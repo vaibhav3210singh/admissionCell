@@ -1,0 +1,322 @@
+[
+  {
+    "id": 1,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "English Rephrased",
+    "targetFaq": "What courses are offered by the university?",
+    "question": "Can you list the courses and degrees offered by this college?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 2,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "Hinglish",
+    "targetFaq": "What is the last date to apply?",
+    "question": "Application form submit karne ki aakhri date kya hai?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 3,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "English Rephrased",
+    "targetFaq": "How can I apply for admission?",
+    "question": "What is the procedure to apply for admission?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 4,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "Hindi",
+    "targetFaq": "What is the application fee?",
+    "question": "आवेदन पत्र का शुल्क कितना निर्धारित है?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 5,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "Hinglish",
+    "targetFaq": "I forgot my application password. What should I do?",
+    "question": "Main application ka password bhool gaya, ab kya karu?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 6,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "Hindi",
+    "targetFaq": "What documents are required for admission?",
+    "question": "प्रवेश के समय मुझे कौन से आवश्यक दस्तावेज जमा करने होंगे?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 7,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "Hinglish",
+    "targetFaq": "What minimum percentage is required?",
+    "question": "Admission paane ke liye 12th class me kitne marks percentage chahiye?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 8,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "English Rephrased",
+    "targetFaq": "Can I apply if my final-year result is awaited?",
+    "question": "My final year results are not declared yet, can I still fill the admission form?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 9,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "Hindi",
+    "targetFaq": "Is there any age limit for admission?",
+    "question": "क्या विश्वविद्यालय में दाखिले के लिए कोई उम्र सीमा तय है?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 10,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "English Rephrased",
+    "targetFaq": "Is there negative marking?",
+    "question": "Do wrong answers in the test have negative marking?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 11,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "Hinglish",
+    "targetFaq": "How can I download my admit card?",
+    "question": "Entrance exam ka admit card portal se kaise download karein?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 12,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "English Rephrased",
+    "targetFaq": "What is the cut-off for admission?",
+    "question": "What is the expected admission cut-off for different branches?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 13,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "Hindi",
+    "targetFaq": "What is the annual tuition fee?",
+    "question": "पाठ्यक्रम की प्रति वर्ष ट्यूशन फीस कितनी है?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 14,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "English Rephrased",
+    "targetFaq": "Can I pay the fee in installments?",
+    "question": "Is it possible to pay the college fees in two or three installments?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 15,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "Hinglish",
+    "targetFaq": "Are scholarships available?",
+    "question": "Kya meritorious students ke liye koi scholarship scheme available hai?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 16,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "Hindi",
+    "targetFaq": "Is hostel accommodation available?",
+    "question": "क्या विश्वविद्यालय में हॉस्टल की सुविधा उपलब्ध है?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 17,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "Hinglish",
+    "targetFaq": "Is mess facility available in the hostel?",
+    "question": "Hostel me khana aur mess ki suvidha milti hai kya?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 18,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "English Rephrased",
+    "targetFaq": "Does the university provide placement assistance?",
+    "question": "What kind of campus recruitment and placement support does the university offer?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 19,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "Hinglish",
+    "targetFaq": "Is a gap-year student eligible?",
+    "question": "Padhai me gap year hone par admission me koi dikkat hoti hai kya?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 20,
+    "group": "Group 1: In FAQ (Reworded / Hindi / Hinglish)",
+    "category": "Hindi",
+    "targetFaq": "Can I cancel my admission?",
+    "question": "क्या मैं अपना एडमिशन रद्द (cancel) करवा सकता हूँ?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 21,
+    "group": "Group 2: Unrelated Topics",
+    "category": "Weather",
+    "targetFaq": null,
+    "question": "What is the weather forecast for tomorrow in Delhi?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 22,
+    "group": "Group 2: Unrelated Topics",
+    "category": "Cricket / Sports",
+    "targetFaq": null,
+    "question": "Who won the cricket match between India and Australia yesterday?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 23,
+    "group": "Group 2: Unrelated Topics",
+    "category": "Cooking / Recipes",
+    "targetFaq": null,
+    "question": "Can you share a quick recipe for baking a chocolate cake at home?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 24,
+    "group": "Group 2: Unrelated Topics",
+    "category": "Vehicle Repair",
+    "targetFaq": null,
+    "question": "How do I fix a flat bicycle tire using a repair kit?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 25,
+    "group": "Group 2: Unrelated Topics",
+    "category": "Finance / Stocks",
+    "targetFaq": null,
+    "question": "What are the latest stock market trends and top gaining shares today?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 26,
+    "group": "Group 2: Unrelated Topics",
+    "category": "Movies / Entertainment",
+    "targetFaq": null,
+    "question": "Who directed the movie Inception and what year did it release?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 27,
+    "group": "Group 2: Unrelated Topics",
+    "category": "Science / Physics",
+    "targetFaq": null,
+    "question": "Can you explain Albert Einstein's theory of general relativity in simple words?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 28,
+    "group": "Group 2: Unrelated Topics",
+    "category": "Weather (Hinglish)",
+    "targetFaq": null,
+    "question": "Kal barsaat hone ki sambhavna hai kya?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 29,
+    "group": "Group 2: Unrelated Topics",
+    "category": "General Knowledge (Hindi)",
+    "targetFaq": null,
+    "question": "भारत का राष्ट्रीय पशु और राष्ट्रीय पक्षी कौन सा है?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 30,
+    "group": "Group 2: Unrelated Topics",
+    "category": "Technology / Mobile",
+    "targetFaq": null,
+    "question": "Which smartphone has the best camera and battery life under 25000 rupees?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 31,
+    "group": "Group 3: Admission Topics NOT in FAQ",
+    "category": "Sports Quota",
+    "targetFaq": null,
+    "question": "Is there a sports quota or athletic achievement reservation for admissions?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 32,
+    "group": "Group 3: Admission Topics NOT in FAQ",
+    "category": "Management / NRI Quota",
+    "targetFaq": null,
+    "question": "Does the college offer direct admission under Management Quota or NRI sponsorship seats?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 33,
+    "group": "Group 3: Admission Topics NOT in FAQ",
+    "category": "Single Girl Child Scheme",
+    "targetFaq": null,
+    "question": "Can single girl children get a fee waiver or special reservation for admission?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 34,
+    "group": "Group 3: Admission Topics NOT in FAQ",
+    "category": "Defense / Armed Forces Quota",
+    "targetFaq": null,
+    "question": "Are there reserved seats for wards of defense and armed forces personnel?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 35,
+    "group": "Group 3: Admission Topics NOT in FAQ",
+    "category": "Lateral Entry B.Tech",
+    "targetFaq": null,
+    "question": "Can diploma holders apply for direct 2nd-year admission through Lateral Entry B.Tech?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 36,
+    "group": "Group 3: Admission Topics NOT in FAQ",
+    "category": "Education Loan Desk",
+    "targetFaq": null,
+    "question": "Does the university provide on-campus education loan assistance or tie-ups with nationalized banks?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 37,
+    "group": "Group 3: Admission Topics NOT in FAQ",
+    "category": "Kashmiri Migrant Quota",
+    "targetFaq": null,
+    "question": "What is the special reservation policy and admission procedure for Kashmiri migrant candidates?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 38,
+    "group": "Group 3: Admission Topics NOT in FAQ",
+    "category": "Dress Code / Uniform",
+    "targetFaq": null,
+    "question": "Is there any uniform or mandatory dress code that freshers must purchase on admission day?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 39,
+    "group": "Group 3: Admission Topics NOT in FAQ",
+    "category": "Exam Center Change",
+    "targetFaq": null,
+    "question": "Can I change my allocated entrance examination city or exam center after admit card is released?",
+    "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 40,
+    "group": "Group 3: Admission Topics NOT in FAQ",
+    "category": "NCC Cadet Quota",
+    "targetFaq": null,
+    "question": "Is extra weightage or preference given to NCC 'C' certificate holders in admission ranking?",
+    "expectedBehavior": "Handed Off"
+  }
+]

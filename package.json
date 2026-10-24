@@ -1,0 +1,32 @@
+{
+  "name": "admission-enquiry-assistant",
+  "version": "1.0.0",
+  "description": "AI Admission Enquiry Assistant for College with semantic FAQ matching",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "convert": "node scripts/convert-faq.js",
+    "test-ask": "node test-ask.js",
+    "test-threshold": "node test-threshold.js"
+  },
+  "keywords": [
+    "ai",
+    "admission",
+    "faq",
+    "embeddings",
+    "multilingual-e5",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@xenova/transformers": "^2.17.2",
+    "cors": "^2.8.6",
+    "dotenv": "^18.0.9",
+    "express": "^5.3.0",
+    "pg": "^8.23.1",
+    "xlsx": "^0.18.5"
+  }
+}

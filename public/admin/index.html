@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | AI Admission Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/admin/admin.css">
+</head>
+<body>
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-left">
+      <div class="nav-brand">
+        <div class="brand-avatar">🎓</div>
+        <div>
+          <h2 class="brand-name">Admission Admin Panel</h2>
+          <span class="brand-sub">MMMUT AI Assistant Management</span>
+        </div>
+      </div>
+    </div>
+    <div class="nav-right">
+      <a href="/" class="btn btn-outline" target="_blank" title="Open user-facing voice assistant">
+        🎙️ Open Voice Assistant
+      </a>
+      <div class="user-pill">
+        <span class="user-dot"></span>
+        <span class="user-label">Logged in as <strong>admin</strong></span>
+      </div>
+      <a href="/admin/logout" class="btn btn-secondary btn-sm" id="logoutBtn">
+        🚪 Logout
+      </a>
+    </div>
+  </header>
+
+  <main class="dashboard-container">
+    <!-- Stat Cards Grid -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-blue">📊</div>
+        <div class="stat-content">
+          <span class="stat-label">Total Questions Asked</span>
+          <h3 class="stat-value" id="statTotalQuestions">--</h3>
+          <span class="stat-sub">Across Web and Phone channels</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-green">🤖</div>
+        <div class="stat-content">
+          <span class="stat-label">Answered by AI</span>
+          <h3 class="stat-value text-success" id="statAnsweredPercent">--%</h3>
+          <span class="stat-sub" id="statAnsweredCount">-- questions resolved</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-amber">📞</div>
+        <div class="stat-content">
+          <span class="stat-label">Handed Off to Staff</span>
+          <h3 class="stat-value text-warning" id="statHandedOffPercent">--%</h3>
+          <span class="stat-sub" id="statHandedOffCount">-- questions routed</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon stat-icon-purple">📚</div>
+        <div class="stat-content">
+          <span class="stat-label">Total FAQs in Database</span>
+          <h3 class="stat-value text-primary" id="statTotalFaqs">--</h3>
+          <span class="stat-sub" id="statThresholdInfo">Similarity Threshold: 0.86</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation Tabs -->
+    <div class="tabs-nav">
+      <button type="button" class="tab-btn active" data-tab="logsTab">
+        📋 All Enquiry Logs
+      </button>
+      <button type="button" class="tab-btn" data-tab="handoffsTab">
+        ⚠️ Handed-Off Enquiries (FAQ Gaps)
+      </button>
+      <button type="button" class="tab-btn" data-tab="faqsTab">
+        ⚙️ Manage FAQs & Embeddings
+      </button>
+    </div>
+
+    <!-- TAB 1: ALL ENQUIRY LOGS -->
+    <section class="tab-pane active" id="logsTab">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h3 class="panel-title">Enquiry Question Logs</h3>
+            <p class="panel-sub">Real-time log of every admission question asked with channels, language & score</p>
+          </div>
+          <div class="panel-actions">
+            <button type="button" class="btn btn-outline" id="exportCsvBtn">
+              📥 Export Logs as CSV
+            </button>
+            <button type="button" class="btn btn-secondary" id="refreshLogsBtn" title="Refresh logs">
+              🔄 Refresh
+            </button>
+          </div>
+        </div>
+
+        <!-- Filters Bar -->
+        <div class="filter-bar">
+          <div class="search-box">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="logSearchInput" placeholder="Search question text or matched FAQ..." class="form-control" />
+          </div>
+          <select id="logStatusFilter" class="form-select">
+            <option value="all">All Statuses</option>
+            <option value="answered">Answered by AI</option>
+            <option value="handed_off">Handed Off to Staff</option>
+          </select>
+          <select id="logChannelFilter" class="form-select">
+            <option value="all">All Channels</option>
+            <option value="web">Web Assistant</option>
+            <option value="phone">Phone / Telephony</option>
+          </select>
+        </div>
+
+        <!-- Logs Table -->
+        <div class="table-responsive">
+          <table class="data-table" id="logsTable">
+            <thead>
+              <tr>
+                <th style="width: 60px;">#</th>
+                <th style="width: 150px;">Time</th>
+                <th style="width: 90px;">Channel</th>
+                <th style="width: 80px;">Lang</th>
+                <th>User Question</th>
+                <th>Matched FAQ</th>
+                <th style="width: 90px;">Score</th>
+                <th style="width: 120px;">Decision</th>
+              </tr>
+            </thead>
+            <tbody id="logsTableBody">
+              <tr>
+                <td colspan="8" class="text-center py-4">Loading enquiry logs...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: HANDED-OFF ENQUIRIES (FAQ GAPS) -->
+    <section class="tab-pane" id="handoffsTab">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h3 class="panel-title">Handed-Off Queries (Missing from FAQ)</h3>
+            <p class="panel-sub">These questions fell below the 0.86 similarity threshold. Staff can review what information applicants need and add them to the FAQ with 1 click.</p>
+          </div>
+          <button type="button" class="btn btn-secondary" id="refreshHandoffsBtn">
+            🔄 Refresh
+          </button>
+        </div>
+
+        <div class="handoff-list" id="handoffListContainer">
+          <div class="text-center py-4">Loading handed-off enquiries...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: FAQ MANAGEMENT -->
+    <section class="tab-pane" id="faqsTab">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h3 class="panel-title">FAQ Knowledge Base Management</h3>
+            <p class="panel-sub">Add, edit, or delete FAQ entries. Vector embeddings will reload automatically after any change.</p>
+          </div>
+          <div class="panel-actions">
+            <button type="button" class="btn btn-primary" id="openAddFaqModalBtn">
+              ➕ Add New FAQ Entry
+            </button>
+          </div>
+        </div>
+
+        <!-- FAQ Search -->
+        <div class="filter-bar">
+          <div class="search-box full-width">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="faqSearchInput" placeholder="Search FAQs by question or answer keywords..." class="form-control" />
+          </div>
+        </div>
+
+        <!-- FAQs Table -->
+        <div class="table-responsive">
+          <table class="data-table" id="faqsTable">
+            <thead>
+              <tr>
+                <th style="width: 60px;">ID</th>
+                <th style="width: 35%;">Question</th>
+                <th>Official Answer</th>
+                <th style="width: 140px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="faqsTableBody">
+              <tr>
+                <td colspan="4" class="text-center py-4">Loading FAQs...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ADD / EDIT FAQ MODAL -->
+  <div class="modal-overlay" id="faqModal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title" id="faqModalTitle">Add New FAQ</h3>
+        <button type="button" class="modal-close" id="closeFaqModalBtn">✕</button>
+      </div>
+      <form id="faqModalForm">
+        <input type="hidden" id="modalFaqId" value="" />
+        
+        <div class="form-group">
+          <label class="form-label" for="modalQuestion">FAQ Question</label>
+          <input 
+            type="text" 
+            id="modalQuestion" 
+            class="form-control" 
+            placeholder="e.g. What is the last date to apply?" 
+            required 
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="modalAnswer">Official Answer</label>
+          <textarea 
+            id="modalAnswer" 
+            class="form-control" 
+            rows="5" 
+            placeholder="Enter the official admission information response..." 
+            required
+          ></textarea>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelFaqModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveFaqBtn">Save & Reload Embeddings</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/admin/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,406 @@
+[
+  {
+    "question": "What courses are offered by the university?",
+    "answer": "The university offers various undergraduate, postgraduate, diploma, and doctoral programmes. Please check the current MMMUT admission brochure for the complete list."
+  },
+  {
+    "question": "When will admissions start?",
+    "answer": "Admissions generally begin according to the academic admission schedule. Please refer to the official MMMUT admission notification for current dates."
+  },
+  {
+    "question": "What is the last date to apply?",
+    "answer": "The last date varies by programme. Check the current MMMUT admission notification before applying."
+  },
+  {
+    "question": "How can I apply for admission?",
+    "answer": "You can apply through the official MMMUT admission portal by completing the application form and submitting the required documents and fee, following the current programme-specific instructions."
+  },
+  {
+    "question": "Is the admission process online?",
+    "answer": "The application process may be conducted online for the relevant programme. Follow the current MMMUT admission instructions."
+  },
+  {
+    "question": "Where can I find the admission form?",
+    "answer": "The admission form is available through the official MMMUT admission portal when applications open."
+  },
+  {
+    "question": "What is the application fee?",
+    "answer": "The application fee varies according to the programme and applicable category. Check the current MMMUT admission notification."
+  },
+  {
+    "question": "Is the application fee refundable?",
+    "answer": "The application fee is generally non-refundable, but the applicable MMMUT admission rules should be checked before payment."
+  },
+  {
+    "question": "Can I apply for more than one programme?",
+    "answer": "This depends on the current MMMUT admission rules. If permitted, a separate application may be required for each programme."
+  },
+  {
+    "question": "Can I edit my application after submission?",
+    "answer": "Corrections may be allowed during a specified correction period. Follow the instructions published on the MMMUT admission portal."
+  },
+  {
+    "question": "I forgot my application password. What should I do?",
+    "answer": "Use the “Forgot Password” option on the admission portal, if available, to reset your password."
+  },
+  {
+    "question": "I have not received my application confirmation. What should I do?",
+    "answer": "Check your registered email and SMS, including the spam or junk folder. If the issue continues, contact the official MMMUT admission help desk."
+  },
+  {
+    "question": "How can I check my application status?",
+    "answer": "Log in to the admission portal using your registered credentials to view your application status, if this facility is available."
+  },
+  {
+    "question": "Can I submit the application offline?",
+    "answer": "Offline applications are accepted only if MMMUT specifically permits them for the programme. Check the current admission instructions."
+  },
+  {
+    "question": "What documents are required for admission?",
+    "answer": "Commonly required documents may include academic certificates, marksheets, identity proof, photographs, category certificate, and programme-specific documents. Confirm the exact list in the current MMMUT admission guidelines."
+  },
+  {
+    "question": "Is an Aadhaar card required?",
+    "answer": "A valid identity document may be required. Follow the identity-document requirements specified in the current MMMUT admission guidelines."
+  },
+  {
+    "question": "Is a photograph required?",
+    "answer": "A recent passport-size photograph is generally required for an application. Follow the current portal instructions for format and size."
+  },
+  {
+    "question": "Is a signature required?",
+    "answer": "A scanned signature may be required for an online application. Check the current MMMUT portal instructions."
+  },
+  {
+    "question": "What format should uploaded documents be in?",
+    "answer": "The admission portal specifies accepted file formats and size limits. Follow the current instructions carefully."
+  },
+  {
+    "question": "Can I upload documents later?",
+    "answer": "This depends on the admission process. Upload all mandatory documents before the deadline unless MMMUT explicitly permits later submission."
+  },
+  {
+    "question": "What is the eligibility criteria?",
+    "answer": "Eligibility varies by programme and may include specific educational qualifications, subjects, marks, and entrance requirements. Check the current MMMUT programme-specific criteria."
+  },
+  {
+    "question": "What minimum percentage is required?",
+    "answer": "The minimum percentage varies by programme and may depend on the applicable category or rules. Refer to the current MMMUT eligibility criteria."
+  },
+  {
+    "question": "I have completed Class 12. Which courses can I apply for?",
+    "answer": "Your eligibility depends on the programme, subjects studied, and required marks. Check the current MMMUT programme-specific eligibility criteria."
+  },
+  {
+    "question": "Can students from another board apply?",
+    "answer": "Students from recognized boards may apply if they meet the applicable programme eligibility requirements. Confirm the current MMMUT rules."
+  },
+  {
+    "question": "Can students from another university apply?",
+    "answer": "Candidates from recognized universities may apply to eligible programmes if they meet the prescribed requirements. Check the current MMMUT admission rules."
+  },
+  {
+    "question": "Can I apply if my final-year result is awaited?",
+    "answer": "Some programmes may allow candidates appearing in the qualifying examination to apply, subject to the current MMMUT admission rules."
+  },
+  {
+    "question": "Can I apply without the qualifying certificate?",
+    "answer": "Provisional admission may be possible in some cases, subject to the applicable rules and submission of the required certificate by the prescribed deadline. Confirm with MMMUT."
+  },
+  {
+    "question": "Is there any age limit for admission?",
+    "answer": "Age requirements vary by programme and applicable regulations. Check the current MMMUT admission notification."
+  },
+  {
+    "question": "Is there any relaxation in eligibility marks?",
+    "answer": "Relaxation may be available to eligible categories under applicable government and university rules. Check the current MMMUT admission guidelines."
+  },
+  {
+    "question": "Is domicile required for admission?",
+    "answer": "Domicile requirements depend on the programme and applicable admission rules. Check the current MMMUT admission notification."
+  },
+  {
+    "question": "Is an entrance examination required?",
+    "answer": "The selection process varies by programme and may involve an entrance examination, merit, or another prescribed process. Check the current MMMUT admission notification."
+  },
+  {
+    "question": "Which entrance examination is required?",
+    "answer": "The required examination depends on the programme and current admission route. Refer to the relevant MMMUT admission notification."
+  },
+  {
+    "question": "What is the entrance examination syllabus?",
+    "answer": "The syllabus, where applicable, is specified in the relevant admission notification or information brochure."
+  },
+  {
+    "question": "What is the entrance examination pattern?",
+    "answer": "The examination pattern, number of questions, duration, and marking scheme vary by programme and examination. Check the current official instructions."
+  },
+  {
+    "question": "Is there negative marking?",
+    "answer": "Negative marking, if applicable, is specified in the relevant examination guidelines."
+  },
+  {
+    "question": "When will the entrance examination be conducted?",
+    "answer": "The examination date, if applicable, will be announced through the official admission notification or portal."
+  },
+  {
+    "question": "How can I download my admit card?",
+    "answer": "Eligible candidates can download an admit card from the designated admission portal if one is issued for their examination. Follow the official instructions."
+  },
+  {
+    "question": "What should I carry to the entrance examination?",
+    "answer": "Carry your admit card, valid photo ID, and any other items specifically permitted in the examination instructions."
+  },
+  {
+    "question": "When will the entrance result be declared?",
+    "answer": "The result date depends on the examination and admission schedule. Check official MMMUT notifications for the announced date."
+  },
+  {
+    "question": "Where can I check the entrance result?",
+    "answer": "Check the official MMMUT website or admission portal for results and related notices."
+  },
+  {
+    "question": "How is the merit list prepared?",
+    "answer": "The merit list is prepared according to the selection criteria prescribed for the particular programme. Refer to the current MMMUT admission rules."
+  },
+  {
+    "question": "When will the merit list be released?",
+    "answer": "The merit list will be published according to the admission schedule announced by MMMUT."
+  },
+  {
+    "question": "How can I check my merit position?",
+    "answer": "Check the admission portal or published merit list for your rank or merit position, where applicable."
+  },
+  {
+    "question": "What is the cut-off for admission?",
+    "answer": "The cut-off varies by programme, category, seat availability, and candidate performance. Refer to official MMMUT admission notices for published cut-offs."
+  },
+  {
+    "question": "Is there a waiting list?",
+    "answer": "A waiting list may be prepared if permitted under the programme's admission process and if seats remain to be filled. Check official notices."
+  },
+  {
+    "question": "How will I know if I am selected?",
+    "answer": "Selection updates may be published on the admission portal and, where applicable, communicated through email, SMS, or official notices."
+  },
+  {
+    "question": "What happens after selection?",
+    "answer": "Selected candidates must complete the required document verification, fee payment, and other admission formalities within the specified deadline."
+  },
+  {
+    "question": "Is document verification compulsory?",
+    "answer": "Document verification is normally required to finalize admission. Follow the current MMMUT instructions for the programme."
+  },
+  {
+    "question": "Can someone else attend document verification on my behalf?",
+    "answer": "This is permitted only if the applicable MMMUT rules allow it under the circumstances. Contact the admission office for confirmation."
+  },
+  {
+    "question": "What happens if I miss the admission deadline?",
+    "answer": "Missing a required deadline may result in cancellation or loss of the admission opportunity, subject to the applicable MMMUT rules."
+  },
+  {
+    "question": "What is the admission fee?",
+    "answer": "The admission fee varies by programme and applicable fee rules. Refer to the current official MMMUT fee structure."
+  },
+  {
+    "question": "What is the annual tuition fee?",
+    "answer": "Tuition fees depend on the programme and current university fee structure. Check the official MMMUT fee notice."
+  },
+  {
+    "question": "Are there any additional fees?",
+    "answer": "Additional charges may include examination, registration, laboratory, library, hostel, or other applicable fees. Check the current MMMUT fee structure."
+  },
+  {
+    "question": "Can the admission fee be paid online?",
+    "answer": "Online payment may be available through the authorized payment gateway. Follow the payment options shown in the current MMMUT admission portal."
+  },
+  {
+    "question": "Which payment methods are accepted?",
+    "answer": "Accepted methods are those displayed on the authorized payment portal and may include debit card, credit card, net banking, UPI, or other listed options."
+  },
+  {
+    "question": "Can I pay the fee in installments?",
+    "answer": "Installment facilities depend on current university rules and the programme. Confirm with MMMUT before making payment arrangements."
+  },
+  {
+    "question": "Is there a late fee for delayed payment?",
+    "answer": "A late fee may apply only where permitted under the applicable admission rules. Check the current MMMUT notice."
+  },
+  {
+    "question": "What should I do if my fee payment fails?",
+    "answer": "Check your bank and payment status before trying again. If money was debited but the portal was not updated, contact the official admission or fee support office with your transaction details."
+  },
+  {
+    "question": "I paid the fee but did not receive a receipt. What should I do?",
+    "answer": "Log in to the admission portal and check the payment section. If needed, contact the concerned MMMUT office with your transaction details."
+  },
+  {
+    "question": "Is the admission fee refundable?",
+    "answer": "Refunds are governed by the applicable MMMUT fee-refund policy and relevant regulatory guidelines. Check the current policy before requesting a refund."
+  },
+  {
+    "question": "Are scholarships available?",
+    "answer": "Scholarships may be available under merit-based, category-based, financial-assistance, or government schemes, subject to eligibility and current rules."
+  },
+  {
+    "question": "How can I apply for a scholarship?",
+    "answer": "Eligible students should apply through the prescribed university or government scholarship portal within the announced period. Check current MMMUT guidance."
+  },
+  {
+    "question": "Are scholarships available for reserved-category students?",
+    "answer": "Eligible students may receive scholarships or fee benefits under applicable government and university rules. Check the current scheme requirements."
+  },
+  {
+    "question": "Is there any merit scholarship?",
+    "answer": "Merit-based scholarships may be available depending on the programme and current institutional policy. Confirm availability with MMMUT."
+  },
+  {
+    "question": "Are there scholarships for economically weaker students?",
+    "answer": "Financial assistance may be available under applicable schemes, subject to eligibility and documentation. Check current MMMUT and government scheme information."
+  },
+  {
+    "question": "Is hostel accommodation available?",
+    "answer": "Hostel accommodation may be available subject to seat availability and the applicable MMMUT hostel rules. Confirm current availability with the university."
+  },
+  {
+    "question": "How can I apply for a hostel?",
+    "answer": "Apply through the prescribed hostel application process and follow the current instructions issued by MMMUT."
+  },
+  {
+    "question": "What is the hostel fee?",
+    "answer": "Hostel fees depend on the applicable hostel charges and accommodation arrangements. Refer to the current official MMMUT fee information."
+  },
+  {
+    "question": "Is hostel accommodation guaranteed?",
+    "answer": "Hostel allotment should not be assumed to be guaranteed; it is generally subject to availability and applicable allotment criteria. Confirm the current MMMUT rules."
+  },
+  {
+    "question": "Is mess facility available in the hostel?",
+    "answer": "Mess arrangements depend on the applicable hostel facilities and rules. Confirm the current arrangements with MMMUT."
+  },
+  {
+    "question": "Is transportation facility available?",
+    "answer": "Transportation facilities, if offered, depend on current university arrangements. Contact MMMUT for confirmation."
+  },
+  {
+    "question": "Does the university provide placement assistance?",
+    "answer": "Placement assistance may be provided through the university's training and placement services. For current details, consult the official MMMUT placement information."
+  },
+  {
+    "question": "Are internships available?",
+    "answer": "Internship opportunities may be available through departments, industry collaborations, or institutional initiatives. Availability is not guaranteed and may vary."
+  },
+  {
+    "question": "Does the university provide career guidance?",
+    "answer": "Career guidance and skill-development activities may be offered through relevant departments and placement or career services. Check current MMMUT information."
+  },
+  {
+    "question": "Are extracurricular activities available?",
+    "answer": "Students may have opportunities to participate in sports, cultural activities, technical events, clubs, and other extracurricular activities. Check current university information."
+  },
+  {
+    "question": "Is attendance compulsory?",
+    "answer": "Students must meet the attendance requirements prescribed by the applicable university and programme regulations. Check the current academic rules."
+  },
+  {
+    "question": "Can I change my programme after admission?",
+    "answer": "Programme changes are subject to university rules, eligibility, seat availability, and applicable deadlines. Confirm with the concerned MMMUT office."
+  },
+  {
+    "question": "Can I change my specialization?",
+    "answer": "A specialization change may be allowed only where programme regulations permit it and subject to availability. Check the current MMMUT rules."
+  },
+  {
+    "question": "Can I transfer from another university?",
+    "answer": "Transfer or migration may be permitted only for eligible candidates and subject to university regulations and approval. Contact MMMUT for programme-specific guidance."
+  },
+  {
+    "question": "Is migration certificate required?",
+    "answer": "A migration certificate may be required for students joining from another recognized university, depending on the applicable rules. Check the current document checklist."
+  },
+  {
+    "question": "Is a gap-year student eligible?",
+    "answer": "Candidates with a gap year may apply if they meet the programme eligibility criteria and provide any required documentation. Confirm current MMMUT rules."
+  },
+  {
+    "question": "Can working professionals apply?",
+    "answer": "Working professionals may apply only to programmes for which they meet the eligibility and attendance requirements. Check the current MMMUT programme rules."
+  },
+  {
+    "question": "Are distance/online programmes available?",
+    "answer": "Availability depends on the programmes officially offered and approved by the institution. Check the current MMMUT programme list and official notifications."
+  },
+  {
+    "question": "Is there a part-time programme?",
+    "answer": "Part-time programmes are available only if specifically offered by MMMUT. Check the current official programme list."
+  },
+  {
+    "question": "Can international students apply?",
+    "answer": "International students may apply through the designated process if available, subject to eligibility and applicable regulations. Consult official MMMUT international admission information."
+  },
+  {
+    "question": "What documents are required for international students?",
+    "answer": "Requirements may include a passport, academic certificates, visa-related documents, equivalence certificates, and other documents specified by the university. Confirm the current MMMUT checklist."
+  },
+  {
+    "question": "Is an equivalence certificate required?",
+    "answer": "Applicants with qualifications obtained outside the applicable education system may need an equivalence certificate from the competent authority. Check the current MMMUT requirements."
+  },
+  {
+    "question": "Is English proficiency required?",
+    "answer": "English-language requirements depend on the programme and applicable admission rules. Check the current MMMUT admission notification."
+  },
+  {
+    "question": "Can I apply if I have a backlog?",
+    "answer": "Eligibility for candidates with backlogs depends on the programme's admission rules and qualification-completion requirements. Confirm the current MMMUT criteria."
+  },
+  {
+    "question": "Can I apply if I have a supplementary examination?",
+    "answer": "Candidates may apply where permitted, but final admission depends on meeting all eligibility requirements within the prescribed timeline."
+  },
+  {
+    "question": "What is the academic session for the admission?",
+    "answer": "The academic session is specified in the current MMMUT admission notification and academic calendar."
+  },
+  {
+    "question": "When will classes begin?",
+    "answer": "Classes generally begin according to the academic calendar published by the university. Check the current MMMUT calendar for dates."
+  },
+  {
+    "question": "How will I receive admission-related updates?",
+    "answer": "Updates may be shared through the official website, admission portal, registered email, SMS, or official notices. Check the portal regularly."
+  },
+  {
+    "question": "Whom should I contact for admission-related problems?",
+    "answer": "Contact the official MMMUT admission help desk or the concerned department using contact details published on the official website or admission portal."
+  },
+  {
+    "question": "What should I do if I enter incorrect information in the application?",
+    "answer": "If a correction window is open, correct the information through the portal. Otherwise, contact the MMMUT admission office for guidance."
+  },
+  {
+    "question": "Can I cancel my admission?",
+    "answer": "Admission cancellation is subject to the university's applicable rules and prescribed procedure. Check the current MMMUT instructions."
+  },
+  {
+    "question": "How can I apply for admission cancellation?",
+    "answer": "Submit a cancellation request through the prescribed process and provide the required documents. Follow the current MMMUT instructions."
+  },
+  {
+    "question": "How long does the fee refund take after cancellation?",
+    "answer": "The refund timeline depends on the applicable refund policy and completion of required formalities. Check the current MMMUT refund policy."
+  },
+  {
+    "question": "Where can I find the official admission notification?",
+    "answer": "Obtain the latest admission notification from the official MMMUT website or admission portal."
+  },
+  {
+    "question": "Where can I get further information about admission?",
+    "answer": "For further assistance, contact the official MMMUT admission help desk or the concerned academic department using contact details published by the university."
+  },
+  {
+    "question": "hello",
+    "answer": "fuck you"
+  }
+]
