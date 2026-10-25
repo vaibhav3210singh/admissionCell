@@ -10,7 +10,9 @@
     "convert": "node scripts/convert-faq.js",
     "test-ask": "node test-ask.js",
     "test-threshold": "node test-threshold.js",
-    "test-compare": "node test-compare.js"
+    "test-compare": "node test-compare.js",
+    "test-voices": "node scripts/test-voices.js",
+    "test-call": "node test-call-simulator.js"
   },
   "keywords": [
     "ai",
@@ -27,7 +29,10 @@
     "cors": "^2.8.6",
     "dotenv": "^18.0.9",
     "express": "^5.3.0",
+    "google-tts-api": "^2.0.2",
     "pg": "^8.23.1",
+    "twilio": "^6.2.0",
+    "ws": "^8.22.0",
     "xlsx": "^0.18.5"
   }
 }

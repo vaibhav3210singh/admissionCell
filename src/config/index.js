@@ -48,10 +48,15 @@ export const config = Object.freeze({
     faqDataPath: path.resolve(rootDir, process.env.FAQ_DATA_PATH || './faq.json')
   },
   telephony: {
-    provider: (process.env.TELEPHONY_PROVIDER || 'mock').toLowerCase(), // 'mock' | 'twilio' | 'exotel'
-    accountSid: process.env.TELEPHONY_ACCOUNT_SID || '',
-    authToken: process.env.TELEPHONY_AUTH_TOKEN || '',
-    phoneNumber: process.env.TELEPHONY_PHONE_NUMBER || ''
+    provider: (process.env.TELEPHONY_PROVIDER || 'twilio').toLowerCase(), // 'twilio' | 'mock'
+    callMode: (process.env.CALL_MODE || 'conversationrelay').toLowerCase(), // 'conversationrelay' | 'gather'
+    accountSid: process.env.TWILIO_ACCOUNT_SID || process.env.TELEPHONY_ACCOUNT_SID || '',
+    authToken: process.env.TWILIO_AUTH_TOKEN || process.env.TELEPHONY_AUTH_TOKEN || '',
+    phoneNumber: process.env.TWILIO_PHONE_NUMBER || process.env.TELEPHONY_PHONE_NUMBER || '',
+    publicBaseUrl: process.env.PUBLIC_BASE_URL || 'http://localhost:3000',
+    ttsProvider: (process.env.TTS_PROVIDER || 'google').toLowerCase(),
+    ttsVoiceEn: process.env.TTS_VOICE_EN || 'Google.en-IN-Neural2-A',
+    ttsVoiceHi: process.env.TTS_VOICE_HI || 'Google.hi-IN-Neural2-A'
   },
   handoff: {
     phone: process.env.HANDOFF_PHONE || '+91-551-2273901 / 2273902',

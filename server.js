@@ -1,5 +1,6 @@
 import config from './src/config/index.js';
 import { createApp, initializeServices } from './src/app.js';
+import telephonyService from './src/services/telephonyService.js';
 import logger from './src/utils/logger.js';
 
 // Catch unhandled process exceptions gracefully
@@ -29,6 +30,8 @@ async function startServer() {
       console.log(` AI Admission Enquiry Assistant Backend is RUNNING!`);
       console.log(` URL           : http://localhost:${PORT}`);
       console.log(` POST Endpoint : http://localhost:${PORT}/ask`);
+      console.log(` Phone Webhook : http://localhost:${PORT}/incoming-call`);
+      console.log(` Phone Relay   : ws://localhost:${PORT}/call-relay (Mode: ${config.telephony.callMode})`);
       console.log(` Health Status : http://localhost:${PORT}/health`);
       console.log(` Web Assistant : http://localhost:${PORT}/`);
       console.log(` Threshold     : ${config.matching.similarityThreshold}`);
@@ -37,6 +40,9 @@ async function startServer() {
       console.log(` Environment   : ${config.server.nodeEnv}`);
       console.log(`======================================================\n`);
     });
+
+    // 4. Attach Twilio ConversationRelay WebSocket server
+    telephonyService.attachWebSocketServer(server);
 
     // Graceful shutdown handling
     const shutdown = (signal) => {

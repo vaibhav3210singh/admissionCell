@@ -27,10 +27,14 @@ class LLMService {
    * @param {Object} params
    * @param {string} params.question - The caller's question text.
    * @param {Array<{ question: string, answer: string }>} params.faqEntries - Up to 3 candidate FAQ entries.
+   * @param {Object} params
+   * @param {string} params.question - The caller's question text.
+   * @param {Array<{ question: string, answer: string }>} params.faqEntries - Up to 3 candidate FAQ entries.
    * @param {string} [params.language] - Optional language code (e.g. 'hi-IN' or 'en-IN').
+   * @param {boolean} [params.isPhoneCall] - Whether this is an active phone call requiring spoken formatting.
    * @returns {Promise<{ success: boolean, isNotFound: boolean, answer: string|null, provider: string, latencyMs: number }>}
    */
-  async generateAnswer({ question, faqEntries = [], language = 'en-IN' }) {
+  async generateAnswer({ question, faqEntries = [], language = 'en-IN', isPhoneCall = false }) {
     const startTime = Date.now();
 
     if (!question || typeof question !== 'string' || !question.trim()) {
@@ -41,13 +45,24 @@ class LLMService {
       return { success: true, isNotFound: true, answer: null, latencyMs: 0, reason: 'no_faqs_provided' };
     }
 
-    // System prompt with university helpline phone rules
-    const systemInstruction = 
-`You are an AI Admission Helpline Assistant for MMMUT University answering phone calls.
+    const isPhone = Boolean(isPhoneCall);
+
+    // System prompt tailored for spoken phone calls vs web text
+    const systemInstruction = isPhone
+      ? `You are an AI Admission Helpline Phone Agent for MMMUT University speaking directly with a caller on a phone line.
+Follow these speech rules strictly:
+1. Use ONLY the provided FAQ entries. Never assume or invent fees, dates, percentages, or eligibility rules.
+2. Spoken style: Use very short, punchy sentences. Absolutely NO markdown formatting, asterisks, bullet points, headers, numbered lists, or emojis.
+3. Pronunciation: Spell out numbers, fees, and dates phonetically as spoken words (e.g. write "twenty-four thousand rupees" instead of "Rs. 24,000", "fifteenth of July" instead of "15/07", "sixty percent" instead of "60%").
+4. Language & Script: If the caller speaks Hindi or Hinglish, reply in pure Devanagari script so text-to-speech engines pronounce it with a natural Indian accent. If English, reply in standard English.
+5. Answer length: Under 35 words. Keep it concise, friendly, and easy to understand over a phone line.
+6. If the provided FAQ entries do NOT actually answer the caller's specific question, reply with EXACTLY: NOT_FOUND
+7. If the caller asks a multi-part question and only one part is covered, answer that covered part and explicitly say the rest will be handled by admission staff.`
+      : `You are an AI Admission Helpline Assistant for MMMUT University.
 Follow these rules strictly:
 1. Answer using ONLY the provided FAQ entries. Never assume, extrapolate, or invent fees, dates, percentages, or eligibility rules.
-2. Answer in the same language as the caller (English, Hindi, or Hinglish).
-3. Keep the answer under 40 words, in a clear, friendly, natural spoken style suitable for a phone call.
+2. Answer in the same language as the caller (English, Hindi, or Hinglish). If Hindi, use Devanagari script.
+3. Keep the answer under 40 words, in a clear, friendly, natural spoken style. Do NOT use markdown, bullet points, or emojis.
 4. If the provided FAQ entries do NOT actually answer the caller's specific question, reply with EXACTLY: NOT_FOUND
 5. If the caller asks a multi-part question and only one part is covered in the FAQ, answer that covered part and explicitly state that the remaining part will be handled by admission staff.`;
 
@@ -79,12 +94,22 @@ Direct Spoken Response:`;
       }
 
       const latencyMs = Date.now() - startTime;
-      const cleanAnswer = (rawAnswer || '').trim();
+      let cleanAnswer = (rawAnswer || '').trim();
+
+      if (isPhone) {
+        cleanAnswer = cleanAnswer
+          .replace(/[*#_~`]/g, '')
+          .replace(/^["']|["']$/g, '')
+          .replace(/\s+/g, ' ')
+          .trim();
+      }
 
       // Check if LLM determined the FAQ does not answer the question
-      const isNotFound = cleanAnswer.toUpperCase() === 'NOT_FOUND' || 
-                         cleanAnswer.toUpperCase().startsWith('NOT_FOUND') ||
-                         cleanAnswer.includes('NOT_FOUND');
+      const rawUpper = (rawAnswer || '').trim().toUpperCase();
+      const isNotFound = rawUpper === 'NOT_FOUND' || 
+                         rawUpper.startsWith('NOT_FOUND') || 
+                         rawUpper.includes('NOT_FOUND') ||
+                         rawUpper.replace(/[^A-Z]/g, '').includes('NOTFOUND');
 
       if (isNotFound) {
         logger.info(`[LLM] Question evaluated as NOT_FOUND (${latencyMs}ms): "${question.substring(0, 50)}..."`);

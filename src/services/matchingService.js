@@ -53,7 +53,12 @@ class MatchingService {
     const scoreFormatted = bestMatch ? Number(bestMatch.similarity.toFixed(4)) : 0;
     const isAboveThreshold = scoreFormatted >= customThreshold;
 
-    let finalAnswer = this.handoffMessage;
+    const isPhone = source === 'phone' || Boolean(options.isPhoneCall);
+    const phoneHandoffMessage = language === 'hi-IN'
+      ? 'मैं आपको व्यक्तिगत सहायता के लिए हमारे प्रवेश कर्मचारियों से जोड़ रहा हूँ।'
+      : 'Please hold while I connect you to our admission staff for personal assistance.';
+
+    let finalAnswer = isPhone ? phoneHandoffMessage : this.handoffMessage;
     let handoff = !isAboveThreshold;
     let llmUsed = false;
     let llmVerdict = null;
@@ -71,13 +76,14 @@ class MatchingService {
         const llmResult = await llmService.generateAnswer({
           question: trimmedQuery,
           faqEntries: candidateFaqs,
-          language
+          language,
+          isPhoneCall: isPhone
         });
 
         if (llmResult.success && llmResult.isNotFound) {
           // LLM evaluated that the top FAQ entries do NOT actually answer the query
           handoff = true;
-          finalAnswer = this.handoffMessage;
+          finalAnswer = isPhone ? phoneHandoffMessage : this.handoffMessage;
           llmUsed = true;
           llmVerdict = 'NOT_FOUND';
         } else if (llmResult.success && llmResult.answer) {

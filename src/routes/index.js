@@ -4,6 +4,7 @@ import config from '../config/index.js';
 import askRoutes from './askRoutes.js';
 import healthRoutes from './healthRoutes.js';
 import adminRoutes from './adminRoutes.js';
+import telephonyRoutes from './telephonyRoutes.js';
 
 const router = express.Router();
 
@@ -11,6 +12,7 @@ const router = express.Router();
 router.use('/ask', askRoutes);
 router.use('/health', healthRoutes);
 router.use('/admin', adminRoutes);
+router.use('/', telephonyRoutes);
 
 // Frontend root route
 router.get('/', (req, res) => {
