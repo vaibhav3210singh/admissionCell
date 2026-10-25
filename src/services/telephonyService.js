@@ -2,6 +2,7 @@ import { WebSocketServer } from 'ws';
 import twilio from 'twilio';
 import config from '../config/index.js';
 import matchingService from './matchingService.js';
+import { cleanSpokenText } from './llmService.js';
 import logger from '../utils/logger.js';
 
 /**
@@ -29,16 +30,25 @@ export function detectSpokenLanguage(text) {
   // Check for Devanagari Unicode block
   if (/[\u0900-\u097F]/.test(text)) return 'hi-IN';
 
-  // Check for common Romanized Hindi / Hinglish keywords
-  const hinglishTokens = [
-    'kya', 'hai', 'hain', 'kaise', 'kab', 'kitna', 'kitni', 'chahiye',
-    'milega', 'hoga', 'mera', 'meri', 'karna', 'karein', 'admission',
-    'bataiye', 'fees', 'hostel', 'daakhila', 'pravesh', 'shulk', 'padhai',
-    'kaha', 'yaha', 'sakte', 'sakta', 'nahi', 'haan', 'ji'
-  ];
-  const words = text.toLowerCase().split(/\s+/);
-  const hindiCount = words.filter(w => hinglishTokens.includes(w)).length;
-  return (hindiCount >= 2 || (words.length <= 4 && hindiCount >= 1)) ? 'hi-IN' : 'en-IN';
+  // Comprehensive Hinglish grammar, function, and vocabulary markers
+  const hinglishMarkers = new Set([
+    'kya', 'kaise', 'kab', 'kitna', 'kitni', 'kitne', 'kaha', 'kahan', 'kyu', 'kyun',
+    'hai', 'hain', 'ho', 'hoon', 'hun',
+    'chahiye', 'chahie', 'milega', 'milegi', 'milenge', 'hoga', 'hogi', 'honge',
+    'karna', 'karein', 'kare', 'karne', 'karta', 'karti', 'karte', 'kiya',
+    'bataiye', 'batao', 'bataye', 'bata',
+    'sakte', 'sakta', 'sakti', 'nahi', 'nahin', 'na',
+    'daakhila', 'pravesh', 'shulk', 'padhai',
+    'mera', 'meri', 'mere', 'apna', 'apni', 'apne',
+    'aap', 'tum', 'hum', 'hamara', 'hamari', 'mujhe', 'hume', 'hame',
+    'ki', 'ke', 'ka', 'ko', 'se', 'mein', 'me', 'par', 'pe', 'aur', 'ya',
+    'bharo', 'bharna', 'bhare', 'milta', 'milti', 'milte',
+    'pata', 'pooch', 'poochhna', 'jana', 'jane', 'dekh', 'dekhein'
+  ]);
+
+  const words = text.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(Boolean);
+  const isHinglish = words.some(w => hinglishMarkers.has(w));
+  return isHinglish ? 'hi-IN' : 'en-IN';
 }
 
 /**
@@ -96,6 +106,15 @@ class TelephonyService {
   async initialize() {
     logger.info(`Telephony service initialized [Provider: ${this.provider.toUpperCase()}, Mode: ${this.callMode.toUpperCase()}]`);
     logger.info(`TTS Provider: ${this.ttsProvider.toUpperCase()} | Voice EN: ${this.ttsVoiceEn} | Voice HI: ${this.ttsVoiceHi}`);
+
+    // Startup warning if configured ElevenLabs voice ID is a default demo voice
+    const DEMO_VOICE_IDS = ['21m00Tcm4TlvDq8ikWAM', 'AZnzlk1XvdvUeBnXmlld', 'EXAVITQu4vr4xnSDxMaL', 'ErXwobaYiN019PkySvjV'];
+    const isEnDemo = DEMO_VOICE_IDS.includes(this.ttsVoiceEn);
+    const isHiDemo = DEMO_VOICE_IDS.includes(this.ttsVoiceHi);
+    if (this.ttsProvider === 'elevenlabs' && (isEnDemo || isHiDemo)) {
+      logger.warn(`⚠️ [TELEPHONY STARTUP WARNING] Configured ElevenLabs voice ID (${isEnDemo ? `EN: ${this.ttsVoiceEn}` : ''}${isHiDemo ? ` HI: ${this.ttsVoiceHi}` : ''}) matches an ElevenLabs default demo voice. For production, set your chosen custom voice IDs in .env.`);
+    }
+
     return true;
   }
 
@@ -116,6 +135,7 @@ class TelephonyService {
         sessionId: null,
         callSid: null,
         callerNumber: 'Unknown',
+        activeLanguage: 'en-IN',
         detectedLanguage: 'en-IN',
         turnCount: 0,
         lastSpokenText: '',
@@ -175,6 +195,20 @@ class TelephonyService {
 
         logger.info(`[TELEPHONY] Caller said [${state.detectedLanguage}]: "${callerSpeech}"`);
 
+        // Mid-Call Language Switching per Twilio ConversationRelay Specification
+        // Sends {"type": "language"} frame to switch STT and TTS language dynamically
+        if (state.detectedLanguage !== state.activeLanguage || state.turnCount === 1) {
+          logger.info(`[TELEPHONY] Sending ConversationRelay switch language frame to: ${state.detectedLanguage}`);
+          if (ws.readyState === ws.OPEN) {
+            ws.send(JSON.stringify({
+              type: 'language',
+              ttsLanguage: state.detectedLanguage,
+              transcriptionLanguage: state.detectedLanguage
+            }));
+          }
+          state.activeLanguage = state.detectedLanguage;
+        }
+
         // Natural Acknowledgment: If query processing takes > 1.5s, send short filler to prevent silence
         state.acknowledgmentTimer = setTimeout(() => {
           if (ws.readyState === ws.OPEN) {
@@ -210,14 +244,23 @@ class TelephonyService {
             spokenAnswer = `${spokenAnswer} ${promptNext}`.trim();
           }
 
+          // Clean and normalize spoken text before sending to TTS
+          spokenAnswer = cleanSpokenText(spokenAnswer, state.detectedLanguage);
           state.lastSpokenText = spokenAnswer;
 
-          // Send synthesized spoken response back to ConversationRelay
+          // Send synthesized spoken response back to ConversationRelay with lang attribute
           if (ws.readyState === ws.OPEN) {
             ws.send(JSON.stringify({
               type: 'text',
               token: spokenAnswer,
-              last: true
+              last: true,
+              lang: state.detectedLanguage,
+              timings: result.timings,
+              handoff: result.handoff,
+              matchedQuestion: result.matchedQuestion,
+              similarity: result.similarity,
+              threshold: result.threshold,
+              llmVerdict: result.llmVerdict
             }));
           }
 
@@ -285,14 +328,29 @@ class TelephonyService {
         action: `/incoming-call/ended`
       });
 
-      connect.conversationRelay({
+      // Clear, inviting greeting spoken naturally by English voice without mangling Hindi Devanagari
+      const cleanGreeting = 'Welcome to MMMUT Admission Helpline. You can speak to me in English or Hindi. How can I help you today?';
+
+      const relay = connect.conversationRelay({
         url: wsUrl,
-        welcomeGreeting: bilingualGreeting,
+        welcomeGreeting: cleanGreeting,
         ttsProvider: this.ttsProvider,
-        voice: this.ttsVoiceEn,
-        language: 'en-IN',
-        transcriptionProvider: 'google',
+        transcriptionProvider: config.telephony.transcriptionProvider || 'deepgram',
+        transcriptionLanguage: config.telephony.transcriptionLanguage || 'multi',
         interruptible: 'true'
+      });
+
+      // Nested Language elements with specific voices for each language
+      relay.language({
+        code: 'en-IN',
+        ttsProvider: this.ttsProvider,
+        voice: this.ttsVoiceEn
+      });
+
+      relay.language({
+        code: 'hi-IN',
+        ttsProvider: this.ttsProvider,
+        voice: this.ttsVoiceHi
       });
 
       return response.toString();
@@ -307,10 +365,19 @@ class TelephonyService {
         hints: 'admission, fees, eligibility, hostel, cut off, dates'
       });
 
-      gather.say({
-        voice: this.ttsVoiceHi.includes('Polly') ? 'Polly.Aditi' : 'Google.hi-IN-Neural2-A',
-        language: 'hi-IN'
-      }, bilingualGreeting);
+      if (this.ttsProvider === 'amazon' || this.ttsVoiceHi.includes('Polly.Aditi')) {
+        // Polly.Aditi is bilingual Indian English & Hindi
+        gather.say({
+          voice: 'Polly.Aditi',
+          language: 'hi-IN'
+        }, 'Welcome to MMMUT Admission Helpline. How can I help you? एमएमएमयूटी प्रवेश सहायता केंद्र में आपका स्वागत है।');
+      } else {
+        // Clear English greeting with English voice
+        gather.say({
+          voice: this.ttsVoiceEn,
+          language: 'en-IN'
+        }, 'Welcome to MMMUT Admission Helpline. You can ask your questions in English or Hindi.');
+      }
 
       // If user remains silent, prompt once more or transfer
       response.say('We did not receive any input. Connecting you to admission staff.');
@@ -408,6 +475,21 @@ class TelephonyService {
       status: 'forwarded',
       targetPhone: staffPhone,
       timestamp: new Date().toISOString()
+    };
+  }
+
+  /**
+   * Diagnostic status for /health endpoint.
+   */
+  getStatus() {
+    return {
+      provider: this.provider,
+      callMode: this.callMode,
+      ttsProvider: this.ttsProvider,
+      ttsVoiceEn: this.ttsVoiceEn,
+      ttsVoiceHi: this.ttsVoiceHi,
+      activeCalls: this.activeCalls ? this.activeCalls.size : 0,
+      wsAttached: Boolean(this.wss)
     };
   }
 }

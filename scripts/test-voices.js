@@ -53,11 +53,44 @@ const sampleAnswers = [
 ];
 
 /**
- * Downloads audio buffer for given text using Google TTS engine.
+ * Generates audio buffer using ElevenLabs REST API with the exact model Twilio ConversationRelay uses.
+ */
+async function generateElevenLabsTTSAudio(text, voiceId) {
+  const apiKey = config.telephony.elevenLabsApiKey || process.env.ELEVENLABS_API_KEY;
+  if (!apiKey) return null;
+
+  const modelId = config.telephony.elevenLabsModel || 'eleven_flash_v2_5';
+  const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
+  
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'xi-api-key': apiKey
+    },
+    body: JSON.stringify({
+      text,
+      model_id: modelId,
+      voice_settings: {
+        stability: 0.5,
+        similarity_boost: 0.75
+      }
+    })
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`ElevenLabs API error (${response.status}): ${errText.substring(0, 100)}`);
+  }
+  const arrayBuffer = await response.arrayBuffer();
+  return Buffer.from(arrayBuffer);
+}
+
+/**
+ * High fidelity Google TTS engine fallback when ElevenLabs API key is not supplied.
  */
 async function generateGoogleTTSAudio(text, lang) {
   const shortLang = lang.startsWith('hi') ? 'hi' : 'en';
-  // Use getAllAudioBase64 to safely support multi-sentence natural spoken utterances
   const audioChunks = await googleTTS.getAllAudioBase64(text, {
     lang: shortLang,
     slow: false,
@@ -69,43 +102,32 @@ async function generateGoogleTTSAudio(text, lang) {
   return Buffer.concat(buffers);
 }
 
-/**
- * Optional ElevenLabs audio generation if user configured ELEVENLABS_API_KEY
- */
-async function generateElevenLabsTTSAudio(text, voiceId) {
-  const apiKey = process.env.ELEVENLABS_API_KEY;
-  if (!apiKey) return null;
-
-  const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`;
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'xi-api-key': apiKey
-    },
-    body: JSON.stringify({
-      text,
-      model_id: 'eleven_multilingual_v2',
-      voice_settings: { stability: 0.5, similarity_boost: 0.75 }
-    })
-  });
-
-  if (!response.ok) {
-    throw new Error(`ElevenLabs API error: ${response.statusText}`);
-  }
-  const arrayBuffer = await response.arrayBuffer();
-  return Buffer.from(arrayBuffer);
-}
-
 async function main() {
+  const isElevenLabsConfigured = Boolean(config.telephony.elevenLabsApiKey || process.env.ELEVENLABS_API_KEY);
+  const activeEngine = isElevenLabsConfigured ? 'ElevenLabs' : 'Google Text-to-Speech (Fallback)';
+
   console.log('================================================================');
   console.log('       AI ADMISSION ASSISTANT - TTS VOICE COMPARISON GENERATOR   ');
   console.log('================================================================');
-  console.log(`Configured Provider : ${config.telephony.ttsProvider.toUpperCase()}`);
+  console.log(`Preferred Provider  : ${config.telephony.ttsProvider.toUpperCase()}`);
+  console.log(`Active Audio Engine : ${activeEngine.toUpperCase()}`);
+  if (isElevenLabsConfigured) {
+    console.log(`ElevenLabs Model    : ${config.telephony.elevenLabsModel}`);
+  }
   console.log(`English Voice (EN)  : ${config.telephony.ttsVoiceEn}`);
   console.log(`Hindi Voice (HI)    : ${config.telephony.ttsVoiceHi}`);
   console.log(`Output Directory    : ${outputDir}`);
   console.log('----------------------------------------------------------------\n');
+
+  if (!isElevenLabsConfigured) {
+    console.log('[NOTE ON VOICES & TWILIO REAL CALLS]:');
+    console.log('1. Because ELEVENLABS_API_KEY is not set in .env, these sample files');
+    console.log('   are generated using Google\'s Text-to-Speech engine as zero-cost fallback.');
+    console.log('2. When you later add ELEVENLABS_API_KEY to .env, this script will generate');
+    console.log(`   audio using ElevenLabs (${config.telephony.elevenLabsModel || 'eleven_flash_v2_5'}).`);
+    console.log('3. On a real Twilio call, Twilio uses Google Cloud Neural2 voices');
+    console.log('   (Google.en-IN-Neural2-A / Google.hi-IN-Neural2-A) or ElevenLabs via ConversationRelay.\n');
+  }
 
   const generatedFiles = [];
 
@@ -120,26 +142,33 @@ async function main() {
 
     try {
       let buffer = null;
+      let usedProvider = 'Google TTS';
 
-      if (config.telephony.ttsProvider === 'elevenlabs' && process.env.ELEVENLABS_API_KEY) {
-        console.log('       -> Using ElevenLabs API...');
-        buffer = await generateElevenLabsTTSAudio(sample.text, sample.voice);
+      if (isElevenLabsConfigured) {
+        try {
+          console.log(`       -> Calling ElevenLabs API (model: ${config.telephony.elevenLabsModel})...`);
+          buffer = await generateElevenLabsTTSAudio(sample.text, sample.voice);
+          usedProvider = `ElevenLabs (${config.telephony.elevenLabsModel})`;
+        } catch (elErr) {
+          console.warn(`       [WARN] ElevenLabs API failed (${elErr.message}). Falling back to Google TTS.`);
+        }
       }
 
       if (!buffer) {
-        // High fidelity Google TTS engine fallback
         buffer = await generateGoogleTTSAudio(sample.text, sample.lang);
+        usedProvider = 'Google TTS';
       }
 
       fs.writeFileSync(filePath, buffer);
       const sizeKb = (buffer.length / 1024).toFixed(1);
-      console.log(`       -> Saved: ${filename} (${sizeKb} KB)\n`);
+      console.log(`       -> Saved: ${filename} (${sizeKb} KB, Engine: ${usedProvider})\n`);
 
       generatedFiles.push({
         id: sample.id,
         title: sample.title,
         lang: sample.lang,
         voice: sample.voice,
+        provider: usedProvider,
         filename,
         filePath,
         text: sample.text
@@ -160,9 +189,11 @@ async function main() {
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; padding: 2rem; }
     .container { max-width: 800px; margin: 0 auto; background: #1e293b; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
     h1 { color: #38bdf8; margin-top: 0; }
+    .info-banner { background: #1e3a5f; border-left: 4px solid #38bdf8; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; font-size: 0.9rem; line-height: 1.5; }
     .sample-card { background: #334155; padding: 1.25rem; border-radius: 8px; margin-bottom: 1.5rem; }
     .sample-title { font-weight: 600; font-size: 1.1rem; color: #f1f5f9; margin-bottom: 0.5rem; }
     .meta { font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.75rem; }
+    .tag { display: inline-block; background: #0284c7; color: white; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.75rem; margin-right: 0.5rem; font-weight: 600; }
     .text { background: #1e293b; padding: 0.75rem; border-radius: 6px; font-size: 0.95rem; margin-bottom: 0.75rem; color: #e2e8f0; border-left: 4px solid #38bdf8; }
     audio { width: 100%; outline: none; border-radius: 6px; }
   </style>
@@ -170,11 +201,20 @@ async function main() {
 <body>
   <div class="container">
     <h1>MMMUT Admission Voice Comparison Samples</h1>
-    <p>Compare the spoken human naturalness of English and Hindi voice answers below.</p>
+    <div class="info-banner">
+      <strong>Active Engine:</strong> ${activeEngine}<br>
+      <strong>Configured TTS Provider:</strong> ${config.telephony.ttsProvider.toUpperCase()}<br>
+      <strong>Voice Mapping:</strong> English (<code>${config.telephony.ttsVoiceEn}</code>) | Hindi (<code>${config.telephony.ttsVoiceHi}</code>)<br>
+      ${isElevenLabsConfigured ? '<em>Generated directly via ElevenLabs API using model: ' + config.telephony.elevenLabsModel + '</em>' : '<em>Generated via Google TTS engine fallback (add ELEVENLABS_API_KEY in .env to switch to direct ElevenLabs synthesis).</em>'}
+    </div>
+    <p>Compare the spoken human naturalness of English and Hindi voice answers below:</p>
     ${generatedFiles.map(f => `
       <div class="sample-card">
         <div class="sample-title">#${f.id}: ${f.title}</div>
-        <div class="meta">Language: <strong>${f.lang}</strong> | Voice: <strong>${f.voice}</strong></div>
+        <div class="meta">
+          <span class="tag">${f.lang}</span>
+          Provider: <strong>${f.provider}</strong> | Voice: <strong>${f.voice}</strong>
+        </div>
         <div class="text">"${f.text}"</div>
         <audio controls src="./${f.filename}"></audio>
       </div>

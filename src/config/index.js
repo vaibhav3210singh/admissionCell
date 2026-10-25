@@ -39,7 +39,8 @@ export const config = Object.freeze({
     geminiApiKey: process.env.GEMINI_API_KEY || '',
     openaiApiKey: process.env.OPENAI_API_KEY || '',
     anthropicApiKey: process.env.ANTHROPIC_API_KEY || '',
-    timeoutMs: parseInt(process.env.LLM_TIMEOUT_MS || '4000', 10)
+    timeoutMs: parseInt(process.env.LLM_TIMEOUT_MS || '4000', 10),
+    phoneTimeoutMs: parseInt(process.env.LLM_PHONE_TIMEOUT_MS || '2500', 10)
   },
   database: {
     type: detectedDbType, // 'sqlite' | 'postgres'
@@ -50,13 +51,22 @@ export const config = Object.freeze({
   telephony: {
     provider: (process.env.TELEPHONY_PROVIDER || 'twilio').toLowerCase(), // 'twilio' | 'mock'
     callMode: (process.env.CALL_MODE || 'conversationrelay').toLowerCase(), // 'conversationrelay' | 'gather'
-    accountSid: process.env.TWILIO_ACCOUNT_SID || process.env.TELEPHONY_ACCOUNT_SID || '',
-    authToken: process.env.TWILIO_AUTH_TOKEN || process.env.TELEPHONY_AUTH_TOKEN || '',
-    phoneNumber: process.env.TWILIO_PHONE_NUMBER || process.env.TELEPHONY_PHONE_NUMBER || '',
-    publicBaseUrl: process.env.PUBLIC_BASE_URL || 'http://localhost:3000',
-    ttsProvider: (process.env.TTS_PROVIDER || 'google').toLowerCase(),
-    ttsVoiceEn: process.env.TTS_VOICE_EN || 'Google.en-IN-Neural2-A',
-    ttsVoiceHi: process.env.TTS_VOICE_HI || 'Google.hi-IN-Neural2-A'
+    accountSid: (process.env.TWILIO_ACCOUNT_SID || process.env.TELEPHONY_ACCOUNT_SID || '').split('#')[0].trim(),
+    authToken: (process.env.TWILIO_AUTH_TOKEN || process.env.TELEPHONY_AUTH_TOKEN || '').split('#')[0].trim(),
+    phoneNumber: (process.env.TWILIO_PHONE_NUMBER || process.env.TELEPHONY_PHONE_NUMBER || '').split('#')[0].trim(),
+    publicBaseUrl: (process.env.PUBLIC_BASE_URL || 'http://localhost:3000').split('#')[0].trim(),
+    ttsProvider: (process.env.TTS_PROVIDER || 'elevenlabs').toLowerCase().split('#')[0].trim(),
+    // Prioritize user's configured ELEVENLABS_VOICE_EN/HI, cleanly stripping any inline comments
+    ttsVoiceEn: (process.env.ELEVENLABS_VOICE_EN || process.env.TTS_VOICE_EN || 'SV61h9yhBg4i91KIBwdz').split('#')[0].trim(),
+    ttsVoiceHi: (process.env.ELEVENLABS_VOICE_HI || process.env.TTS_VOICE_HI || 'b5m9xhAKAyHH3AjEfTFZ').split('#')[0].trim(),
+    elevenLabsVoiceEn: (process.env.ELEVENLABS_VOICE_EN || 'SV61h9yhBg4i91KIBwdz').split('#')[0].trim(),
+    elevenLabsVoiceHi: (process.env.ELEVENLABS_VOICE_HI || 'b5m9xhAKAyHH3AjEfTFZ').split('#')[0].trim(),
+    elevenLabsApiKey: (process.env.ELEVENLABS_API_KEY || '').split('#')[0].trim(),
+    elevenLabsModel: (process.env.ELEVENLABS_MODEL || 'eleven_flash_v2_5').split('#')[0].trim(),
+    googleVoiceEn: (process.env.GOOGLE_VOICE_EN || 'Google.en-IN-Neural2-A').split('#')[0].trim(),
+    googleVoiceHi: (process.env.GOOGLE_VOICE_HI || 'Google.hi-IN-Neural2-A').split('#')[0].trim(),
+    transcriptionProvider: (process.env.TRANSCRIPTION_PROVIDER || 'deepgram').toLowerCase().split('#')[0].trim(),
+    transcriptionLanguage: (process.env.TRANSCRIPTION_LANGUAGE || 'multi').split('#')[0].trim()
   },
   handoff: {
     phone: process.env.HANDOFF_PHONE || '+91-551-2273901 / 2273902',

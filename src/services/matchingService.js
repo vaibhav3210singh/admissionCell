@@ -47,15 +47,21 @@ class MatchingService {
     // Auto-detect Hindi script if not provided
     const language = options.language || (/[\u0900-\u097F]/.test(trimmedQuery) ? 'hi-IN' : 'en-IN');
 
+    const totalStartTime = Date.now();
+    let matchingMs = 0;
+    let llmMs = 0;
+
     // 1. Semantic vector search: retrieve top 3 candidate FAQs
+    const matchStart = Date.now();
     const topMatches = await findTopMatchingFAQs(trimmedQuery, 3);
+    matchingMs = Date.now() - matchStart;
     const bestMatch = topMatches[0] || null;
     const scoreFormatted = bestMatch ? Number(bestMatch.similarity.toFixed(4)) : 0;
     const isAboveThreshold = scoreFormatted >= customThreshold;
 
     const isPhone = source === 'phone' || Boolean(options.isPhoneCall);
     const phoneHandoffMessage = language === 'hi-IN'
-      ? 'मैं आपको व्यक्तिगत सहायता के लिए हमारे प्रवेश कर्मचारियों से जोड़ रहा हूँ।'
+      ? 'कृपया लाइन पर बने रहें, मैं आपको हमारे प्रवेश सहायता केंद्र के कर्मचारी से जोड़ रहा हूँ।'
       : 'Please hold while I connect you to our admission staff for personal assistance.';
 
     let finalAnswer = isPhone ? phoneHandoffMessage : this.handoffMessage;
@@ -79,6 +85,7 @@ class MatchingService {
           language,
           isPhoneCall: isPhone
         });
+        llmMs = llmResult.latencyMs || 0;
 
         if (llmResult.success && llmResult.isNotFound) {
           // LLM evaluated that the top FAQ entries do NOT actually answer the query
@@ -93,10 +100,15 @@ class MatchingService {
           llmUsed = true;
           llmVerdict = 'ANSWERED';
         } else {
-          // LLM call failed or timed out (4s): fallback to direct FAQ answer
+          // LLM call failed or timed out: fallback to direct FAQ answer
           logger.warn('[MATCHING] LLM synthesis unavailable/timed out. Falling back to direct FAQ answer.');
           handoff = false;
-          finalAnswer = bestMatch.answer;
+          if (isPhone && language === 'hi-IN') {
+            // Guarantee 100% language consistency for Hindi callers on phone lines
+            finalAnswer = 'इसकी विस्तृत जानकारी के लिए कृपया एमएमएमयूटी की आधिकारिक वेबसाइट देखें या प्रवेश सहायता केंद्र से संपर्क करें।';
+          } else {
+            finalAnswer = bestMatch.answer;
+          }
           llmUsed = false;
           llmVerdict = 'FALLBACK_RAW_FAQ';
         }
@@ -131,6 +143,11 @@ class MatchingService {
       })),
       llmUsed,
       llmVerdict,
+      timings: {
+        matchingMs,
+        llmMs,
+        totalMs: Date.now() - totalStartTime
+      },
       metadata: {
         channel: source,
         language,
