@@ -134,6 +134,9 @@ function renderLogsTable(logs) {
       ? '<span class="badge badge-success">Answered</span>' 
       : '<span class="badge badge-warning">Handed Off</span>';
     
+    const isLlm = item.llm_used === 1 || item.llm_used === true || item.llm_used === '1';
+    const llmBadge = isLlm ? '<span class="badge" style="background: rgba(147, 51, 234, 0.2); color: #c084fc; border: 1px solid rgba(147, 51, 234, 0.4); margin-left: 4px;" title="Processed by Gemini LLM">✨ LLM</span>' : '';
+
     const channelBadge = `<span class="badge badge-secondary">${escapeHtml(item.channel || 'web')}</span>`;
     const langBadge = `<span class="score-tag">${escapeHtml(item.language || 'en-IN')}</span>`;
     const scoreVal = typeof item.score === 'number' ? item.score.toFixed(4) : item.score;
@@ -148,7 +151,7 @@ function renderLogsTable(logs) {
         <td><strong>${escapeHtml(item.question_text)}</strong></td>
         <td class="text-muted">${item.matched_faq ? escapeHtml(item.matched_faq) : '<em>None</em>'}</td>
         <td><span class="score-tag">${scoreVal}</span></td>
-        <td>${statusBadge}</td>
+        <td>${statusBadge} ${llmBadge}</td>
       </tr>
     `;
   }).join('');

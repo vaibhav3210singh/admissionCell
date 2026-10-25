@@ -114,6 +114,7 @@ class DatabaseService {
           matched_faq TEXT,
           score REAL NOT NULL,
           status TEXT NOT NULL,
+          llm_used INTEGER NOT NULL DEFAULT 0,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
 
@@ -136,6 +137,13 @@ class DatabaseService {
         CREATE INDEX IF NOT EXISTS idx_logs_status ON enquiry_logs(status);
         CREATE INDEX IF NOT EXISTS idx_logs_channel ON enquiry_logs(channel);
       `);
+
+      // Migration: Add llm_used column if table existed from previous version
+      try {
+        this.sqliteDb.exec('ALTER TABLE enquiry_logs ADD COLUMN llm_used INTEGER NOT NULL DEFAULT 0;');
+      } catch {
+        // Column already exists
+      }
     } else {
       await this.pgPool.query(`
         CREATE TABLE IF NOT EXISTS enquiry_logs (
@@ -147,6 +155,7 @@ class DatabaseService {
           matched_faq TEXT,
           score DOUBLE PRECISION NOT NULL,
           status VARCHAR(32) NOT NULL,
+          llm_used BOOLEAN NOT NULL DEFAULT FALSE,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
 
@@ -169,6 +178,13 @@ class DatabaseService {
         CREATE INDEX IF NOT EXISTS idx_logs_status ON enquiry_logs(status);
         CREATE INDEX IF NOT EXISTS idx_logs_channel ON enquiry_logs(channel);
       `);
+
+      // Migration: Add llm_used column if table existed
+      try {
+        await this.pgPool.query('ALTER TABLE enquiry_logs ADD COLUMN IF NOT EXISTS llm_used BOOLEAN NOT NULL DEFAULT FALSE;');
+      } catch {
+        // Column already exists
+      }
     }
   }
 
@@ -259,15 +275,16 @@ class DatabaseService {
    * Logs an admission enquiry into enquiry_logs table.
    * Only logs operational data (no sensitive PII).
    */
-  async logEnquiry({ channel = 'web', language = 'en-IN', questionText, matchedFaq, score, status }) {
+  async logEnquiry({ channel = 'web', language = 'en-IN', questionText, matchedFaq, score, status, llmUsed = false }) {
     const timestamp = new Date().toISOString();
     const normalizedChannel = (channel || 'web').toLowerCase();
     const normalizedStatus = (status || 'answered').toLowerCase();
+    const llmUsedVal = this.type === 'sqlite' ? (llmUsed ? 1 : 0) : Boolean(llmUsed);
 
     await this.executeQuery(`
-      INSERT INTO enquiry_logs (timestamp, channel, language, question_text, matched_faq, score, status)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `, [timestamp, normalizedChannel, language, questionText, matchedFaq || null, score, normalizedStatus]);
+      INSERT INTO enquiry_logs (timestamp, channel, language, question_text, matched_faq, score, status, llm_used)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+    `, [timestamp, normalizedChannel, language, questionText, matchedFaq || null, score, normalizedStatus, llmUsedVal]);
 
     return { success: true };
   }
@@ -304,7 +321,7 @@ class DatabaseService {
 
     // Fetch page items
     const querySql = `
-      SELECT id, timestamp, channel, language, question_text, matched_faq, score, status
+      SELECT id, timestamp, channel, language, question_text, matched_faq, score, status, llm_used
       FROM enquiry_logs
       ${whereSql}
       ORDER BY id DESC
@@ -375,7 +392,7 @@ class DatabaseService {
 
     const whereSql = whereClauses.length > 0 ? `WHERE ${whereClauses.join(' AND ')}` : '';
     const sql = `
-      SELECT id, timestamp, channel, language, question_text, matched_faq, score, status
+      SELECT id, timestamp, channel, language, question_text, matched_faq, score, status, llm_used
       FROM enquiry_logs
       ${whereSql}
       ORDER BY id DESC
@@ -389,7 +406,7 @@ class DatabaseService {
       return `"${str}"`;
     };
 
-    const headers = ['ID', 'Timestamp', 'Channel', 'Language', 'Question Text', 'Matched FAQ', 'Similarity Score', 'Status'];
+    const headers = ['ID', 'Timestamp', 'Channel', 'Language', 'Question Text', 'Matched FAQ', 'Similarity Score', 'Status', 'LLM Used'];
     const lines = [headers.join(',')];
 
     for (const r of rows) {
@@ -401,7 +418,8 @@ class DatabaseService {
         escapeCsv(r.question_text),
         escapeCsv(r.matched_faq),
         r.score,
-        escapeCsv(r.status)
+        escapeCsv(r.status),
+        escapeCsv(r.llm_used ? 'Yes' : 'No')
       ].join(','));
     }
 

@@ -15,8 +15,9 @@ router.post('/', rateLimiter, validateAskRequest, async (req, res, next) => {
     const question = req.sanitizedQuestion;
     const channel = req.body.channel || req.body.source || 'web';
     const language = req.body.language;
+    const llmEnabled = req.body.llm !== undefined ? req.body.llm : (req.query.llm !== undefined ? req.query.llm === 'true' : undefined);
 
-    const result = await matchingService.processAdmissionEnquiry(question, { channel, language });
+    const result = await matchingService.processAdmissionEnquiry(question, { channel, language, llmEnabled });
     return res.json(result);
   } catch (error) {
     next(error);

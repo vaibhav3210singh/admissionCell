@@ -94,11 +94,12 @@ export async function reloadEmbeddings() {
 }
 
 /**
- * Finds the closest matching FAQ for an input question using semantic cosine similarity.
+ * Finds the top K closest matching FAQs for an input question using semantic cosine similarity.
  * @param {string} userQuery
- * @returns {Promise<{ bestMatch: { id?: number, question: string, answer: string }, similarity: number }>}
+ * @param {number} topK
+ * @returns {Promise<Array<{ id?: number, question: string, answer: string, similarity: number }>>}
  */
-export async function findBestMatchingFAQ(userQuery) {
+export async function findTopMatchingFAQs(userQuery, topK = 3) {
   if (cachedFaqsWithEmbeddings.length === 0) {
     throw new Error('Embedding service is not initialized yet.');
   }
@@ -114,24 +115,28 @@ export async function findBestMatchingFAQ(userQuery) {
     queryEmbedding = new Float32Array(384).fill(0.1);
   }
 
-  let bestMatch = null;
-  let highestSimilarity = -1;
+  const scoredFaqs = cachedFaqsWithEmbeddings.map(item => ({
+    id: item.id,
+    question: item.question,
+    answer: item.answer,
+    similarity: computeCosineSimilarity(queryEmbedding, item.embedding)
+  }));
 
-  for (const item of cachedFaqsWithEmbeddings) {
-    const similarity = computeCosineSimilarity(queryEmbedding, item.embedding);
-    if (similarity > highestSimilarity) {
-      highestSimilarity = similarity;
-      bestMatch = {
-        id: item.id,
-        question: item.question,
-        answer: item.answer
-      };
-    }
-  }
+  scoredFaqs.sort((a, b) => b.similarity - a.similarity);
+  return scoredFaqs.slice(0, topK);
+}
 
+/**
+ * Finds the closest matching FAQ for an input question using semantic cosine similarity.
+ * @param {string} userQuery
+ * @returns {Promise<{ bestMatch: { id?: number, question: string, answer: string }, similarity: number }>}
+ */
+export async function findBestMatchingFAQ(userQuery) {
+  const topMatches = await findTopMatchingFAQs(userQuery, 1);
+  const best = topMatches[0] || null;
   return {
-    bestMatch,
-    similarity: highestSimilarity
+    bestMatch: best ? { id: best.id, question: best.question, answer: best.answer } : null,
+    similarity: best ? best.similarity : -1
   };
 }
 
@@ -157,6 +162,7 @@ export function getEmbeddingStatus() {
 export default {
   initializeEmbeddingService,
   reloadEmbeddings,
+  findTopMatchingFAQs,
   findBestMatchingFAQ,
   getFaqCount,
   getEmbeddingStatus

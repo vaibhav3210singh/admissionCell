@@ -29,7 +29,7 @@
   },
   {
     "question": "Is the application fee refundable?",
-    "answer": "The application fee is generally non-refundable, but the applicable MMMUT admission rules should be checked before payment."
+    "answer": "The application fee is generally non-refundable, but the applicable MMMUT admission rules should be checked before 20000 payment."
   },
   {
     "question": "Can I apply for more than one programme?",
@@ -398,9 +398,5 @@
   {
     "question": "Where can I get further information about admission?",
     "answer": "For further assistance, contact the official MMMUT admission help desk or the concerned academic department using contact details published by the university."
-  },
-  {
-    "question": "hello",
-    "answer": "fuck you"
   }
 ]

@@ -32,6 +32,15 @@ export const config = Object.freeze({
     openaiApiKey: process.env.OPENAI_API_KEY || '',
     geminiApiKey: process.env.GEMINI_API_KEY || ''
   },
+  llm: {
+    enabled: process.env.LLM_ENABLED === 'true' || process.env.LLM_ENABLED === '1',
+    provider: (process.env.LLM_PROVIDER || 'gemini').toLowerCase(), // 'gemini' | 'openai' | 'claude'
+    model: process.env.LLM_MODEL || 'gemini-3.5-flash-lite',
+    geminiApiKey: process.env.GEMINI_API_KEY || '',
+    openaiApiKey: process.env.OPENAI_API_KEY || '',
+    anthropicApiKey: process.env.ANTHROPIC_API_KEY || '',
+    timeoutMs: parseInt(process.env.LLM_TIMEOUT_MS || '4000', 10)
+  },
   database: {
     type: detectedDbType, // 'sqlite' | 'postgres'
     url: rawDbUrl,
