@@ -182,13 +182,15 @@ class LLMService {
                          rawUpper.replace(/[^A-Z]/g, '').includes('NOTFOUND');
 
       if (isNotFound) {
-        logger.info(`[LLM] Question evaluated as NOT_FOUND (${latencyMs}ms): "${question.substring(0, 50)}..."`);
+        logger.info(`[LLM CALL] Outcome: NOT_FOUND | Model: ${this.model} | Real Latency: ${latencyMs}ms | Question: "${question.substring(0, 45)}..."`);
         return {
           success: true,
           isNotFound: true,
           answer: null,
           provider: this.provider,
-          latencyMs
+          model: this.model,
+          latencyMs,
+          outcome: 'NOT_FOUND'
         };
       }
 
@@ -197,43 +199,49 @@ class LLMService {
 
       // Validate script quality: reject mixed-script or corrupt tokens
       if (!validateSpokenScriptQuality(cleanAnswer, language)) {
-        logger.warn(`[LLM] Reply failed script quality check (broken or mixed script detected): "${cleanAnswer.substring(0, 60)}". Falling back to FAQ answer.`);
+        logger.warn(`[LLM CALL] Outcome: SCRIPT_QUALITY_REJECTED | Model: ${this.model} | Real Latency: ${latencyMs}ms | Answer: "${cleanAnswer.substring(0, 50)}..."`);
         return {
           success: false,
           isNotFound: false,
           answer: null,
           provider: this.provider,
+          model: this.model,
           latencyMs,
+          outcome: 'SCRIPT_QUALITY_REJECTED',
           reason: 'script_quality_rejected'
         };
       }
 
-      logger.info(`[LLM] Answer synthesized successfully (${latencyMs}ms) via ${this.provider}/${this.model}`);
+      logger.info(`[LLM CALL] Outcome: SUCCESS | Model: ${this.model} | Real Latency: ${latencyMs}ms | Provider: ${this.provider}`);
       return {
         success: true,
         isNotFound: false,
         answer: cleanAnswer,
         provider: this.provider,
-        latencyMs
+        model: this.model,
+        latencyMs,
+        outcome: 'SUCCESS'
       };
 
     } catch (err) {
       const latencyMs = Date.now() - startTime;
       const isTimeout = err.name === 'TimeoutError' || err.message?.includes('timeout') || err.name === 'AbortError';
-      
-      if (isTimeout) {
-        logger.warn(`[LLM] Request timed out after ${effectiveTimeout}ms. Falling back to direct FAQ answer.`);
-      } else {
-        logger.warn(`[LLM] Call failed (${err.message}). Falling back to direct FAQ answer.`);
-      }
+      const is429 = err.is429 || err.status === 429 || err.message?.includes('429');
+      let outcome = 'HTTP_ERROR';
+      if (isTimeout) outcome = 'TIMEOUT';
+      else if (is429) outcome = 'RATE_LIMIT_429';
+
+      logger.warn(`[LLM CALL] Outcome: ${outcome} | Model: ${this.model} | Real Latency: ${latencyMs}ms | Error: ${err.message}`);
 
       return {
         success: false,
         isNotFound: false,
         answer: null,
         provider: this.provider,
+        model: this.model,
         latencyMs,
-        reason: isTimeout ? 'timeout' : 'error'
+        outcome,
+        reason: isTimeout ? 'timeout' : is429 ? 'rate_limit_429' : 'error'
       };
     }
   }
@@ -274,7 +282,10 @@ class LLMService {
 
     if (!res.ok) {
       const errBody = await res.text();
-      throw new Error(`Gemini API returned HTTP ${res.status}: ${errBody.substring(0, 150)}`);
+      const err = new Error(`Gemini API returned HTTP ${res.status}: ${errBody.substring(0, 150)}`);
+      err.status = res.status;
+      err.is429 = res.status === 429;
+      throw err;
     }
 
     const data = await res.json();

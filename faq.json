@@ -1,402 +1,802 @@
 [
   {
     "question": "What courses are offered by the university?",
-    "answer": "The university offers various undergraduate, postgraduate, diploma, and doctoral programmes. Please check the current MMMUT admission brochure for the complete list."
+    "answer": "The university offers various undergraduate, postgraduate, diploma, and doctoral programmes. Please check the current MMMUT admission brochure for the complete list.",
+    "question_hi": "विश्वविद्यालय द्वारा कौन-से पाठ्यक्रम प्रदान किए जाते हैं?",
+    "answer_en_spoken": "The university offers undergraduate, postgraduate, diploma, and doctoral programmes. Please check the admission brochure for the full list.",
+    "answer_hi_spoken": "विश्वविद्यालय स्नातक, स्नातकोत्तर, डिप्लोमा और डॉक्टरेट पाठ्यक्रम प्रदान करता है। पूरी सूची के लिए कृपया प्रवेश विवरणिका देखें।",
+    "review_status": "draft"
   },
   {
     "question": "When will admissions start?",
-    "answer": "Admissions generally begin according to the academic admission schedule. Please refer to the official MMMUT admission notification for current dates."
+    "answer": "Admissions generally begin according to the academic admission schedule. Please refer to the official MMMUT admission notification for current dates.",
+    "question_hi": "प्रवेश कब शुरू होंगे?",
+    "answer_en_spoken": "Admissions generally begin according to the academic schedule. Please check the official MMMUT admission notification for current dates.",
+    "answer_hi_spoken": "प्रवेश आमतौर पर शैक्षणिक अनुसूची के अनुसार शुरू होते हैं। वर्तमान तिथियों के लिए कृपया आधिकारिक एमएमएमयूटी प्रवेश अधिसूचना देखें।",
+    "review_status": "draft"
   },
   {
     "question": "What is the last date to apply?",
-    "answer": "The last date varies by programme. Check the current MMMUT admission notification before applying."
+    "answer": "The last date varies by programme. Check the current MMMUT admission notification before applying.",
+    "question_hi": "आवेदन करने की अंतिम तिथि क्या है?",
+    "answer_en_spoken": "The last date varies by programme. Please check the current MMMUT admission notification before applying.",
+    "answer_hi_spoken": "अंतिम तिथि कार्यक्रम के अनुसार भिन्न होती है। आवेदन करने से पहले वर्तमान एमएमएमयूटी प्रवेश अधिसूचना की जाँच करें।",
+    "review_status": "draft"
   },
   {
     "question": "How can I apply for admission?",
-    "answer": "You can apply through the official MMMUT admission portal by completing the application form and submitting the required documents and fee, following the current programme-specific instructions."
+    "answer": "You can apply through the official MMMUT admission portal by completing the application form and submitting the required documents and fee, following the current programme-specific instructions.",
+    "question_hi": "मैं प्रवेश के लिए आवेदन कैसे कर सकता हूँ?",
+    "answer_en_spoken": "You can apply through the official MMMUT portal by completing the form, paying the fee, and submitting documents.",
+    "answer_hi_spoken": "आप फॉर्म भरकर, शुल्क जमा करके और दस्तावेज सबमिट करके आधिकारिक एमएमएमयूटी प्रवेश पोर्टल के माध्यम से आवेदन कर सकते हैं।",
+    "review_status": "draft"
   },
   {
     "question": "Is the admission process online?",
-    "answer": "The application process may be conducted online for the relevant programme. Follow the current MMMUT admission instructions."
+    "answer": "The application process may be conducted online for the relevant programme. Follow the current MMMUT admission instructions.",
+    "question_hi": "क्या प्रवेश प्रक्रिया ऑनलाइन है?",
+    "answer_en_spoken": "Yes, the application process may be conducted online. Please follow the current MMMUT admission instructions.",
+    "answer_hi_spoken": "हाँ, आवेदन प्रक्रिया ऑनलाइन आयोजित की जा सकती है। कृपया वर्तमान एमएमएमयूटी प्रवेश निर्देशों का पालन करें।",
+    "review_status": "draft"
   },
   {
     "question": "Where can I find the admission form?",
-    "answer": "The admission form is available through the official MMMUT admission portal when applications open."
+    "answer": "The admission form is available through the official MMMUT admission portal when applications open.",
+    "question_hi": "मुझे प्रवेश फॉर्म कहाँ मिल सकता है?",
+    "answer_en_spoken": "The admission form is available on the official MMMUT admission portal when applications open.",
+    "answer_hi_spoken": "आवेदन खुलने पर प्रवेश फॉर्म आधिकारिक एमएमएमयूटी प्रवेश पोर्टल पर उपलब्ध होता है।",
+    "review_status": "draft"
   },
   {
     "question": "What is the application fee?",
-    "answer": "The application fee varies according to the programme and applicable category. Check the current MMMUT admission notification."
+    "answer": "The application fee varies according to the programme and applicable category. Check the current MMMUT admission notification.",
+    "question_hi": "आवेदन शुल्क कितना है?",
+    "answer_en_spoken": "The application fee varies by programme and category. Please check the current MMMUT admission notification.",
+    "answer_hi_spoken": "आवेदन शुल्क कार्यक्रम और श्रेणी के अनुसार अलग होता है। कृपया वर्तमान एमएमएमयूटी प्रवेश अधिसूचना की जाँच करें।",
+    "review_status": "draft"
   },
   {
     "question": "Is the application fee refundable?",
-    "answer": "The application fee is generally non-refundable, but the applicable MMMUT admission rules should be checked before payment."
+    "answer": "The application fee is generally non-refundable, but the applicable MMMUT admission rules should be checked before payment.",
+    "question_hi": "क्या आवेदन शुल्क वापस किया जा सकता है?",
+    "answer_en_spoken": "The application fee is generally non-refundable. Please check the applicable MMMUT admission rules before payment.",
+    "answer_hi_spoken": "आवेदन शुल्क आमतौर पर वापस नहीं किया जाता है। भुगतान करने से पहले लागू एमएमएमयूटी प्रवेश नियमों की जाँच करें।",
+    "review_status": "draft"
   },
   {
     "question": "Can I apply for more than one programme?",
-    "answer": "This depends on the current MMMUT admission rules. If permitted, a separate application may be required for each programme."
+    "answer": "This depends on the current MMMUT admission rules. If permitted, a separate application may be required for each programme.",
+    "question_hi": "क्या मैं एक से अधिक पाठ्यक्रम के लिए आवेदन कर सकता हूँ?",
+    "answer_en_spoken": "This depends on MMMUT admission rules. If permitted, a separate application may be required for each programme.",
+    "answer_hi_spoken": "यह एमएमएमयूटी प्रवेश नियमों पर निर्भर करता है। अनुमति होने पर, प्रत्येक कार्यक्रम के लिए अलग आवेदन आवश्यक हो सकता है।",
+    "review_status": "draft"
   },
   {
     "question": "Can I edit my application after submission?",
-    "answer": "Corrections may be allowed during a specified correction period. Follow the instructions published on the MMMUT admission portal."
+    "answer": "Corrections may be allowed during a specified correction period. Follow the instructions published on the MMMUT admission portal.",
+    "question_hi": "क्या मैं जमा करने के बाद अपने आवेदन को संपादित कर सकता हूँ?",
+    "answer_en_spoken": "Corrections may be allowed during a specified correction period. Follow the portal instructions.",
+    "answer_hi_spoken": "निर्धारित सुधार अवधि के दौरान सुधार की अनुमति मिल सकती है। पोर्टल के निर्देशों का पालन करें।",
+    "review_status": "draft"
   },
   {
     "question": "I forgot my application password. What should I do?",
-    "answer": "Use the “Forgot Password” option on the admission portal, if available, to reset your password."
+    "answer": "Use the “Forgot Password” option on the admission portal, if available, to reset your password.",
+    "question_hi": "मैं अपना आवेदन पासवर्ड भूल गया हूँ। मुझे क्या करना चाहिए?",
+    "answer_en_spoken": "Use the “Forgot Password” option on the admission portal to reset your password.",
+    "answer_hi_spoken": "अपना पासवर्ड रीसेट करने के लिए प्रवेश पोर्टल पर “फॉरगेट पासवर्ड” विकल्प का उपयोग करें।",
+    "review_status": "draft"
   },
   {
     "question": "I have not received my application confirmation. What should I do?",
-    "answer": "Check your registered email and SMS, including the spam or junk folder. If the issue continues, contact the official MMMUT admission help desk."
+    "answer": "Check your registered email and SMS, including the spam or junk folder. If the issue continues, contact the official MMMUT admission help desk.",
+    "question_hi": "मुझे अपने आवेदन की पुष्टि प्राप्त नहीं हुई है। मुझे क्या करना चाहिए?",
+    "answer_en_spoken": "Check your email and SMS, including spam. If the issue continues, contact the MMMUT help desk.",
+    "answer_hi_spoken": "स्पैम सहित अपना ईमेल और एसएमएस चेक करें। यदि समस्या बनी रहे, तो एमएमएमयूटी हेल्प डेस्क से संपर्क करें।",
+    "review_status": "draft"
   },
   {
     "question": "How can I check my application status?",
-    "answer": "Log in to the admission portal using your registered credentials to view your application status, if this facility is available."
+    "answer": "Log in to the admission portal using your registered credentials to view your application status, if this facility is available.",
+    "question_hi": "मैं अपने आवेदन की स्थिति कैसे देख सकता हूँ?",
+    "answer_en_spoken": "Log in to the admission portal using your registered credentials to view your application status.",
+    "answer_hi_spoken": "अपनी आवेदन स्थिति देखने के लिए अपने पंजीकृत विवरण का उपयोग करके प्रवेश पोर्टल पर लॉगिन करें।",
+    "review_status": "draft"
   },
   {
     "question": "Can I submit the application offline?",
-    "answer": "Offline applications are accepted only if MMMUT specifically permits them for the programme. Check the current admission instructions."
+    "answer": "Offline applications are accepted only if MMMUT specifically permits them for the programme. Check the current admission instructions.",
+    "question_hi": "क्या मैं ऑफ़लाइन आवेदन जमा कर सकता हूँ?",
+    "answer_en_spoken": "Offline applications are accepted only if MMMUT permits them. Check the current admission instructions.",
+    "answer_hi_spoken": "ऑफ़लाइन आवेदन तभी स्वीकार किए जाते हैं जब एमएमएमयूटी इसकी अनुमति देता है। वर्तमान प्रवेश निर्देशों की जाँच करें।",
+    "review_status": "draft"
   },
   {
     "question": "What documents are required for admission?",
-    "answer": "Commonly required documents may include academic certificates, marksheets, identity proof, photographs, category certificate, and programme-specific documents. Confirm the exact list in the current MMMUT admission guidelines."
+    "answer": "Commonly required documents may include academic certificates, marksheets, identity proof, photographs, category certificate, and programme-specific documents. Confirm the exact list in the current MMMUT admission guidelines.",
+    "question_hi": "प्रवेश के लिए कौन-से दस्तावेजों की आवश्यकता होती है?",
+    "answer_en_spoken": "Required documents include academic certificates, marksheets, ID proof, photographs, and category certificates.",
+    "answer_hi_spoken": "आवश्यक दस्तावेजों में शैक्षणिक प्रमाण पत्र, अंकपत्र, आईडी प्रूफ, फोटो और श्रेणी प्रमाण पत्र शामिल हैं।",
+    "review_status": "draft"
   },
   {
     "question": "Is an Aadhaar card required?",
-    "answer": "A valid identity document may be required. Follow the identity-document requirements specified in the current MMMUT admission guidelines."
+    "answer": "A valid identity document may be required. Follow the identity-document requirements specified in the current MMMUT admission guidelines.",
+    "question_hi": "क्या आधार कार्ड आवश्यक है?",
+    "answer_en_spoken": "A valid identity document may be required as per current MMMUT admission guidelines.",
+    "answer_hi_spoken": "वर्तमान एमएमएमयूटी प्रवेश दिशानिर्देशों के अनुसार एक वैध पहचान दस्तावेज आवश्यक हो सकता है।",
+    "review_status": "draft"
   },
   {
     "question": "Is a photograph required?",
-    "answer": "A recent passport-size photograph is generally required for an application. Follow the current portal instructions for format and size."
+    "answer": "A recent passport-size photograph is generally required for an application. Follow the current portal instructions for format and size.",
+    "question_hi": "क्या फोटोग्राफ आवश्यक है?",
+    "answer_en_spoken": "A recent passport-size photograph is generally required. Follow the portal instructions for format.",
+    "answer_hi_spoken": "आमतौर पर हाल ही की पासपोर्ट आकार की फोटो की आवश्यकता होती है। प्रारूप के लिए पोर्टल निर्देशों का पालन करें।",
+    "review_status": "draft"
   },
   {
     "question": "Is a signature required?",
-    "answer": "A scanned signature may be required for an online application. Check the current MMMUT portal instructions."
+    "answer": "A scanned signature may be required for an online application. Check the current MMMUT portal instructions.",
+    "question_hi": "क्या हस्ताक्षर आवश्यक है?",
+    "answer_en_spoken": "A scanned signature may be required for online applications. Check the current MMMUT portal instructions.",
+    "answer_hi_spoken": "ऑनलाइन आवेदन के लिए स्कैन किए गए हस्ताक्षर की आवश्यकता हो सकती है। वर्तमान एमएमएमयूटी पोर्टल निर्देश देखें।",
+    "review_status": "draft"
   },
   {
     "question": "What format should uploaded documents be in?",
-    "answer": "The admission portal specifies accepted file formats and size limits. Follow the current instructions carefully."
+    "answer": "The admission portal specifies accepted file formats and size limits. Follow the current instructions carefully.",
+    "question_hi": "अपलोड किए जाने वाले दस्तावेज किस प्रारूप में होने चाहिए?",
+    "answer_en_spoken": "The admission portal specifies accepted file formats and size limits. Please follow them carefully.",
+    "answer_hi_spoken": "प्रवेश पोर्टल स्वीकार्य फ़ाइल प्रारूप और आकार सीमा निर्दिष्ट करता है। कृपया उनका सावधानीपूर्वक पालन करें।",
+    "review_status": "draft"
   },
   {
     "question": "Can I upload documents later?",
-    "answer": "This depends on the admission process. Upload all mandatory documents before the deadline unless MMMUT explicitly permits later submission."
+    "answer": "This depends on the admission process. Upload all mandatory documents before the deadline unless MMMUT explicitly permits later submission.",
+    "question_hi": "क्या मैं बाद में दस्तावेज अपलोड कर सकता हूँ?",
+    "answer_en_spoken": "Upload all mandatory documents before the deadline unless MMMUT explicitly permits later submission.",
+    "answer_hi_spoken": "समय सीमा से पहले सभी अनिवार्य दस्तावेज अपलोड करें, जब तक कि एमएमएमयूटी बाद में जमा करने की अनुमति न दे।",
+    "review_status": "draft"
   },
   {
     "question": "What is the eligibility criteria?",
-    "answer": "Eligibility varies by programme and may include specific educational qualifications, subjects, marks, and entrance requirements. Check the current MMMUT programme-specific criteria."
+    "answer": "Eligibility varies by programme and may include specific educational qualifications, subjects, marks, and entrance requirements. Check the current MMMUT programme-specific criteria.",
+    "question_hi": "पात्रता मानदंड क्या है?",
+    "answer_en_spoken": "Eligibility varies by programme, including educational qualifications, subjects, and marks. Please check MMMUT's specific criteria.",
+    "answer_hi_spoken": "पात्रता कार्यक्रम के अनुसार अलग होती है। कृपया एमएमएमयूटी के विशिष्ट मानदंड देख लें।",
+    "review_status": "draft"
   },
   {
     "question": "What minimum percentage is required?",
-    "answer": "The minimum percentage varies by programme and may depend on the applicable category or rules. Refer to the current MMMUT eligibility criteria."
+    "answer": "The minimum percentage varies by programme and may depend on the applicable category or rules. Refer to the current MMMUT eligibility criteria.",
+    "question_hi": "न्यूनतम कितने प्रतिशत अंक आवश्यक हैं?",
+    "answer_en_spoken": "The minimum percentage varies by programme and category. Please refer to current MMMUT eligibility criteria.",
+    "answer_hi_spoken": "न्यूनतम प्रतिशत कार्यक्रम और श्रेणी के अनुसार अलग होता है। कृपया एमएमएमयूटी की पात्रता देखें।",
+    "review_status": "draft"
   },
   {
     "question": "I have completed Class 12. Which courses can I apply for?",
-    "answer": "Your eligibility depends on the programme, subjects studied, and required marks. Check the current MMMUT programme-specific eligibility criteria."
+    "answer": "Your eligibility depends on the programme, subjects studied, and required marks. Check the current MMMUT programme-specific eligibility criteria.",
+    "question_hi": "मैंने कक्षा 12 पूरी कर ली है। मैं किन पाठ्यक्रमों के लिए आवेदन कर सकता हूँ?",
+    "answer_en_spoken": "Your eligibility depends on the programme, subjects, and marks. Check MMMUT's current criteria.",
+    "answer_hi_spoken": "आपकी पात्रता पाठ्यक्रम और अंकों पर निर्भर करती है। कृपया एमएमएमयूटी के वर्तमान मानदंड देखें।",
+    "review_status": "draft"
   },
   {
     "question": "Can students from another board apply?",
-    "answer": "Students from recognized boards may apply if they meet the applicable programme eligibility requirements. Confirm the current MMMUT rules."
+    "answer": "Students from recognized boards may apply if they meet the applicable programme eligibility requirements. Confirm the current MMMUT rules.",
+    "question_hi": "क्या अन्य बोर्ड के छात्र आवेदन कर सकते हैं?",
+    "answer_en_spoken": "Students from recognized boards can apply if they meet the requirements. Confirm MMMUT rules.",
+    "answer_hi_spoken": "मान्यता प्राप्त बोर्ड के छात्र आवेदन कर सकते हैं यदि वे शर्तें पूरी करते हैं।",
+    "review_status": "draft"
   },
   {
     "question": "Can students from another university apply?",
-    "answer": "Candidates from recognized universities may apply to eligible programmes if they meet the prescribed requirements. Check the current MMMUT admission rules."
+    "answer": "Candidates from recognized universities may apply to eligible programmes if they meet the prescribed requirements. Check the current MMMUT admission rules.",
+    "question_hi": "क्या अन्य विश्वविद्यालय के छात्र आवेदन कर सकते हैं?",
+    "answer_en_spoken": "Candidates from recognized universities may apply if they meet the prescribed requirements.",
+    "answer_hi_spoken": "मान्यता प्राप्त विश्वविद्यालयों के उम्मीदवार निर्धारित आवश्यकताएं पूरी करने पर आवेदन कर सकते हैं।",
+    "review_status": "draft"
   },
   {
     "question": "Can I apply if my final-year result is awaited?",
-    "answer": "Some programmes may allow candidates appearing in the qualifying examination to apply, subject to the current MMMUT admission rules."
+    "answer": "Some programmes may allow candidates appearing in the qualifying examination to apply, subject to the current MMMUT admission rules.",
+    "question_hi": "क्या मैं आवेदन कर सकता हूँ यदि मेरा अंतिम वर्ष का परिणाम प्रतीक्षित है?",
+    "answer_en_spoken": "Some programmes may allow candidates appearing in qualifying exams to apply under MMMUT rules.",
+    "answer_hi_spoken": "कुछ कार्यक्रम अर्हकारी परीक्षा में शामिल होने वाले छात्रों को आवेदन की अनुमति दे सकते हैं।",
+    "review_status": "draft"
   },
   {
     "question": "Can I apply without the qualifying certificate?",
-    "answer": "Provisional admission may be possible in some cases, subject to the applicable rules and submission of the required certificate by the prescribed deadline. Confirm with MMMUT."
+    "answer": "Provisional admission may be possible in some cases, subject to the applicable rules and submission of the required certificate by the prescribed deadline. Confirm with MMMUT.",
+    "question_hi": "क्या मैं योग्यता प्रमाण पत्र के बिना आवेदन कर सकता हूँ?",
+    "answer_en_spoken": "Provisional admission may be possible subject to rules and deadline submission. Confirm with MMMUT.",
+    "answer_hi_spoken": "नियमों के तहत अनंतिम प्रवेश संभव हो सकता है। कृपया एमएमएमयूटी से पुष्टि करें।",
+    "review_status": "draft"
   },
   {
     "question": "Is there any age limit for admission?",
-    "answer": "Age requirements vary by programme and applicable regulations. Check the current MMMUT admission notification."
+    "answer": "Age requirements vary by programme and applicable regulations. Check the current MMMUT admission notification.",
+    "question_hi": "प्रवेश के लिए कोई आयु सीमा है क्या?",
+    "answer_en_spoken": "Age requirements vary by programme and regulations. Please check the current MMMUT admission notification.",
+    "answer_hi_spoken": "आयु की आवश्यकताएं कार्यक्रम के अनुसार अलग होती हैं। कृपया प्रवेश अधिसूचना देखें।",
+    "review_status": "draft"
   },
   {
     "question": "Is there any relaxation in eligibility marks?",
-    "answer": "Relaxation may be available to eligible categories under applicable government and university rules. Check the current MMMUT admission guidelines."
+    "answer": "Relaxation may be available to eligible categories under applicable government and university rules. Check the current MMMUT admission guidelines.",
+    "question_hi": "क्या पात्रता अंकों में कोई छूट है?",
+    "answer_en_spoken": "Relaxation may be available for eligible categories under government and university rules.",
+    "answer_hi_spoken": "सरकारी और विश्वविद्यालय के नियमों के तहत पात्र श्रेणियों को छूट मिल सकती है।",
+    "review_status": "draft"
   },
   {
     "question": "Is domicile required for admission?",
-    "answer": "Domicile requirements depend on the programme and applicable admission rules. Check the current MMMUT admission notification."
+    "answer": "Domicile requirements depend on the programme and applicable admission rules. Check the current MMMUT admission notification.",
+    "question_hi": "क्या प्रवेश के लिए अधिवास (डोमिसिल) आवश्यक है?",
+    "answer_en_spoken": "Domicile requirements depend on the programme and rules. Check the current MMMUT notification.",
+    "answer_hi_spoken": "अधिवास की आवश्यकता कार्यक्रम और नियमों पर निर्भर करती है। अधिसूचना अवश्य देखें।",
+    "review_status": "draft"
   },
   {
     "question": "Is an entrance examination required?",
-    "answer": "The selection process varies by programme and may involve an entrance examination, merit, or another prescribed process. Check the current MMMUT admission notification."
+    "answer": "The selection process varies by programme and may involve an entrance examination, merit, or another prescribed process. Check the current MMMUT admission notification.",
+    "question_hi": "क्या प्रवेश परीक्षा आवश्यक है?",
+    "answer_en_spoken": "Selection varies by programme and may involve an entrance exam or merit. Check MMMUT notifications.",
+    "answer_hi_spoken": "चयन प्रक्रिया में प्रवेश परीक्षा या मेरिट शामिल हो सकती है। एमएमएमयूटी अधिसूचना देखें।",
+    "review_status": "draft"
   },
   {
     "question": "Which entrance examination is required?",
-    "answer": "The required examination depends on the programme and current admission route. Refer to the relevant MMMUT admission notification."
+    "answer": "The required examination depends on the programme and current admission route. Refer to the relevant MMMUT admission notification.",
+    "question_hi": "कौन सी प्रवेश परीक्षा आवश्यक है?",
+    "answer_en_spoken": "The required examination depends on the programme and route. Refer to MMMUT admission notifications.",
+    "answer_hi_spoken": "आवश्यक परीक्षा कार्यक्रम पर निर्भर करती है। कृपया एमएमएमयूटी प्रवेश अधिसूचना देखें।",
+    "review_status": "draft"
   },
   {
     "question": "What is the entrance examination syllabus?",
-    "answer": "The syllabus, where applicable, is specified in the relevant admission notification or information brochure."
+    "answer": "The syllabus, where applicable, is specified in the relevant admission notification or information brochure.",
+    "question_hi": "प्रवेश परीक्षा का पाठ्यक्रम (सिलबस) क्या है?",
+    "answer_en_spoken": "The syllabus is specified in the relevant admission notification or information brochure.",
+    "answer_hi_spoken": "पाठ्यक्रम संबंधित प्रवेश अधिसूचना या सूचना पुस्तिका में दिया गया है।",
+    "review_status": "draft"
   },
   {
     "question": "What is the entrance examination pattern?",
-    "answer": "The examination pattern, number of questions, duration, and marking scheme vary by programme and examination. Check the current official instructions."
+    "answer": "The examination pattern, number of questions, duration, and marking scheme vary by programme and examination. Check the current official instructions.",
+    "question_hi": "प्रवेश परीक्षा का पैटर्न क्या है?",
+    "answer_en_spoken": "The examination pattern, duration, and marking scheme vary by programme. Check official instructions.",
+    "answer_hi_spoken": "परीक्षा का पैटर्न और अवधि कार्यक्रम के अनुसार अलग होते हैं। आधिकारिक निर्देश देखें।",
+    "review_status": "draft"
   },
   {
     "question": "Is there negative marking?",
-    "answer": "Negative marking, if applicable, is specified in the relevant examination guidelines."
+    "answer": "Negative marking, if applicable, is specified in the relevant examination guidelines.",
+    "question_hi": "क्या नेगेटिव मार्किंग है?",
+    "answer_en_spoken": "Negative marking, if applicable, is specified in the relevant examination guidelines.",
+    "answer_hi_spoken": "यदि नेगेटिव मार्किंग लागू है, तो उसे परीक्षा दिशा-निर्देशों में बताया गया है।",
+    "review_status": "draft"
   },
   {
     "question": "When will the entrance examination be conducted?",
-    "answer": "The examination date, if applicable, will be announced through the official admission notification or portal."
+    "answer": "The examination date, if applicable, will be announced through the official admission notification or portal.",
+    "question_hi": "प्रवेश परीक्षा कब आयोजित की जाएगी?",
+    "answer_en_spoken": "The examination date will be announced through the official admission notification or portal.",
+    "answer_hi_spoken": "परीक्षा की तिथि की घोषणा आधिकारिक प्रवेश अधिसूचना या पोर्टल के माध्यम से की जाएगी।",
+    "review_status": "draft"
   },
   {
     "question": "How can I download my admit card?",
-    "answer": "Eligible candidates can download an admit card from the designated admission portal if one is issued for their examination. Follow the official instructions."
+    "answer": "Eligible candidates can download an admit card from the designated admission portal if one is issued for their examination. Follow the official instructions.",
+    "question_hi": "मैं अपना एडमिट कार्ड कैसे डाउनलोड कर सकता हूँ?",
+    "answer_en_spoken": "Eligible candidates can download their admit card from the designated portal following official instructions.",
+    "answer_hi_spoken": "पात्र उम्मीदवार आधिकारिक निर्देशों का पालन करके पोर्टल से एडमिट कार्ड डाउनलोड कर सकते हैं।",
+    "review_status": "draft"
   },
   {
     "question": "What should I carry to the entrance examination?",
-    "answer": "Carry your admit card, valid photo ID, and any other items specifically permitted in the examination instructions."
+    "answer": "Carry your admit card, valid photo ID, and any other items specifically permitted in the examination instructions.",
+    "question_hi": "मुझे प्रवेश परीक्षा में क्या लेकर जाना चाहिए?",
+    "answer_en_spoken": "Carry your admit card, valid photo ID, and permitted items listed in the instructions.",
+    "answer_hi_spoken": "अपना एडमिट कार्ड, वैध फोटो आईडी और निर्देशों में बताई गई अनुमत वस्तुएं साथ लेकर जाएं।",
+    "review_status": "draft"
   },
   {
     "question": "When will the entrance result be declared?",
-    "answer": "The result date depends on the examination and admission schedule. Check official MMMUT notifications for the announced date."
+    "answer": "The result date depends on the examination and admission schedule. Check official MMMUT notifications for the announced date.",
+    "question_hi": "प्रवेश परीक्षा का परिणाम कब घोषित किया जाएगा?",
+    "answer_en_spoken": "The result date depends on the schedule. Check official MMMUT notifications for details.",
+    "answer_hi_spoken": "परिणाम की तिथि अनुसूची पर निर्भर करती है। विवरण के लिए आधिकारिक अधिसूचना देखें।",
+    "review_status": "draft"
   },
   {
     "question": "Where can I check the entrance result?",
-    "answer": "Check the official MMMUT website or admission portal for results and related notices."
+    "answer": "Check the official MMMUT website or admission portal for results and related notices.",
+    "question_hi": "मैं प्रवेश परीक्षा का परिणाम कहाँ देख सकता हूँ?",
+    "answer_en_spoken": "Check the official MMMUT website or admission portal for results and related notices.",
+    "answer_hi_spoken": "परिणाम और संबंधित सूचनाओं के लिए एमएमएमयूटी की आधिकारिक वेबसाइट या पोर्टल देखें।",
+    "review_status": "draft"
   },
   {
     "question": "How is the merit list prepared?",
-    "answer": "The merit list is prepared according to the selection criteria prescribed for the particular programme. Refer to the current MMMUT admission rules."
+    "answer": "The merit list is prepared according to the selection criteria prescribed for the particular programme. Refer to the current MMMUT admission rules.",
+    "question_hi": "मेधा सूची कैसे तैयार की जाती है?",
+    "answer_en_spoken": "The merit list is prepared based on the selection criteria for your specific programme. Please refer to current MMMUT admission rules.",
+    "answer_hi_spoken": "मेधा सूची आपके कार्यक्रम के चयन मानदंडों के अनुसार तैयार की जाती है। कृपया वर्तमान एमएमएमयूटी प्रवेश नियमों को देखें।",
+    "review_status": "draft"
   },
   {
     "question": "When will the merit list be released?",
-    "answer": "The merit list will be published according to the admission schedule announced by MMMUT."
+    "answer": "The merit list will be published according to the admission schedule announced by MMMUT.",
+    "question_hi": "मेधा सूची कब जारी की जाएगी?",
+    "answer_en_spoken": "The merit list will be published according to the official admission schedule announced by MMMUT.",
+    "answer_hi_spoken": "मेधा सूची एमएमएमयूटी द्वारा घोषित प्रवेश कार्यक्रम के अनुसार प्रकाशित की जाएगी।",
+    "review_status": "draft"
   },
   {
     "question": "How can I check my merit position?",
-    "answer": "Check the admission portal or published merit list for your rank or merit position, where applicable."
+    "answer": "Check the admission portal or published merit list for your rank or merit position, where applicable.",
+    "question_hi": "मैं अपनी मेधा स्थिति कैसे देख सकता हूँ?",
+    "answer_en_spoken": "You can check your rank or merit position on the admission portal or the published merit list.",
+    "answer_hi_spoken": "आप प्रवेश पोर्टल या प्रकाशित मेधा सूची पर अपनी रैंक या मेधा स्थिति देख सकते हैं।",
+    "review_status": "draft"
   },
   {
     "question": "What is the cut-off for admission?",
-    "answer": "The cut-off varies by programme, category, seat availability, and candidate performance. Refer to official MMMUT admission notices for published cut-offs."
+    "answer": "The cut-off varies by programme, category, seat availability, and candidate performance. Refer to official MMMUT admission notices for published cut-offs.",
+    "question_hi": "प्रवेश के लिए कट-ऑफ क्या है?",
+    "answer_en_spoken": "Cut-offs vary by programme, category, and seat availability. Please refer to official MMMUT admission notices.",
+    "answer_hi_spoken": "कट-ऑफ कार्यक्रम, श्रेणी और सीट की उपलब्धता के अनुसार भिन्न होती है। कृपया आधिकारिक एमएमएमयूटी प्रवेश सूचनाएं देखें।",
+    "review_status": "draft"
   },
   {
     "question": "Is there a waiting list?",
-    "answer": "A waiting list may be prepared if permitted under the programme's admission process and if seats remain to be filled. Check official notices."
+    "answer": "A waiting list may be prepared if permitted under the programme's admission process and if seats remain to be filled. Check official notices.",
+    "question_hi": "क्या कोई प्रतीक्षा सूची है?",
+    "answer_en_spoken": "A waiting list may be prepared if seats remain and the programme rules permit. Check official notices.",
+    "answer_hi_spoken": "यदि सीटें खाली रहती हैं और कार्यक्रम के नियम अनुमति देते हैं, तो प्रतीक्षा सूची तैयार की जा सकती है। आधिकारिक सूचनाएं देखें।",
+    "review_status": "draft"
   },
   {
     "question": "How will I know if I am selected?",
-    "answer": "Selection updates may be published on the admission portal and, where applicable, communicated through email, SMS, or official notices."
+    "answer": "Selection updates may be published on the admission portal and, where applicable, communicated through email, SMS, or official notices.",
+    "question_hi": "मुझे कैसे पता चलेगा कि मेरा चयन हो गया है?",
+    "answer_en_spoken": "Selection updates are published on the admission portal and may be communicated through email or official notices.",
+    "answer_hi_spoken": "चयन अपडेट प्रवेश पोर्टल पर प्रकाशित किए जाते हैं और ईमेल या आधिकारिक सूचनाओं के माध्यम से सूचित किए जा सकते हैं।",
+    "review_status": "draft"
   },
   {
     "question": "What happens after selection?",
-    "answer": "Selected candidates must complete the required document verification, fee payment, and other admission formalities within the specified deadline."
+    "answer": "Selected candidates must complete the required document verification, fee payment, and other admission formalities within the specified deadline.",
+    "question_hi": "चयन के बाद क्या होता है?",
+    "answer_en_spoken": "Selected candidates must complete document verification, fee payment, and admission formalities within the specified deadline.",
+    "answer_hi_spoken": "चयनित उम्मीदवारों को निर्धारित समय सीमा के भीतर दस्तावेज सत्यापन, शुल्क भुगतान और अन्य प्रवेश औपचारिकताएं पूरी करनी होंगी।",
+    "review_status": "draft"
   },
   {
     "question": "Is document verification compulsory?",
-    "answer": "Document verification is normally required to finalize admission. Follow the current MMMUT instructions for the programme."
+    "answer": "Document verification is normally required to finalize admission. Follow the current MMMUT instructions for the programme.",
+    "question_hi": "क्या दस्तावेज सत्यापन अनिवार्य है?",
+    "answer_en_spoken": "Yes, document verification is normally required to finalize your admission. Follow current MMMUT instructions.",
+    "answer_hi_spoken": "हाँ, प्रवेश को अंतिम रूप देने के लिए आमतौर पर दस्तावेज सत्यापन आवश्यक है। वर्तमान एमएमएमयूटी निर्देशों का पालन करें।",
+    "review_status": "draft"
   },
   {
     "question": "Can someone else attend document verification on my behalf?",
-    "answer": "This is permitted only if the applicable MMMUT rules allow it under the circumstances. Contact the admission office for confirmation."
+    "answer": "This is permitted only if the applicable MMMUT rules allow it under the circumstances. Contact the admission office for confirmation.",
+    "question_hi": "क्या मेरी ओर से कोई अन्य व्यक्ति दस्तावेज सत्यापन में शामिल हो सकता है?",
+    "answer_en_spoken": "This is only permitted if MMMUT rules allow it under special circumstances. Contact the admission office for confirmation.",
+    "answer_hi_spoken": "यह तभी अनुमति है जब एमएमएमयूटी के नियम विशेष परिस्थितियों में इसकी अनुमति देते हों। पुष्टि के लिए प्रवेश कार्यालय से संपर्क करें।",
+    "review_status": "draft"
   },
   {
     "question": "What happens if I miss the admission deadline?",
-    "answer": "Missing a required deadline may result in cancellation or loss of the admission opportunity, subject to the applicable MMMUT rules."
+    "answer": "Missing a required deadline may result in cancellation or loss of the admission opportunity, subject to the applicable MMMUT rules.",
+    "question_hi": "यदि मैं प्रवेश की समय सीमा चूक जाऊँ तो क्या होगा?",
+    "answer_en_spoken": "Missing the deadline may result in cancellation of your admission opportunity, as per MMMUT rules.",
+    "answer_hi_spoken": "समय सीमा चूकने पर एमएमएमयूटी नियमों के अनुसार आपके प्रवेश का अवसर रद्द हो सकता है।",
+    "review_status": "draft"
   },
   {
     "question": "What is the admission fee?",
-    "answer": "The admission fee varies by programme and applicable fee rules. Refer to the current official MMMUT fee structure."
+    "answer": "The admission fee varies by programme and applicable fee rules. Refer to the current official MMMUT fee structure.",
+    "question_hi": "प्रवेश शुल्क कितना है?",
+    "answer_en_spoken": "Admission fees vary by programme. Please refer to the current official MMMUT fee structure.",
+    "answer_hi_spoken": "प्रवेश शुल्क कार्यक्रम के अनुसार अलग-अलग होता है। कृपया वर्तमान आधिकारिक एमएमएमयूटी शुल्क संरचना देखें।",
+    "review_status": "draft"
   },
   {
     "question": "What is the annual tuition fee?",
-    "answer": "Tuition fees depend on the programme and current university fee structure. Check the official MMMUT fee notice."
+    "answer": "Tuition fees depend on the programme and current university fee structure. Check the official MMMUT fee notice.",
+    "question_hi": "वार्षिक शिक्षण शुल्क क्या है?",
+    "answer_en_spoken": "Tuition fees depend on your programme and university rules. Check the official MMMUT fee notice.",
+    "answer_hi_spoken": "शिक्षण शुल्क आपके कार्यक्रम और विश्वविद्यालय के नियमों पर निर्भर करता है। आधिकारिक एमएमएमयूटी शुल्क सूचना देखें।",
+    "review_status": "draft"
   },
   {
     "question": "Are there any additional fees?",
-    "answer": "Additional charges may include examination, registration, laboratory, library, hostel, or other applicable fees. Check the current MMMUT fee structure."
+    "answer": "Additional charges may include examination, registration, laboratory, library, hostel, or other applicable fees. Check the current MMMUT fee structure.",
+    "question_hi": "क्या कोई अतिरिक्त शुल्क भी है?",
+    "answer_en_spoken": "Additional charges may include exam, registration, lab, library, or hostel fees. Check the fee structure.",
+    "answer_hi_spoken": "अतिरिक्त शुल्कों में परीक्षा, पंजीकरण, लैब, पुस्तकालय या छात्रावास शुल्क शामिल हो सकते हैं। शुल्क संरचना देखें।",
+    "review_status": "draft"
   },
   {
     "question": "Can the admission fee be paid online?",
-    "answer": "Online payment may be available through the authorized payment gateway. Follow the payment options shown in the current MMMUT admission portal."
+    "answer": "Online payment may be available through the authorized payment gateway. Follow the payment options shown in the current MMMUT admission portal.",
+    "question_hi": "क्या प्रवेश शुल्क का भुगतान ऑनलाइन किया जा सकता है?",
+    "answer_en_spoken": "Online payment is available through the authorized gateway on the MMMUT admission portal.",
+    "answer_hi_spoken": "एमएमएमयूटी प्रवेश पोर्टल पर अधिकृत गेटवे के माध्यम से ऑनलाइन भुगतान उपलब्ध है।",
+    "review_status": "draft"
   },
   {
     "question": "Which payment methods are accepted?",
-    "answer": "Accepted methods are those displayed on the authorized payment portal and may include debit card, credit card, net banking, UPI, or other listed options."
+    "answer": "Accepted methods are those displayed on the authorized payment portal and may include debit card, credit card, net banking, UPI, or other listed options.",
+    "question_hi": "कौन सी भुगतान विधियां स्वीकार की जाती हैं?",
+    "answer_en_spoken": "Accepted methods include debit card, credit card, net banking, and UPI as displayed on the portal.",
+    "answer_hi_spoken": "पोर्टल पर प्रदर्शित डेबिट कार्ड, क्रेडिट कार्ड, नेट बैंकिंग और यूपीआई स्वीकार्य विधियां हैं।",
+    "review_status": "draft"
   },
   {
     "question": "Can I pay the fee in installments?",
-    "answer": "Installment facilities depend on current university rules and the programme. Confirm with MMMUT before making payment arrangements."
+    "answer": "Installment facilities depend on current university rules and the programme. Confirm with MMMUT before making payment arrangements.",
+    "question_hi": "क्या मैं किस्तों में शुल्क का भुगतान कर सकता हूँ?",
+    "answer_en_spoken": "Installment facilities depend on university rules for your programme. Confirm with MMMUT first.",
+    "answer_hi_spoken": "किस्त की सुविधा आपके कार्यक्रम के लिए विश्वविद्यालय के नियमों पर निर्भर करती है। पहले एमएमएमयूटी से पुष्टि करें।",
+    "review_status": "draft"
   },
   {
     "question": "Is there a late fee for delayed payment?",
-    "answer": "A late fee may apply only where permitted under the applicable admission rules. Check the current MMMUT notice."
+    "answer": "A late fee may apply only where permitted under the applicable admission rules. Check the current MMMUT notice.",
+    "question_hi": "क्या देर से भुगतान करने पर कोई विलंब शुल्क लगता है?",
+    "answer_en_spoken": "A late fee may apply only if permitted under current admission rules. Check the MMMUT notice.",
+    "answer_hi_spoken": "विलंब शुल्क केवल तभी लागू हो सकता है जब वर्तमान प्रवेश नियमों के तहत अनुमति हो। एमएमएमयूटी नोटिस देखें।",
+    "review_status": "draft"
   },
   {
     "question": "What should I do if my fee payment fails?",
-    "answer": "Check your bank and payment status before trying again. If money was debited but the portal was not updated, contact the official admission or fee support office with your transaction details."
+    "answer": "Check your bank and payment status before trying again. If money was debited but the portal was not updated, contact the official admission or fee support office with your transaction details.",
+    "question_hi": "यदि मेरा शुल्क भुगतान विफल हो जाए तो मुझे क्या करना चाहिए?",
+    "answer_en_spoken": "Check your bank status. If money was debited but the portal is not updated, contact the fee support office.",
+    "answer_hi_spoken": "अपने बैंक की स्थिति जांचें। यदि पैसा कट गया है लेकिन पोर्टल अपडेट नहीं हुआ है, तो शुल्क सहायता कार्यालय से संपर्क करें।",
+    "review_status": "draft"
   },
   {
     "question": "I paid the fee but did not receive a receipt. What should I do?",
-    "answer": "Log in to the admission portal and check the payment section. If needed, contact the concerned MMMUT office with your transaction details."
+    "answer": "Log in to the admission portal and check the payment section. If needed, contact the concerned MMMUT office with your transaction details.",
+    "question_hi": "मैंने शुल्क का भुगतान किया लेकिन मुझे रसीद नहीं मिली। मुझे क्या करना चाहिए?",
+    "answer_en_spoken": "Log in to the portal to check the payment section, or contact the MMMUT office with transaction details.",
+    "answer_hi_spoken": "भुगतान अनुभाग की जांच के लिए पोर्टल पर लॉगिन करें, या लेनदेन विवरण के साथ एमएमएमयूटी कार्यालय से संपर्क करें।",
+    "review_status": "draft"
   },
   {
     "question": "Is the admission fee refundable?",
-    "answer": "Refunds are governed by the applicable MMMUT fee-refund policy and relevant regulatory guidelines. Check the current policy before requesting a refund."
+    "answer": "Refunds are governed by the applicable MMMUT fee-refund policy and relevant regulatory guidelines. Check the current policy before requesting a refund.",
+    "question_hi": "क्या प्रवेश शुल्क वापसी योग्य है?",
+    "answer_en_spoken": "Refunds are governed by the MMMUT fee-refund policy and regulatory guidelines. Check the current policy.",
+    "answer_hi_spoken": "वापसी एमएमएमयूटी शुल्क-वापसी नीति और नियामक दिशानिर्देशों द्वारा नियंत्रित होती है। वर्तमान नीति की जांच करें।",
+    "review_status": "draft"
   },
   {
     "question": "Are scholarships available?",
-    "answer": "Scholarships may be available under merit-based, category-based, financial-assistance, or government schemes, subject to eligibility and current rules."
+    "answer": "Scholarships may be available under merit-based, category-based, financial-assistance, or government schemes, subject to eligibility and current rules.",
+    "question_hi": "क्या छात्रवृत्तियां उपलब्ध हैं?",
+    "answer_en_spoken": "Yes, scholarships may be available under merit, category, or government schemes, subject to eligibility and current rules.",
+    "answer_hi_spoken": "हाँ, योग्यता और नियमों के आधार पर छात्रवृत्तियां उपलब्ध हो सकती हैं।",
+    "review_status": "draft"
   },
   {
     "question": "How can I apply for a scholarship?",
-    "answer": "Eligible students should apply through the prescribed university or government scholarship portal within the announced period. Check current MMMUT guidance."
+    "answer": "Eligible students should apply through the prescribed university or government scholarship portal within the announced period. Check current MMMUT guidance.",
+    "question_hi": "मैं छात्रवृत्ति के लिए कैसे आवेदन कर सकता हूँ?",
+    "answer_en_spoken": "Eligible students should apply through the prescribed university or government portal within the announced period.",
+    "answer_hi_spoken": "योग्य छात्र निर्धारित पोर्टल के माध्यम से तय समय सीमा में आवेदन करें।",
+    "review_status": "draft"
   },
   {
     "question": "Are scholarships available for reserved-category students?",
-    "answer": "Eligible students may receive scholarships or fee benefits under applicable government and university rules. Check the current scheme requirements."
+    "answer": "Eligible students may receive scholarships or fee benefits under applicable government and university rules. Check the current scheme requirements.",
+    "question_hi": "क्या आरक्षित श्रेणी के छात्रों के लिए छात्रवृत्तियां उपलब्ध हैं?",
+    "answer_en_spoken": "Yes, eligible students may receive scholarships or fee benefits under applicable government and university rules.",
+    "answer_hi_spoken": "हाँ, योग्य छात्रों को नियमों के तहत छात्रवृत्ति या शुल्क लाभ मिल सकता है।",
+    "review_status": "draft"
   },
   {
     "question": "Is there any merit scholarship?",
-    "answer": "Merit-based scholarships may be available depending on the programme and current institutional policy. Confirm availability with MMMUT."
+    "answer": "Merit-based scholarships may be available depending on the programme and current institutional policy. Confirm availability with MMMUT.",
+    "question_hi": "क्या कोई मेरिट छात्रवृत्ति है?",
+    "answer_en_spoken": "Merit-based scholarships may be available depending on the programme and institutional policy. Confirm with MMMUT.",
+    "answer_hi_spoken": "मेरिट छात्रवृत्ति कार्यक्रम और नीति के आधार पर उपलब्ध हो सकती है, कृपया पुष्टि करें।",
+    "review_status": "draft"
   },
   {
     "question": "Are there scholarships for economically weaker students?",
-    "answer": "Financial assistance may be available under applicable schemes, subject to eligibility and documentation. Check current MMMUT and government scheme information."
+    "answer": "Financial assistance may be available under applicable schemes, subject to eligibility and documentation. Check current MMMUT and government scheme information.",
+    "question_hi": "क्या आर्थिक रूप से कमजोर छात्रों के लिए छात्रवृत्तियां हैं?",
+    "answer_en_spoken": "Financial assistance may be available under applicable schemes, subject to eligibility and proper documentation.",
+    "answer_hi_spoken": "पात्रता और दस्तावेजों के आधार पर आर्थिक सहायता उपलब्ध हो सकती है।",
+    "review_status": "draft"
   },
   {
     "question": "Is hostel accommodation available?",
-    "answer": "Hostel accommodation may be available subject to seat availability and the applicable MMMUT hostel rules. Confirm current availability with the university."
+    "answer": "Hostel accommodation may be available subject to seat availability and the applicable MMMUT hostel rules. Confirm current availability with the university.",
+    "question_hi": "क्या छात्रावास की सुविधा उपलब्ध है?",
+    "answer_en_spoken": "Hostel accommodation may be available subject to seat availability and applicable MMMUT rules.",
+    "answer_hi_spoken": "सीटों की उपलब्धता और एमएमएमयूटी के नियमों के अनुसार छात्रावास मिल सकता है।",
+    "review_status": "draft"
   },
   {
     "question": "How can I apply for a hostel?",
-    "answer": "Apply through the prescribed hostel application process and follow the current instructions issued by MMMUT."
+    "answer": "Apply through the prescribed hostel application process and follow the current instructions issued by MMMUT.",
+    "question_hi": "मैं छात्रावास के लिए कैसे आवेदन कर सकता हूँ?",
+    "answer_en_spoken": "You can apply through the prescribed hostel application process by following current instructions issued by MMMUT.",
+    "answer_hi_spoken": "आप एमएमएमयूटी के निर्देशों के अनुसार निर्धारित प्रक्रिया से छात्रावास के लिए आवेदन कर सकते हैं।",
+    "review_status": "draft"
   },
   {
     "question": "What is the hostel fee?",
-    "answer": "Hostel fees depend on the applicable hostel charges and accommodation arrangements. currently it is 45 thousand"
+    "answer": "Hostel fees depend on the applicable hostel charges and accommodation arrangements. currently it is 45 thousand",
+    "question_hi": "छात्रावास का शुल्क कितना है?",
+    "answer_en_spoken": "Hostel fees depend on applicable charges, and currently it is forty-five thousand.",
+    "answer_hi_spoken": "छात्रावास शुल्क लागू शुल्कों पर निर्भर करता है, और वर्तमान में यह पैंतालीस हजार है।",
+    "review_status": "draft"
   },
   {
     "question": "Is hostel accommodation guaranteed?",
-    "answer": "Hostel allotment should not be assumed to be guaranteed; it is generally subject to availability and applicable allotment criteria. Confirm the current MMMUT rules."
+    "answer": "Hostel allotment should not be assumed to be guaranteed; it is generally subject to availability and applicable allotment criteria. Confirm the current MMMUT rules.",
+    "question_hi": "क्या छात्रावास की आवास सुविधा की गारंटी है?",
+    "answer_en_spoken": "No, hostel allotment is not guaranteed and is generally subject to availability and allotment criteria.",
+    "answer_hi_spoken": "नहीं, छात्रावास की सीट की गारंटी नहीं है, यह उपलब्धता पर निर्भर करती है।",
+    "review_status": "draft"
   },
   {
     "question": "Is mess facility available in the hostel?",
-    "answer": "Mess arrangements depend on the applicable hostel facilities and rules. Confirm the current arrangements with MMMUT."
+    "answer": "Mess arrangements depend on the applicable hostel facilities and rules. Confirm the current arrangements with MMMUT.",
+    "question_hi": "क्या छात्रावास में मेस की सुविधा उपलब्ध है?",
+    "answer_en_spoken": "Mess arrangements depend on the applicable hostel facilities and rules. Please confirm with MMMUT.",
+    "answer_hi_spoken": "मेस की व्यवस्था छात्रावास के नियमों पर निर्भर करती है, कृपया एमएमएमयूटी से पुष्टि करें।",
+    "review_status": "draft"
   },
   {
     "question": "Is transportation facility available?",
-    "answer": "Transportation facilities, if offered, depend on current university arrangements. Contact MMMUT for confirmation."
+    "answer": "Transportation facilities, if offered, depend on current university arrangements. Contact MMMUT for confirmation.",
+    "question_hi": "क्या परिवहन सुविधा उपलब्ध है?",
+    "answer_en_spoken": "Transportation facilities, if offered, depend on current university arrangements. Contact MMMUT to confirm.",
+    "answer_hi_spoken": "परिवहन सुविधा विश्वविद्यालय की व्यवस्था पर निर्भर करती है, पुष्टि के लिए संपर्क करें।",
+    "review_status": "draft"
   },
   {
     "question": "Does the university provide placement assistance?",
-    "answer": "Placement assistance may be provided through the university's training and placement services. For current details, consult the official MMMUT placement information."
+    "answer": "Placement assistance may be provided through the university's training and placement services. For current details, consult the official MMMUT placement information.",
+    "question_hi": "क्या विश्वविद्यालय प्लेसमेंट सहायता प्रदान करता है?",
+    "answer_en_spoken": "Yes, placement assistance is provided through the university's training and placement services.",
+    "answer_hi_spoken": "हाँ, विश्वविद्यालय की ट्रेनिंग और प्लेसमेंट सेवाओं के माध्यम से सहायता मिलती है।",
+    "review_status": "draft"
   },
   {
     "question": "Are internships available?",
-    "answer": "Internship opportunities may be available through departments, industry collaborations, or institutional initiatives. Availability is not guaranteed and may vary."
+    "answer": "Internship opportunities may be available through departments, industry collaborations, or institutional initiatives. Availability is not guaranteed and may vary.",
+    "question_hi": "क्या इंटर्नशिप उपलब्ध हैं?",
+    "answer_en_spoken": "Internship opportunities may be available through departments or industry collaborations, but availability can vary.",
+    "answer_hi_spoken": "इंटर्नशिप के अवसर विभागों या उद्योग सहयोग के माध्यम से मिल सकते हैं।",
+    "review_status": "draft"
   },
   {
     "question": "Does the university provide career guidance?",
-    "answer": "Career guidance and skill-development activities may be offered through relevant departments and placement or career services. Check current MMMUT information."
+    "answer": "Career guidance and skill-development activities may be offered through relevant departments and placement or career services. Check current MMMUT information.",
+    "question_hi": "क्या विश्वविद्यालय करियर मार्गदर्शन प्रदान करता है?",
+    "answer_en_spoken": "Yes, career guidance and skill-development activities are offered through relevant departments and services.",
+    "answer_hi_spoken": "हाँ, संबंधित विभागों के माध्यम से करियर मार्गदर्शन और कौशल विकास गतिविधियाँ कराई जाती हैं।",
+    "review_status": "draft"
   },
   {
     "question": "Are extracurricular activities available?",
-    "answer": "Students may have opportunities to participate in sports, cultural activities, technical events, clubs, and other extracurricular activities. Check current university information."
+    "answer": "Students may have opportunities to participate in sports, cultural activities, technical events, clubs, and other extracurricular activities. Check current university information.",
+    "question_hi": "क्या पाठ्येतर गतिविधियाँ उपलब्ध हैं?",
+    "answer_en_spoken": "Students can participate in sports, cultural activities, technical events, clubs, and other extracurricular activities.",
+    "answer_hi_spoken": "छात्र खेल, सांस्कृतिक गतिविधियों, तकनीकी कार्यक्रमों और क्लबों में भाग ले सकते हैं।",
+    "review_status": "draft"
   },
   {
     "question": "Is attendance compulsory?",
-    "answer": "Students must meet the attendance requirements prescribed by the applicable university and programme regulations. Check the current academic rules."
+    "answer": "Students must meet the attendance requirements prescribed by the applicable university and programme regulations. Check the current academic rules.",
+    "question_hi": "क्या उपस्थिति अनिवार्य है?",
+    "answer_en_spoken": "Yes, students must meet the attendance requirements prescribed by the applicable university and programme regulations.",
+    "answer_hi_spoken": "हाँ, छात्रों को विश्वविद्यालय और कार्यक्रम के नियमों के अनुसार उपस्थिति पूरी करनी होगी।",
+    "review_status": "draft"
   },
   {
     "question": "Can I change my programme after admission?",
-    "answer": "Programme changes are subject to university rules, eligibility, seat availability, and applicable deadlines. Confirm with the concerned MMMUT office."
+    "answer": "Programme changes are subject to university rules, eligibility, seat availability, and applicable deadlines. Confirm with the concerned MMMUT office.",
+    "question_hi": "क्या मैं प्रवेश के बाद अपना कार्यक्रम बदल सकता हूँ?",
+    "answer_en_spoken": "Programme changes are subject to university rules, eligibility, seat availability, and applicable deadlines.",
+    "answer_hi_spoken": "कार्यक्रम बदलना विश्वविद्यालय के नियमों, पात्रता और सीट की उपलब्धता पर निर्भर करता है।",
+    "review_status": "draft"
   },
   {
     "question": "Can I change my specialization?",
-    "answer": "A specialization change may be allowed only where programme regulations permit it and subject to availability. Check the current MMMUT rules."
+    "answer": "A specialization change may be allowed only where programme regulations permit it and subject to availability. Check the current MMMUT rules.",
+    "question_hi": "क्या मैं अपनी विशेषज्ञता बदल सकता हूँ?",
+    "answer_en_spoken": "A specialization change may be allowed only where programme regulations permit and subject to availability.",
+    "answer_hi_spoken": "विशेषज्ञता बदलना तभी संभव है जब कार्यक्रम के नियम इसकी अनुमति दें।",
+    "review_status": "draft"
   },
   {
     "question": "Can I transfer from another university?",
-    "answer": "Transfer or migration may be permitted only for eligible candidates and subject to university regulations and approval. Contact MMMUT for programme-specific guidance."
+    "answer": "Transfer or migration may be permitted only for eligible candidates and subject to university regulations and approval. Contact MMMUT for programme-specific guidance.",
+    "question_hi": "क्या मैं किसी अन्य विश्वविद्यालय से ट्रांसफर ले सकता हूँ?",
+    "answer_en_spoken": "Transfer or migration may be permitted for eligible candidates subject to university regulations and approval.",
+    "answer_hi_spoken": "योग्य उम्मीदवारों के लिए विश्वविद्यालय के नियमों के तहत ट्रांसफर की अनुमति मिल सकती है।",
+    "review_status": "draft"
   },
   {
     "question": "Is migration certificate required?",
-    "answer": "A migration certificate may be required for students joining from another recognized university, depending on the applicable rules. Check the current document checklist."
+    "answer": "A migration certificate may be required for students joining from another recognized university, depending on the applicable rules. Check the current document checklist.",
+    "question_hi": "क्या माइग्रेशन प्रमाणपत्र आवश्यक है?",
+    "answer_en_spoken": "A migration certificate may be required for students joining from another recognized university.",
+    "answer_hi_spoken": "других अन्य मान्यता प्राप्त विश्वविद्यालय से आने वाले छात्रों के लिए माइग्रेशन प्रमाणपत्र आवश्यक हो सकता है।",
+    "review_status": "draft"
   },
   {
     "question": "Is a gap-year student eligible?",
-    "answer": "Candidates with a gap year may apply if they meet the programme eligibility criteria and provide any required documentation. Confirm current MMMUT rules."
+    "answer": "Candidates with a gap year may apply if they meet the programme eligibility criteria and provide any required documentation. Confirm current MMMUT rules.",
+    "question_hi": "क्या गैप-इयर (gap-year) का छात्र पात्र है?",
+    "answer_en_spoken": "Yes, gap-year candidates can apply if they meet the programme eligibility and provide required documents. Please confirm current MMMUT rules.",
+    "answer_hi_spoken": "हाँ, यदि आप पात्रता पूरी करते हैं और दस्तावेज देते हैं, तो गैप-इयर के छात्र आवेदन कर सकते हैं।",
+    "review_status": "draft"
   },
   {
     "question": "Can working professionals apply?",
-    "answer": "Working professionals may apply only to programmes for which they meet the eligibility and attendance requirements. Check the current MMMUT programme rules."
+    "answer": "Working professionals may apply only to programmes for which they meet the eligibility and attendance requirements. Check the current MMMUT programme rules.",
+    "question_hi": "क्या कामकाजी पेशेवर (working professionals) आवेदन कर सकते हैं?",
+    "answer_en_spoken": "Working professionals may apply only if they meet specific programme eligibility and attendance requirements.",
+    "answer_hi_spoken": "कामकाजी पेशेवर केवल उन कार्यक्रमों के लिए आवेदन कर सकते हैं जिनके लिए वे पात्रता और उपस्थिति आवश्यकताएं पूरी करते हैं।",
+    "review_status": "draft"
   },
   {
     "question": "Are distance/online programmes available?",
-    "answer": "Availability depends on the programmes officially offered and approved by the institution. Check the current MMMUT programme list and official notifications."
+    "answer": "Availability depends on the programmes officially offered and approved by the institution. Check the current MMMUT programme list and official notifications.",
+    "question_hi": "क्या दूरस्थ (distance) या ऑनलाइन कार्यक्रम उपलब्ध हैं?",
+    "answer_en_spoken": "Availability depends on officially offered programmes. Please check the current MMMUT programme list.",
+    "answer_hi_spoken": "उपलब्धता आधिकारिक रूप से प्रदान किए गए कार्यक्रमों पर निर्भर करती है। कृपया एमएमएमयूटी की सूची देखें।",
+    "review_status": "draft"
   },
   {
     "question": "Is there a part-time programme?",
-    "answer": "Part-time programmes are available only if specifically offered by MMMUT. Check the current official programme list."
+    "answer": "Part-time programmes are available only if specifically offered by MMMUT. Check the current official programme list.",
+    "question_hi": "क्या कोई अंशकालिक (part-time) कार्यक्रम है?",
+    "answer_en_spoken": "Part-time programmes are available only if specifically offered by MMMUT. Check the official list.",
+    "answer_hi_spoken": "अंशकालिक कार्यक्रम केवल तभी उपलब्ध हैं जब एमएमएमयूटी द्वारा विशेष रूप से प्रदान किए जाएं।",
+    "review_status": "draft"
   },
   {
     "question": "Can international students apply?",
-    "answer": "International students may apply through the designated process if available, subject to eligibility and applicable regulations. Consult official MMMUT international admission information."
+    "answer": "International students may apply through the designated process if available, subject to eligibility and applicable regulations. Consult official MMMUT international admission information.",
+    "question_hi": "क्या अंतरराष्ट्रीय छात्र आवेदन कर सकते हैं?",
+    "answer_en_spoken": "International students may apply through the designated process, subject to eligibility and regulations.",
+    "answer_hi_spoken": "अंतरराष्ट्रीय छात्र पात्रता और नियमों के अधीन निर्धारित प्रक्रिया के माध्यम से आवेदन कर सकते हैं।",
+    "review_status": "draft"
   },
   {
     "question": "What documents are required for international students?",
-    "answer": "Requirements may include a passport, academic certificates, visa-related documents, equivalence certificates, and other documents specified by the university. Confirm the current MMMUT checklist."
+    "answer": "Requirements may include a passport, academic certificates, visa-related documents, equivalence certificates, and other documents specified by the university. Confirm the current MMMUT checklist.",
+    "question_hi": "अंतरराष्ट्रीय छात्रों के लिए कौन से दस्तावेज आवश्यक हैं?",
+    "answer_en_spoken": "Requirements include a passport, academic certificates, visa documents, and equivalence certificates. Check the MMMUT checklist.",
+    "answer_hi_spoken": "आवश्यकताओं में पासपोर्ट, शैक्षणिक प्रमाण पत्र, वीजा दस्तावेज और समकक्षता प्रमाण पत्र शामिल हो सकते हैं।",
+    "review_status": "draft"
   },
   {
     "question": "Is an equivalence certificate required?",
-    "answer": "Applicants with qualifications obtained outside the applicable education system may need an equivalence certificate from the competent authority. Check the current MMMUT requirements."
+    "answer": "Applicants with qualifications obtained outside the applicable education system may need an equivalence certificate from the competent authority. Check the current MMMUT requirements.",
+    "question_hi": "क्या समकक्षता प्रमाण पत्र (equivalence certificate) आवश्यक है?",
+    "answer_en_spoken": "Applicants with external qualifications may need an equivalence certificate from the competent authority.",
+    "answer_hi_spoken": "बाहरी योग्यता वाले आवेदकों को सक्षम प्राधिकारी से समकक्षता प्रमाण पत्र की आवश्यकता हो सकती है।",
+    "review_status": "draft"
   },
   {
     "question": "Is English proficiency required?",
-    "answer": "English-language requirements depend on the programme and applicable admission rules. Check the current MMMUT admission notification."
+    "answer": "English-language requirements depend on the programme and applicable admission rules. Check the current MMMUT admission notification.",
+    "question_hi": "क्या अंग्रेजी में दक्षता आवश्यक है?",
+    "answer_en_spoken": "English-language requirements depend on the specific programme and applicable admission rules.",
+    "answer_hi_spoken": "अंग्रेजी भाषा की आवश्यकताएं विशिष्ट कार्यक्रम और प्रवेश नियमों पर निर्भर करती हैं।",
+    "review_status": "draft"
   },
   {
     "question": "Can I apply if I have a backlog?",
-    "answer": "Eligibility for candidates with backlogs depends on the programme's admission rules and qualification-completion requirements. Confirm the current MMMUT criteria."
+    "answer": "Eligibility for candidates with backlogs depends on the programme's admission rules and qualification-completion requirements. Confirm the current MMMUT criteria.",
+    "question_hi": "क्या बैकलॉग होने पर मैं आवेदन कर सकता हूँ?",
+    "answer_en_spoken": "Eligibility for candidates with backlogs depends on programme rules and qualification-completion requirements.",
+    "answer_hi_spoken": "बैकलॉग वाले उम्मीदवारों की पात्रता कार्यक्रम के नियमों और योग्यता पूरी करने की शर्तों पर निर्भर करती है।",
+    "review_status": "draft"
   },
   {
     "question": "Can I apply if I have a supplementary examination?",
-    "answer": "Candidates may apply where permitted, but final admission depends on meeting all eligibility requirements within the prescribed timeline."
+    "answer": "Candidates may apply where permitted, but final admission depends on meeting all eligibility requirements within the prescribed timeline.",
+    "question_hi": "क्या सप्लीमेंट्री परीक्षा होने पर मैं आवेदन कर सकता हूँ?",
+    "answer_en_spoken": "Candidates may apply where permitted, but final admission requires meeting eligibility within the timeline.",
+    "answer_hi_spoken": "अनुमत होने पर उम्मीदवार आवेदन कर सकते हैं, लेकिन अंतिम प्रवेश समय सीमा के भीतर पात्रता पूरी करने पर निर्भर है।",
+    "review_status": "draft"
   },
   {
     "question": "What is the academic session for the admission?",
-    "answer": "The academic session is specified in the current MMMUT admission notification and academic calendar."
+    "answer": "The academic session is specified in the current MMMUT admission notification and academic calendar.",
+    "question_hi": "प्रवेश के लिए शैक्षणिक सत्र क्या है?",
+    "answer_en_spoken": "The academic session is specified in the current MMMUT admission notification and academic calendar.",
+    "answer_hi_spoken": "शैक्षणिक सत्र वर्तमान एमएमएमयूटी प्रवेश अधिसूचना और शैक्षणिक कैलेंडर में निर्दिष्ट किया गया है।",
+    "review_status": "draft"
   },
   {
     "question": "When will classes begin?",
-    "answer": "Classes generally begin according to the academic calendar published by the university. Check the current MMMUT calendar for dates."
+    "answer": "Classes generally begin according to the academic calendar published by the university. Check the current MMMUT calendar for dates.",
+    "question_hi": "कक्षाएं कब शुरू होंगी?",
+    "answer_en_spoken": "Classes generally begin according to the academic calendar published by the university.",
+    "answer_hi_spoken": "कक्षाएं आम तौर पर विश्वविद्यालय द्वारा प्रकाशित शैक्षणिक कैलेंडर के अनुसार शुरू होती हैं।",
+    "review_status": "draft"
   },
   {
     "question": "How will I receive admission-related updates?",
-    "answer": "Updates may be shared through the official website, admission portal, registered email, SMS, or official notices. Check the portal regularly."
+    "answer": "Updates may be shared through the official website, admission portal, registered email, SMS, or official notices. Check the portal regularly.",
+    "question_hi": "मुझे प्रवेश संबंधी अपडेट कैसे मिलेंगे?",
+    "answer_en_spoken": "Updates are shared through the official website, admission portal, email, SMS, or notices.",
+    "answer_hi_spoken": "अपडेट आधिकारिक वेबसाइट, प्रवेश पोर्टल, ईमेल, एसएमएस या नोटिस के माध्यम से साझा किए जाते हैं।",
+    "review_status": "draft"
   },
   {
     "question": "Whom should I contact for admission-related problems?",
-    "answer": "Contact the official MMMUT admission help desk or the concerned department using contact details published on the official website or admission portal."
+    "answer": "Contact the official MMMUT admission help desk or the concerned department using contact details published on the official website or admission portal.",
+    "question_hi": "प्रवेश संबंधी समस्याओं के लिए मुझे किससे संपर्क करना चाहिए?",
+    "answer_en_spoken": "Contact the official MMMUT admission help desk or concerned department using website details.",
+    "answer_hi_spoken": "आधिकारिक वेबसाइट पर दिए गए विवरण का उपयोग करके एमएमएमयूटी प्रवेश हेल्प डेस्क से संपर्क करें।",
+    "review_status": "draft"
   },
   {
     "question": "What should I do if I enter incorrect information in the application?",
-    "answer": "If a correction window is open, correct the information through the portal. Otherwise, contact the MMMUT admission office for guidance."
+    "answer": "If a correction window is open, correct the information through the portal. Otherwise, contact the MMMUT admission office for guidance.",
+    "question_hi": "आवेदन में गलत जानकारी दर्ज होने पर मुझे क्या करना चाहिए?",
+    "answer_en_spoken": "Correct info through the portal if the window is open, otherwise contact the MMMUT office.",
+    "answer_hi_spoken": "यदि करेक्शन विंडो खुली है तो पोर्टल से सुधार करें, अन्यथा एमएमएमयूटी प्रवेश कार्यालय से संपर्क करें।",
+    "review_status": "draft"
   },
   {
     "question": "Can I cancel my admission?",
-    "answer": "Admission cancellation is subject to the university's applicable rules and prescribed procedure. Check the current MMMUT instructions."
+    "answer": "Admission cancellation is subject to the university's applicable rules and prescribed procedure. Check the current MMMUT instructions.",
+    "question_hi": "क्या मैं अपना प्रवेश रद्द कर सकता हूँ?",
+    "answer_en_spoken": "Admission cancellation is subject to the university's applicable rules and prescribed procedure.",
+    "answer_hi_spoken": "प्रवेश रद्दीकरण विश्वविद्यालय के लागू नियमों और निर्धारित प्रक्रिया के अधीन है।",
+    "review_status": "draft"
   },
   {
     "question": "How can I apply for admission cancellation?",
-    "answer": "Submit a cancellation request through the prescribed process and provide the required documents. Follow the current MMMUT instructions."
+    "answer": "Submit a cancellation request through the prescribed process and provide the required documents. Follow the current MMMUT instructions.",
+    "question_hi": "मैं प्रवेश रद्दीकरण के लिए आवेदन कैसे कर सकता हूँ?",
+    "answer_en_spoken": "Submit a cancellation request through the prescribed process and provide required documents.",
+    "answer_hi_spoken": "निर्धारित प्रक्रिया के माध्यम से रद्दीकरण अनुरोध जमा करें और आवश्यक दस्तावेज प्रदान करें।",
+    "review_status": "draft"
   },
   {
     "question": "How long does the fee refund take after cancellation?",
-    "answer": "The refund timeline depends on the applicable refund policy and completion of required formalities. Check the current MMMUT refund policy."
+    "answer": "The refund timeline depends on the applicable refund policy and completion of required formalities. Check the current MMMUT refund policy.",
+    "question_hi": "रद्दीकरण के बाद शुल्क रिफंड में कितना समय लगता है?",
+    "answer_en_spoken": "The refund timeline depends on the applicable refund policy and completion of formalities.",
+    "answer_hi_spoken": "रिफंड की समय सीमा लागू रिफंड नीति और औपचारिकताओं को पूरा करने पर निर्भर करती है।",
+    "review_status": "draft"
   },
   {
     "question": "Where can I find the official admission notification?",
-    "answer": "Obtain the latest admission notification from the official MMMUT website or admission portal."
+    "answer": "Obtain the latest admission notification from the official MMMUT website or admission portal.",
+    "question_hi": "मुझे आधिकारिक प्रवेश अधिसूचना कहाँ मिल सकती है?",
+    "answer_en_spoken": "Obtain the latest admission notification from the official MMMUT website or admission portal.",
+    "answer_hi_spoken": "आधिकारिक एमएमएमयूटी वेबसाइट या प्रवेश पोर्टल से नवीनतम प्रवेश अधिसूचना प्राप्त करें।",
+    "review_status": "draft"
   },
   {
     "question": "Where can I get further information about admission?",
-    "answer": "For further assistance, contact the official MMMUT admission help desk or the concerned academic department using contact details published by the university."
+    "answer": "For further assistance, contact the official MMMUT admission help desk or the concerned academic department using contact details published by the university.",
+    "question_hi": "प्रवेश के बारे में अधिक जानकारी मुझे कहाँ मिल सकती है?",
+    "answer_en_spoken": "Contact the official MMMUT admission help desk or academic department for further assistance.",
+    "answer_hi_spoken": "अधिक सहायता के लिए आधिकारिक एमएमएमयूटी प्रवेश हेल्प डेस्क या संबंधित विभाग से संपर्क करें।",
+    "review_status": "draft"
   }
 ]

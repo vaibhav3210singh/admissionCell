@@ -122,6 +122,10 @@ class DatabaseService {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           question TEXT NOT NULL UNIQUE,
           answer TEXT NOT NULL,
+          question_hi TEXT,
+          answer_en_spoken TEXT,
+          answer_hi_spoken TEXT,
+          review_status TEXT NOT NULL DEFAULT 'draft',
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
           updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
@@ -138,11 +142,26 @@ class DatabaseService {
         CREATE INDEX IF NOT EXISTS idx_logs_channel ON enquiry_logs(channel);
       `);
 
-      // Migration: Add llm_used column if table existed from previous version
+      // Migrations: Add new columns if tables existed from previous version
+      const sqliteMigrations = [
+        'ALTER TABLE enquiry_logs ADD COLUMN llm_used INTEGER NOT NULL DEFAULT 0;',
+        'ALTER TABLE faqs ADD COLUMN question_hi TEXT;',
+        'ALTER TABLE faqs ADD COLUMN answer_en_spoken TEXT;',
+        'ALTER TABLE faqs ADD COLUMN answer_hi_spoken TEXT;',
+        "ALTER TABLE faqs ADD COLUMN review_status TEXT NOT NULL DEFAULT 'draft';"
+      ];
+      for (const sql of sqliteMigrations) {
+        try {
+          this.sqliteDb.exec(sql);
+        } catch {
+          // Column already exists
+        }
+      }
+
       try {
-        this.sqliteDb.exec('ALTER TABLE enquiry_logs ADD COLUMN llm_used INTEGER NOT NULL DEFAULT 0;');
+        this.sqliteDb.exec('CREATE INDEX IF NOT EXISTS idx_faqs_review ON faqs(review_status);');
       } catch {
-        // Column already exists
+        // Ignored
       }
     } else {
       await this.pgPool.query(`
@@ -163,6 +182,10 @@ class DatabaseService {
           id SERIAL PRIMARY KEY,
           question TEXT NOT NULL UNIQUE,
           answer TEXT NOT NULL,
+          question_hi TEXT,
+          answer_en_spoken TEXT,
+          answer_hi_spoken TEXT,
+          review_status VARCHAR(32) NOT NULL DEFAULT 'draft',
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
@@ -177,9 +200,22 @@ class DatabaseService {
         CREATE INDEX IF NOT EXISTS idx_logs_timestamp ON enquiry_logs(timestamp);
         CREATE INDEX IF NOT EXISTS idx_logs_status ON enquiry_logs(status);
         CREATE INDEX IF NOT EXISTS idx_logs_channel ON enquiry_logs(channel);
+        CREATE INDEX IF NOT EXISTS idx_faqs_review ON faqs(review_status);
       `);
 
-      // Migration: Add llm_used column if table existed
+      const pgMigrations = [
+        'ALTER TABLE faqs ADD COLUMN IF NOT EXISTS question_hi TEXT;',
+        'ALTER TABLE faqs ADD COLUMN IF NOT EXISTS answer_en_spoken TEXT;',
+        'ALTER TABLE faqs ADD COLUMN IF NOT EXISTS answer_hi_spoken TEXT;',
+        "ALTER TABLE faqs ADD COLUMN IF NOT EXISTS review_status VARCHAR(32) NOT NULL DEFAULT 'draft';"
+      ];
+      for (const sql of pgMigrations) {
+        try {
+          await this.pgPool.query(sql);
+        } catch {}
+      }
+
+      // Migration: Add llm_used column if table existed in PostgreSQL
       try {
         await this.pgPool.query('ALTER TABLE enquiry_logs ADD COLUMN IF NOT EXISTS llm_used BOOLEAN NOT NULL DEFAULT FALSE;');
       } catch {
@@ -201,14 +237,22 @@ class DatabaseService {
       const faqs = JSON.parse(raw);
 
       for (const item of faqs) {
+        const qHi = item.question_hi || null;
+        const aEnSpoken = item.answer_en_spoken || null;
+        const aHiSpoken = item.answer_hi_spoken || null;
+        const status = item.review_status || 'draft';
+
         if (this.type === 'sqlite') {
           this.sqliteDb.prepare(`
-            INSERT OR IGNORE INTO faqs (question, answer) VALUES (?, ?)
-          `).run(item.question.trim(), item.answer.trim());
+            INSERT OR IGNORE INTO faqs (question, answer, question_hi, answer_en_spoken, answer_hi_spoken, review_status)
+            VALUES (?, ?, ?, ?, ?, ?)
+          `).run(item.question.trim(), item.answer.trim(), qHi, aEnSpoken, aHiSpoken, status);
         } else {
           await this.pgPool.query(`
-            INSERT INTO faqs (question, answer) VALUES ($1, $2) ON CONFLICT (question) DO NOTHING
-          `, [item.question.trim(), item.answer.trim()]);
+            INSERT INTO faqs (question, answer, question_hi, answer_en_spoken, answer_hi_spoken, review_status)
+            VALUES ($1, $2, $3, $4, $5, $6)
+            ON CONFLICT (question) DO NOTHING
+          `, [item.question.trim(), item.answer.trim(), qHi, aEnSpoken, aHiSpoken, status]);
         }
       }
 
@@ -220,43 +264,82 @@ class DatabaseService {
   // FAQ CRUD Methods
   // ==========================================
 
-  async loadFAQs() {
-    const rows = await this.executeQuery('SELECT id, question, answer FROM faqs ORDER BY id ASC');
+  async loadFAQs({ reviewStatus } = {}) {
+    let sql = 'SELECT id, question, answer, question_hi, answer_en_spoken, answer_hi_spoken, review_status FROM faqs';
+    const params = [];
+    if (reviewStatus && reviewStatus !== 'all') {
+      sql += ' WHERE review_status = ?';
+      params.push(reviewStatus);
+    }
+    sql += ' ORDER BY id ASC';
+    const rows = await this.executeQuery(sql, params);
     return rows;
   }
 
   async getFAQById(id) {
-    const rows = await this.executeQuery('SELECT id, question, answer FROM faqs WHERE id = ?', [id]);
+    const rows = await this.executeQuery(
+      'SELECT id, question, answer, question_hi, answer_en_spoken, answer_hi_spoken, review_status FROM faqs WHERE id = ?',
+      [id]
+    );
     return rows[0] || null;
   }
 
-  async createFAQ(question, answer) {
-    const trimmedQ = question.trim();
-    const trimmedA = answer.trim();
+  async createFAQ(question, answer, extra = {}) {
+    const trimmedQ = (typeof question === 'object' ? question.question : question).trim();
+    const trimmedA = (typeof question === 'object' ? question.answer : answer).trim();
+    const qHi = (typeof question === 'object' ? question.question_hi : extra.question_hi) || null;
+    const aEnSpoken = (typeof question === 'object' ? question.answer_en_spoken : extra.answer_en_spoken) || null;
+    const aHiSpoken = (typeof question === 'object' ? question.answer_hi_spoken : extra.answer_hi_spoken) || null;
+    const status = (typeof question === 'object' ? question.review_status : extra.review_status) || 'draft';
 
     if (this.type === 'sqlite') {
       const info = this.sqliteDb.prepare(`
-        INSERT INTO faqs (question, answer) VALUES (?, ?)
-      `).run(trimmedQ, trimmedA);
-      return { id: Number(info.lastInsertRowid), question: trimmedQ, answer: trimmedA };
+        INSERT INTO faqs (question, answer, question_hi, answer_en_spoken, answer_hi_spoken, review_status)
+        VALUES (?, ?, ?, ?, ?, ?)
+      `).run(trimmedQ, trimmedA, qHi, aEnSpoken, aHiSpoken, status);
+      return {
+        id: Number(info.lastInsertRowid),
+        question: trimmedQ,
+        answer: trimmedA,
+        question_hi: qHi,
+        answer_en_spoken: aEnSpoken,
+        answer_hi_spoken: aHiSpoken,
+        review_status: status
+      };
     } else {
       const res = await this.pgPool.query(`
-        INSERT INTO faqs (question, answer) VALUES ($1, $2) RETURNING id, question, answer
-      `, [trimmedQ, trimmedA]);
+        INSERT INTO faqs (question, answer, question_hi, answer_en_spoken, answer_hi_spoken, review_status)
+        VALUES ($1, $2, $3, $4, $5, $6)
+        RETURNING id, question, answer, question_hi, answer_en_spoken, answer_hi_spoken, review_status
+      `, [trimmedQ, trimmedA, qHi, aEnSpoken, aHiSpoken, status]);
       return res.rows[0];
     }
   }
 
-  async updateFAQ(id, question, answer) {
-    const trimmedQ = question.trim();
-    const trimmedA = answer.trim();
+  async updateFAQ(id, question, answer, extra = {}) {
+    const trimmedQ = (typeof question === 'object' ? question.question : question).trim();
+    const trimmedA = (typeof question === 'object' ? question.answer : answer).trim();
+    const qHi = (typeof question === 'object' ? question.question_hi : extra.question_hi) || null;
+    const aEnSpoken = (typeof question === 'object' ? question.answer_en_spoken : extra.answer_en_spoken) || null;
+    const aHiSpoken = (typeof question === 'object' ? question.answer_hi_spoken : extra.answer_hi_spoken) || null;
+    const status = (typeof question === 'object' ? question.review_status : extra.review_status) || 'draft';
     const now = new Date().toISOString();
 
     await this.executeQuery(`
-      UPDATE faqs SET question = ?, answer = ?, updated_at = ? WHERE id = ?
-    `, [trimmedQ, trimmedA, now, id]);
+      UPDATE faqs
+      SET question = ?, answer = ?, question_hi = ?, answer_en_spoken = ?, answer_hi_spoken = ?, review_status = ?, updated_at = ?
+      WHERE id = ?
+    `, [trimmedQ, trimmedA, qHi, aEnSpoken, aHiSpoken, status, now, id]);
 
-    return { id: Number(id), question: trimmedQ, answer: trimmedA };
+    return {
+      id: Number(id),
+      question: trimmedQ,
+      answer: trimmedA,
+      question_hi: qHi,
+      answer_en_spoken: aEnSpoken,
+      answer_hi_spoken: aHiSpoken,
+      review_status: status
+    };
   }
 
   async deleteFAQ(id) {

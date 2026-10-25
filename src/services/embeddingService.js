@@ -57,24 +57,40 @@ export async function reloadEmbeddings() {
   for (let i = 0; i < faqs.length; i++) {
     const item = faqs[i];
     
-    let vectorData;
+    let vectorEn;
+    let vectorHi = null;
+
     if (provider === 'local') {
       const passageInput = `passage: ${item.question}`;
       const output = await extractor(passageInput, { pooling: 'mean', normalize: true });
-      vectorData = output.data;
+      vectorEn = output.data;
+
+      if (item.question_hi && item.question_hi.trim()) {
+        const passageHi = `passage: ${item.question_hi.trim()}`;
+        const outputHi = await extractor(passageHi, { pooling: 'mean', normalize: true });
+        vectorHi = outputHi.data;
+      }
     } else {
-      vectorData = new Float32Array(384).fill(0.1);
+      vectorEn = new Float32Array(384).fill(0.1);
+      if (item.question_hi && item.question_hi.trim()) {
+        vectorHi = new Float32Array(384).fill(0.1);
+      }
     }
 
     newEmbeddings.push({
       id: item.id,
       question: item.question,
+      question_hi: item.question_hi || null,
       answer: item.answer,
-      embedding: vectorData
+      answer_en_spoken: item.answer_en_spoken || null,
+      answer_hi_spoken: item.answer_hi_spoken || null,
+      review_status: item.review_status || 'draft',
+      embeddingEn: vectorEn,
+      embeddingHi: vectorHi
     });
 
     if ((i + 1) % 25 === 0 || i + 1 === faqs.length) {
-      process.stdout.write(`  -> Embedded ${i + 1}/${faqs.length} FAQs\r`);
+      process.stdout.write(`  -> Embedded ${i + 1}/${faqs.length} FAQs (bilingual)\r`);
     }
   }
 
@@ -83,21 +99,29 @@ export async function reloadEmbeddings() {
 
   // Sync to faq.json on disk to keep local backup current
   try {
-    const cleanFaqs = faqs.map(f => ({ question: f.question, answer: f.answer }));
+    const cleanFaqs = faqs.map(f => ({
+      question: f.question,
+      answer: f.answer,
+      question_hi: f.question_hi || null,
+      answer_en_spoken: f.answer_en_spoken || null,
+      answer_hi_spoken: f.answer_hi_spoken || null,
+      review_status: f.review_status || 'draft'
+    }));
     fs.writeFileSync(config.database.faqDataPath, JSON.stringify(cleanFaqs, null, 2), 'utf-8');
   } catch (err) {
     logger.warn('Failed to update faq.json on disk:', err.message);
   }
 
-  logger.info(`\nEmbeddings loaded: ${cachedFaqsWithEmbeddings.length} FAQs in ${((Date.now() - embedStartTime) / 1000).toFixed(2)}s.`);
+  logger.info(`\nEmbeddings loaded: ${cachedFaqsWithEmbeddings.length} bilingual FAQs in ${((Date.now() - embedStartTime) / 1000).toFixed(2)}s.`);
   return cachedFaqsWithEmbeddings.length;
 }
 
 /**
  * Finds the top K closest matching FAQs for an input question using semantic cosine similarity.
+ * Matches against both English (question) and Hindi (question_hi) embeddings.
  * @param {string} userQuery
  * @param {number} topK
- * @returns {Promise<Array<{ id?: number, question: string, answer: string, similarity: number }>>}
+ * @returns {Promise<Array<{ id?: number, question: string, question_hi?: string, answer: string, answer_en_spoken?: string, answer_hi_spoken?: string, similarity: number, matchedScript: string }>>}
  */
 export async function findTopMatchingFAQs(userQuery, topK = 3) {
   if (cachedFaqsWithEmbeddings.length === 0) {
@@ -115,12 +139,31 @@ export async function findTopMatchingFAQs(userQuery, topK = 3) {
     queryEmbedding = new Float32Array(384).fill(0.1);
   }
 
-  const scoredFaqs = cachedFaqsWithEmbeddings.map(item => ({
-    id: item.id,
-    question: item.question,
-    answer: item.answer,
-    similarity: computeCosineSimilarity(queryEmbedding, item.embedding)
-  }));
+  const scoredFaqs = cachedFaqsWithEmbeddings.map(item => {
+    const simEn = computeCosineSimilarity(queryEmbedding, item.embeddingEn);
+    let bestSim = simEn;
+    let matchedScript = 'en';
+
+    if (item.embeddingHi) {
+      const simHi = computeCosineSimilarity(queryEmbedding, item.embeddingHi);
+      if (simHi > bestSim) {
+        bestSim = simHi;
+        matchedScript = 'hi';
+      }
+    }
+
+    return {
+      id: item.id,
+      question: item.question,
+      question_hi: item.question_hi,
+      answer: item.answer,
+      answer_en_spoken: item.answer_en_spoken,
+      answer_hi_spoken: item.answer_hi_spoken,
+      review_status: item.review_status,
+      similarity: bestSim,
+      matchedScript
+    };
+  });
 
   scoredFaqs.sort((a, b) => b.similarity - a.similarity);
   return scoredFaqs.slice(0, topK);
@@ -129,13 +172,20 @@ export async function findTopMatchingFAQs(userQuery, topK = 3) {
 /**
  * Finds the closest matching FAQ for an input question using semantic cosine similarity.
  * @param {string} userQuery
- * @returns {Promise<{ bestMatch: { id?: number, question: string, answer: string }, similarity: number }>}
+ * @returns {Promise<{ bestMatch: Object, similarity: number }>}
  */
 export async function findBestMatchingFAQ(userQuery) {
   const topMatches = await findTopMatchingFAQs(userQuery, 1);
   const best = topMatches[0] || null;
   return {
-    bestMatch: best ? { id: best.id, question: best.question, answer: best.answer } : null,
+    bestMatch: best ? {
+      id: best.id,
+      question: best.question,
+      question_hi: best.question_hi,
+      answer: best.answer,
+      answer_en_spoken: best.answer_en_spoken,
+      answer_hi_spoken: best.answer_hi_spoken
+    } : null,
     similarity: best ? best.similarity : -1
   };
 }

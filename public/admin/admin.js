@@ -31,6 +31,7 @@ const refreshHandoffsBtn = document.getElementById('refreshHandoffsBtn');
 
 const faqsTableBody = document.getElementById('faqsTableBody');
 const faqSearchInput = document.getElementById('faqSearchInput');
+const faqStatusFilter = document.getElementById('faqStatusFilter');
 const openAddFaqModalBtn = document.getElementById('openAddFaqModalBtn');
 
 const faqModal = document.getElementById('faqModal');
@@ -38,7 +39,11 @@ const faqModalTitle = document.getElementById('faqModalTitle');
 const faqModalForm = document.getElementById('faqModalForm');
 const modalFaqId = document.getElementById('modalFaqId');
 const modalQuestion = document.getElementById('modalQuestion');
+const modalQuestionHi = document.getElementById('modalQuestionHi');
 const modalAnswer = document.getElementById('modalAnswer');
+const modalAnswerEnSpoken = document.getElementById('modalAnswerEnSpoken');
+const modalAnswerHiSpoken = document.getElementById('modalAnswerHiSpoken');
+const modalReviewStatus = document.getElementById('modalReviewStatus');
 const closeFaqModalBtn = document.getElementById('closeFaqModalBtn');
 const cancelFaqModalBtn = document.getElementById('cancelFaqModalBtn');
 const saveFaqBtn = document.getElementById('saveFaqBtn');
@@ -220,15 +225,25 @@ async function loadFaqs() {
 
 function renderFaqsTable(faqs) {
   const query = faqSearchInput.value.trim().toLowerCase();
-  const filtered = query 
-    ? faqs.filter(f => f.question.toLowerCase().includes(query) || f.answer.toLowerCase().includes(query))
-    : faqs;
+  const statusFilter = faqStatusFilter ? faqStatusFilter.value : 'all';
+
+  let filtered = faqs;
+  if (statusFilter !== 'all') {
+    filtered = filtered.filter(f => (f.review_status || 'draft') === statusFilter);
+  }
+  if (query) {
+    filtered = filtered.filter(f => 
+      f.question.toLowerCase().includes(query) ||
+      (f.question_hi && f.question_hi.toLowerCase().includes(query)) ||
+      f.answer.toLowerCase().includes(query)
+    );
+  }
 
   if (filtered.length === 0) {
     faqsTableBody.innerHTML = `
       <tr>
-        <td colspan="4" class="text-center py-4 text-muted">
-          No FAQs match "${escapeHtml(query)}".
+        <td colspan="5" class="text-center py-4 text-muted">
+          No FAQs match current filter/search.
         </td>
       </tr>
     `;
@@ -236,13 +251,26 @@ function renderFaqsTable(faqs) {
   }
 
   faqsTableBody.innerHTML = filtered.map(f => {
-    const truncatedAnswer = f.answer.length > 120 ? f.answer.substring(0, 117) + '...' : f.answer;
+    const isDraft = (f.review_status || 'draft') === 'draft';
+    const statusBadge = isDraft
+      ? `<span style="background: rgba(245, 158, 11, 0.15); color: #d97706; border: 1px solid rgba(245, 158, 11, 0.35); padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap;">⚠️ Draft</span>`
+      : `<span style="background: rgba(16, 185, 129, 0.15); color: #059669; border: 1px solid rgba(16, 185, 129, 0.35); padding: 3px 8px; border-radius: 6px; font-size: 11px; font-weight: 600; white-space: nowrap;">✅ Approved</span>`;
+
+    const truncatedAnswer = f.answer.length > 95 ? f.answer.substring(0, 92) + '...' : f.answer;
+    const spokenHiInfo = f.answer_hi_spoken ? `<div style="font-size: 11px; color: #4b5563; margin-top: 4px;"><strong>🗣️ Hi:</strong> ${escapeHtml(f.answer_hi_spoken.length > 70 ? f.answer_hi_spoken.substring(0, 67) + '...' : f.answer_hi_spoken)}</div>` : '';
 
     return `
       <tr>
         <td><strong>#${f.id}</strong></td>
-        <td><strong>${escapeHtml(f.question)}</strong></td>
-        <td class="text-muted" title="${escapeHtml(f.answer)}">${escapeHtml(truncatedAnswer)}</td>
+        <td>
+          <div style="font-weight: 600;">${escapeHtml(f.question)}</div>
+          ${f.question_hi ? `<div style="font-size: 12px; color: #4338ca; margin-top: 3px;">🇮🇳 ${escapeHtml(f.question_hi)}</div>` : ''}
+        </td>
+        <td>${statusBadge}</td>
+        <td>
+          <div class="text-muted" title="${escapeHtml(f.answer)}">${escapeHtml(truncatedAnswer)}</div>
+          ${spokenHiInfo}
+        </td>
         <td>
           <div style="display: flex; gap: 0.35rem;">
             <button type="button" class="btn btn-secondary btn-sm edit-faq-btn" data-id="${f.id}">
@@ -279,14 +307,22 @@ function openFaqModal(faq = null) {
   if (faq && faq.id) {
     faqModalTitle.textContent = `Edit FAQ #${faq.id}`;
     modalFaqId.value = faq.id;
-    modalQuestion.value = faq.question;
-    modalAnswer.value = faq.answer;
+    modalQuestion.value = faq.question || '';
+    modalQuestionHi.value = faq.question_hi || '';
+    modalAnswer.value = faq.answer || '';
+    modalAnswerEnSpoken.value = faq.answer_en_spoken || '';
+    modalAnswerHiSpoken.value = faq.answer_hi_spoken || '';
+    modalReviewStatus.value = faq.review_status || 'draft';
     saveFaqBtn.textContent = 'Update & Reload Embeddings';
   } else {
     faqModalTitle.textContent = 'Add New FAQ Entry';
     modalFaqId.value = '';
     modalQuestion.value = faq?.question || '';
+    modalQuestionHi.value = faq?.question_hi || '';
     modalAnswer.value = faq?.answer || '';
+    modalAnswerEnSpoken.value = faq?.answer_en_spoken || '';
+    modalAnswerHiSpoken.value = faq?.answer_hi_spoken || '';
+    modalReviewStatus.value = faq?.review_status || 'draft';
     saveFaqBtn.textContent = 'Save & Reload Embeddings';
   }
 
@@ -417,7 +453,14 @@ faqModalForm.addEventListener('submit', async (e) => {
   const res = await apiFetch(url, {
     method,
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ question: q, answer: a })
+    body: JSON.stringify({
+      question: q,
+      question_hi: modalQuestionHi.value.trim(),
+      answer: a,
+      answer_en_spoken: modalAnswerEnSpoken.value.trim(),
+      answer_hi_spoken: modalAnswerHiSpoken.value.trim(),
+      review_status: modalReviewStatus.value || 'draft'
+    })
   });
 
   saveFaqBtn.disabled = false;

@@ -28,7 +28,7 @@ const testQuestions = [
     callerSpeech: 'What courses are offered by the university?'
   },
   {
-    type: 'Hindi FAQ Query',
+    type: 'Hindi Out-of-FAQ Handoff',
     callerSpeech: 'क्या विश्वविद्यालय में बीटेक के लिए लेटरल एंट्री मिलती है?'
   },
   {
@@ -64,7 +64,7 @@ const testQuestions = [
     callerSpeech: 'क्या विश्वविद्यालय में छात्रों को छात्रवृत्ति मिलती है?'
   },
   {
-    type: 'Hinglish FAQ Query',
+    type: 'Hinglish Out-of-FAQ Handoff',
     callerSpeech: 'Direct admission mil sakta hai kya management quota se?'
   },
   {
@@ -76,7 +76,7 @@ const testQuestions = [
     callerSpeech: 'What is the placement record of the university?'
   },
   {
-    type: 'Hindi FAQ Query',
+    type: 'Hindi Out-of-FAQ Handoff',
     callerSpeech: 'एमबीए कोर्स में एडमिशन का क्या प्रोसेस है?'
   },
   {
@@ -84,7 +84,7 @@ const testQuestions = [
     callerSpeech: 'Entrance exam center admit card aane ke baad change ho sakta hai kya?'
   },
   {
-    type: 'English FAQ Query',
+    type: 'English Out-of-FAQ Handoff',
     callerSpeech: 'Where is the university campus located and how can I reach there?'
   }
 ];

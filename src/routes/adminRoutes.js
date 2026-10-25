@@ -214,11 +214,12 @@ router.get('/api/export-csv', requireAdminSession, async (req, res, next) => {
 
 /**
  * GET /admin/api/faqs
- * Lists all FAQs stored in the database.
+ * Lists all FAQs stored in the database, with optional review_status filtering.
  */
 router.get('/api/faqs', requireAdminSession, async (req, res, next) => {
   try {
-    const faqs = await databaseService.loadFAQs();
+    const { status } = req.query;
+    const faqs = await databaseService.loadFAQs({ reviewStatus: status });
     res.json({ count: faqs.length, faqs });
   } catch (err) {
     next(err);
@@ -227,11 +228,11 @@ router.get('/api/faqs', requireAdminSession, async (req, res, next) => {
 
 /**
  * POST /admin/api/faqs
- * Adds a new FAQ entry and automatically reloads embeddings.
+ * Adds a new FAQ entry (with bilingual & spoken answers) and automatically reloads embeddings.
  */
 router.post('/api/faqs', requireAdminSession, async (req, res, next) => {
   try {
-    const { question, answer } = req.body || {};
+    const { question, answer, question_hi, answer_en_spoken, answer_hi_spoken, review_status } = req.body || {};
 
     if (!question || !question.trim() || !answer || !answer.trim()) {
       return res.status(400).json({
@@ -240,7 +241,14 @@ router.post('/api/faqs', requireAdminSession, async (req, res, next) => {
       });
     }
 
-    const created = await databaseService.createFAQ(question, answer);
+    const created = await databaseService.createFAQ({
+      question,
+      answer,
+      question_hi,
+      answer_en_spoken,
+      answer_hi_spoken,
+      review_status: review_status || 'draft'
+    });
     
     // Automatically re-compute & reload vector embeddings
     const reloadedCount = await reloadEmbeddings();
@@ -264,7 +272,7 @@ router.post('/api/faqs', requireAdminSession, async (req, res, next) => {
 router.put('/api/faqs/:id', requireAdminSession, async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { question, answer } = req.body || {};
+    const { question, answer, question_hi, answer_en_spoken, answer_hi_spoken, review_status } = req.body || {};
 
     if (!question || !question.trim() || !answer || !answer.trim()) {
       return res.status(400).json({
@@ -273,7 +281,14 @@ router.put('/api/faqs/:id', requireAdminSession, async (req, res, next) => {
       });
     }
 
-    const updated = await databaseService.updateFAQ(id, question, answer);
+    const updated = await databaseService.updateFAQ(id, {
+      question,
+      answer,
+      question_hi,
+      answer_en_spoken,
+      answer_hi_spoken,
+      review_status: review_status || 'draft'
+    });
     const reloadedCount = await reloadEmbeddings();
 
     logger.info(`[ADMIN] Updated FAQ #${id}. Embeddings reloaded (${reloadedCount} total).`);

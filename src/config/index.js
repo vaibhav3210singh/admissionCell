@@ -24,7 +24,8 @@ export const config = Object.freeze({
     isProduction: process.env.NODE_ENV === 'production'
   },
   matching: {
-    similarityThreshold: parseFloat(process.env.SIMILARITY_THRESHOLD ?? '0.86')
+    similarityThreshold: parseFloat(process.env.SIMILARITY_THRESHOLD ?? '0.86'),
+    highConfidenceThreshold: parseFloat(process.env.HIGH_CONFIDENCE_THRESHOLD ?? '0.90')
   },
   embedding: {
     provider: (process.env.EMBEDDING_PROVIDER || 'local').toLowerCase(), // 'local' | 'openai' | 'gemini'

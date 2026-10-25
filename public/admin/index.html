@@ -183,12 +183,17 @@
           </div>
         </div>
 
-        <!-- FAQ Search -->
+        <!-- FAQ Search & Filters -->
         <div class="filter-bar">
-          <div class="search-box full-width">
+          <div class="search-box" style="flex: 1;">
             <span class="search-icon">🔍</span>
             <input type="text" id="faqSearchInput" placeholder="Search FAQs by question or answer keywords..." class="form-control" />
           </div>
+          <select id="faqStatusFilter" class="form-select" style="max-width: 250px;">
+            <option value="all">All FAQs (Drafts & Approved)</option>
+            <option value="draft">⚠️ Draft - Needs Staff Review</option>
+            <option value="approved">✅ Approved Only</option>
+          </select>
         </div>
 
         <!-- FAQs Table -->
@@ -196,15 +201,16 @@
           <table class="data-table" id="faqsTable">
             <thead>
               <tr>
-                <th style="width: 60px;">ID</th>
-                <th style="width: 35%;">Question</th>
-                <th>Official Answer</th>
-                <th style="width: 140px;">Actions</th>
+                <th style="width: 50px;">ID</th>
+                <th style="width: 30%;">Question (EN / HI)</th>
+                <th style="width: 140px;">Status</th>
+                <th>Official & Spoken Answers</th>
+                <th style="width: 130px;">Actions</th>
               </tr>
             </thead>
             <tbody id="faqsTableBody">
               <tr>
-                <td colspan="4" class="text-center py-4">Loading FAQs...</td>
+                <td colspan="5" class="text-center py-4">Loading FAQs...</td>
               </tr>
             </tbody>
           </table>
@@ -215,7 +221,7 @@
 
   <!-- ADD / EDIT FAQ MODAL -->
   <div class="modal-overlay" id="faqModal" style="display: none;">
-    <div class="modal-card">
+    <div class="modal-card" style="max-width: 680px;">
       <div class="modal-header">
         <h3 class="modal-title" id="faqModalTitle">Add New FAQ</h3>
         <button type="button" class="modal-close" id="closeFaqModalBtn">✕</button>
@@ -224,7 +230,7 @@
         <input type="hidden" id="modalFaqId" value="" />
         
         <div class="form-group">
-          <label class="form-label" for="modalQuestion">FAQ Question</label>
+          <label class="form-label" for="modalQuestion">FAQ Question (English)</label>
           <input 
             type="text" 
             id="modalQuestion" 
@@ -235,14 +241,53 @@
         </div>
 
         <div class="form-group">
-          <label class="form-label" for="modalAnswer">Official Answer</label>
+          <label class="form-label" for="modalQuestionHi">Hindi Question (Devanagari)</label>
+          <input 
+            type="text" 
+            id="modalQuestionHi" 
+            class="form-control" 
+            placeholder="e.g. आवेदन करने की आखिरी तारीख क्या है?" 
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="modalAnswer">Official Full Answer (English)</label>
           <textarea 
             id="modalAnswer" 
             class="form-control" 
-            rows="5" 
+            rows="3" 
             placeholder="Enter the official admission information response..." 
             required
           ></textarea>
+        </div>
+
+        <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+          <div class="form-group" style="flex: 1; margin-bottom: 0;">
+            <label class="form-label" for="modalAnswerEnSpoken">English Spoken Answer (Short, for Phone)</label>
+            <textarea 
+              id="modalAnswerEnSpoken" 
+              class="form-control" 
+              rows="2" 
+              placeholder="Short spoken answer for callers..."
+            ></textarea>
+          </div>
+          <div class="form-group" style="flex: 1; margin-bottom: 0;">
+            <label class="form-label" for="modalAnswerHiSpoken">Hindi Spoken Answer (Devanagari, for Phone)</label>
+            <textarea 
+              id="modalAnswerHiSpoken" 
+              class="form-control" 
+              rows="2" 
+              placeholder="फोन कॉल के लिए संक्षिप्त हिंदी उत्तर..."
+            ></textarea>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="modalReviewStatus">Review Status</label>
+          <select id="modalReviewStatus" class="form-select">
+            <option value="draft">⚠️ Draft - Needs Staff Review</option>
+            <option value="approved">✅ Approved & Verified</option>
+          </select>
         </div>
 
         <div class="modal-footer">

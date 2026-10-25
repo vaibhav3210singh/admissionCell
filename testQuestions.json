@@ -318,5 +318,165 @@
     "targetFaq": null,
     "question": "Is extra weightage or preference given to NCC 'C' certificate holders in admission ranking?",
     "expectedBehavior": "Handed Off"
+  },
+  {
+    "id": 41,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hindi (Hostel)",
+    "targetFaq": "Is hostel accommodation available?",
+    "question": "क्या कॉलेज में छात्रों के लिए हॉस्टल और रहने की सुविधा उपलब्ध है?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 42,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hinglish (Hostel Fee)",
+    "targetFaq": "What is the hostel fee?",
+    "question": "Hostel ka per semester ya annual charge kitna lagta hai?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 43,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hindi (Mess)",
+    "targetFaq": "Is mess facility available in the hostel?",
+    "question": "हॉस्टल के अंदर मेस और खाने-पीने की व्यवस्था कैसी है?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 44,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hinglish (Scholarship Application)",
+    "targetFaq": "How can I apply for a scholarship?",
+    "question": "Main government ya college scholarship ke liye form kaise apply kar sakta hu?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 45,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hindi (Merit Scholarship)",
+    "targetFaq": "Is there any merit scholarship?",
+    "question": "अच्छे अंक लाने वाले मेधावी छात्रों को क्या कोई विशेष छात्रवृत्ति मिलती है?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 46,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hinglish (Placement)",
+    "targetFaq": "Does the university provide placement assistance?",
+    "question": "MMMUT me B.Tech students ke liye campus placement kaisa rehta hai aur companies aati hain?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 47,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hindi (Attendance)",
+    "targetFaq": "Is attendance compulsory?",
+    "question": "परीक्षा में बैठने के लिए क्या क्लास में न्यूनतम उपस्थिति अनिवार्य है?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 48,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hinglish (Branch Change)",
+    "targetFaq": "Can I change my programme after admission?",
+    "question": "First year ke baad kya branch change ya specialization switch karne ka option milta hai?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 49,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hindi (Gap Year)",
+    "targetFaq": "Is a gap-year student eligible?",
+    "question": "अगर 12वीं के बाद मेरा एक या दो साल का गैप है तो क्या मैं एडमिशन ले सकता हूँ?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 50,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hinglish (Admit Card)",
+    "targetFaq": "How can I download my admit card?",
+    "question": "Entrance exam ka admit card portal se kaise download karein?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 51,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hindi (Negative Marking)",
+    "targetFaq": "Is there negative marking?",
+    "question": "क्या विश्वविद्यालय की प्रवेश परीक्षा में गलत उत्तर देने पर नेगेटिव मार्किंग होती है?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 52,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hinglish (Fee Refund)",
+    "targetFaq": "Is the admission fee refundable?",
+    "question": "Agar main kisi reason se seat cancel karwau to kitna fee refund milega?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 53,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hindi (Classes Start)",
+    "targetFaq": "When will classes begin?",
+    "question": "नये सत्र के छात्र-छात्राओं की नियमित कक्षाएं किस महीने से शुरू होंगी?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 54,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hinglish (Supplementary/Compartment)",
+    "targetFaq": "Can I apply if I have a supplementary examination?",
+    "question": "Mere 12th me ek subject me compartment aayi thi, kya main counselling me baith sakta hu?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 55,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hindi (Reserved Category Scholarship)",
+    "targetFaq": "Are scholarships available for reserved-category students?",
+    "question": "आरक्षित वर्ग जैसे ओबीसी और एससी/एसटी छात्रों के लिए क्या फीस में छूट या स्कॉलरशिप है?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 56,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hinglish (Document Verification)",
+    "targetFaq": "Is document verification compulsory?",
+    "question": "Counselling ke time physically documents verify karwane campus aana compulsory hai kya?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 57,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hindi (Distance/Online)",
+    "targetFaq": "Are distance/online programmes available?",
+    "question": "क्या यहां डिस्टेंस लर्निंग या ऑनलाइन डिग्री के माध्यम से भी कोई कोर्स कराया जाता है?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 58,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hinglish (Cutoff Rank)",
+    "targetFaq": "What is the cut-off for admission?",
+    "question": "General category ke liye B.Tech Computer Science ki closing cutoff rank kitni jaati hai?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 59,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hindi (Admission Problems Contact)",
+    "targetFaq": "Whom should I contact for admission-related problems?",
+    "question": "प्रवेश फॉर्म भरते समय तकनीकी दिक्कत आने पर किससे संपर्क करना होगा?",
+    "expectedBehavior": "Answered"
+  },
+  {
+    "id": 60,
+    "group": "Group 4: New Hindi & Hinglish Queries (In FAQ)",
+    "category": "Hinglish (Internships)",
+    "targetFaq": "Are internships available?",
+    "question": "Padhai ke dauran summer internship aur industry training university provide karwati hai?",
+    "expectedBehavior": "Answered"
   }
 ]
