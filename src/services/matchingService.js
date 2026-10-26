@@ -3,6 +3,7 @@ import { findTopMatchingFAQs, getFaqCount } from './embeddingService.js';
 import llmService from './llmService.js';
 import databaseService from './databaseService.js';
 import telephonyService from './telephonyService.js';
+import { isExplicitHumanHandoffRequest } from './intentService.js';
 import logger from '../utils/logger.js';
 
 /**
@@ -78,9 +79,23 @@ class MatchingService {
       : Boolean(config.llm.enabled);
 
     // =========================================================================
+    // EXPLICIT HUMAN OPERATOR / STAFF REQUEST CHECK
+    // =========================================================================
+    const isExplicitHuman = isExplicitHumanHandoffRequest(trimmedQuery);
+
+    // =========================================================================
     // 3-TIER SAFE MATCHING & ROUTING ARCHITECTURE
     // =========================================================================
-    if (!bestMatch || scoreFormatted < baseThreshold) {
+    if (isExplicitHuman) {
+      // Caller explicitly asked to speak with a human/operator/staff
+      tier = 'explicit_human_request';
+      handoff = true;
+      finalAnswer = isPhone ? phoneHandoffMessage : this.handoffMessage;
+      llmUsed = false;
+      llmVerdict = 'EXPLICIT_HUMAN_REQUEST';
+      decisionReason = 'Caller explicitly requested human staff/operator';
+
+    } else if (!bestMatch || scoreFormatted < baseThreshold) {
       // -----------------------------------------------------------------------
       // TIER 1: LOW CONFIDENCE (< 0.86) -> Immediate Staff Handoff (No LLM call)
       // -----------------------------------------------------------------------
@@ -167,17 +182,27 @@ class MatchingService {
     }
 
     // 3. Telephony routing trigger if handoff occurs on phone channel
-    if (handoff && source === 'phone') {
-      await telephonyService.transferToStaff(
-        options.callerNumber || 'Unknown Caller',
-        `Similarity: ${scoreFormatted}, Tier: ${tier}, Reason: ${decisionReason}`
-      );
+    let handoffDetails = null;
+    if (handoff && isPhone) {
+      handoffDetails = await telephonyService.handleHandoffTransfer({
+        callerNumber: options.callerNumber || 'Unknown Caller',
+        questionText: trimmedQuery,
+        language,
+        simulatedStaffStatuses: options.simulatedStaffStatuses,
+        forceOutsideHours: options.forceOutsideHours,
+        forceInsideHours: options.forceInsideHours,
+        reason: `${tier}: ${decisionReason}`
+      });
+      if (handoffDetails && handoffDetails.spokenMessage) {
+        finalAnswer = handoffDetails.spokenMessage;
+      }
     }
 
     // 4. Construct uniform result
     const result = {
       answer: finalAnswer,
       handoff,
+      handoffDetails,
       similarity: scoreFormatted,
       threshold: customThreshold,
       highConfidenceThreshold,

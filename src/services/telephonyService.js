@@ -4,6 +4,8 @@ import config from '../config/index.js';
 import matchingService from './matchingService.js';
 import { cleanSpokenText } from './llmService.js';
 import logger from '../utils/logger.js';
+import databaseService from './databaseService.js';
+import scheduleService from './scheduleService.js';
 
 /**
  * Masks a caller phone number to preserve privacy.
@@ -89,6 +91,7 @@ export function validateTwilioSignature(req) {
 class TelephonyService {
   constructor() {
     this.provider = config.telephony.provider;
+    this.dialerProvider = config.telephony.dialerProvider || 'mock'; // 'mock' | 'twilio'
     this.callMode = config.telephony.callMode; // 'conversationrelay' | 'gather'
     this.accountSid = config.telephony.accountSid;
     this.authToken = config.telephony.authToken;
@@ -98,6 +101,7 @@ class TelephonyService {
     this.ttsVoiceHi = config.telephony.ttsVoiceHi;
     this.wss = null;
     this.activeCalls = new Map();
+    this.callerTransferHistory = new Map(); // caller -> array of timestamp numbers
   }
 
   /**
@@ -257,6 +261,7 @@ class TelephonyService {
               lang: state.detectedLanguage,
               timings: result.timings,
               handoff: result.handoff,
+              handoffDetails: result.handoffDetails || null,
               matchedQuestion: result.matchedQuestion,
               similarity: result.similarity,
               threshold: result.threshold,
@@ -464,18 +469,232 @@ class TelephonyService {
   }
 
   /**
+   * Rate limiting for caller transfers to prevent abuse.
+   * Window: config.telephony.transferRateLimitWindowMs (default 15m), Max: config.telephony.maxTransfersPerCaller (default 3)
+   */
+  checkCallerTransferRateLimit(callerPhone) {
+    if (!callerPhone || callerPhone === 'Unknown' || callerPhone.includes('Unknown')) {
+      return { allowed: true, count: 1, max: config.telephony.maxTransfersPerCaller || 3 };
+    }
+    const cleanPhone = callerPhone.replace(/[^0-9]/g, '');
+    const now = Date.now();
+    const windowMs = config.telephony.transferRateLimitWindowMs || 900000;
+    const maxTransfers = config.telephony.maxTransfersPerCaller || 3;
+
+    let history = this.callerTransferHistory.get(cleanPhone) || [];
+    // Purge timestamps older than window
+    history = history.filter(ts => (now - ts) < windowMs);
+
+    if (history.length >= maxTransfers) {
+      this.callerTransferHistory.set(cleanPhone, history);
+      return { allowed: false, count: history.length, max: maxTransfers };
+    }
+
+    history.push(now);
+    this.callerTransferHistory.set(cleanPhone, history);
+    return { allowed: true, count: history.length, max: maxTransfers };
+  }
+
+  /**
+   * Comprehensive Sequential Staff Dialer with Busy-Line Fallback and Encrypted Callback Registration.
+   */
+  async handleHandoffTransfer(params = {}) {
+    const callerNumber = params.callerNumber || 'Unknown';
+    const maskedCaller = maskPhoneNumber(callerNumber);
+    const questionText = params.questionText || 'General Admission Enquiry';
+    const language = params.language || 'en-IN';
+    const isHindi = language === 'hi-IN';
+    const simulatedStatuses = params.simulatedStaffStatuses || null;
+    const forceOutside = params.forceOutsideHours ?? false;
+    const forceInside = params.forceInsideHours ?? false;
+    const reason = params.reason || 'Staff handoff initiated';
+
+    logger.info(`[TELEPHONY HANDOFF] Initiating transfer sequence for caller ${maskedCaller} (${language}). Reason: ${reason}`);
+
+    // STEP 1: Check Caller Transfer Rate Limit
+    const rateLimitCheck = this.checkCallerTransferRateLimit(callerNumber);
+    if (!rateLimitCheck.allowed) {
+      logger.warn(`[TELEPHONY RATE LIMIT] Caller ${maskedCaller} exceeded limit (${rateLimitCheck.count}/${rateLimitCheck.max} transfers in window). Blocking transfer.`);
+      await databaseService.createCallbackRequest({
+        caller_phone: callerNumber,
+        question_text: questionText,
+        language,
+        reason: 'rate_limit_exceeded',
+        notes: `Transfer rate limit exceeded (${rateLimitCheck.count}/${rateLimitCheck.max})`
+      });
+
+      const rateMsg = isHindi
+        ? 'आपके नंबर से पहले ही कई ट्रांसफर अनुरोध दर्ज हो चुके हैं। हमारे प्रवेश अधिकारी जल्द ही आपसे संपर्क करेंगे। धन्यवाद।'
+        : 'Multiple transfer requests have already been logged for your number. Our admission desk will call you back shortly. Thank you.';
+
+      return {
+        success: false,
+        status: 'rate_limited',
+        spokenMessage: rateMsg,
+        dialResults: []
+      };
+    }
+
+    // STEP 2: Respect Working Hours & Holidays
+    const hoursCheck = await scheduleService.isWithinWorkingHours({ 
+      forceOutsideHours: forceOutside,
+      forceInsideHours: forceInside
+    });
+    if (!hoursCheck.isOpen) {
+      logger.info(`[TELEPHONY SCHEDULE] Office is CLOSED (${hoursCheck.reason}). Skipping staff transfer and registering callback.`);
+      await databaseService.createCallbackRequest({
+        caller_phone: callerNumber,
+        question_text: questionText,
+        language,
+        reason: 'outside_hours',
+        notes: `Office closed: ${hoursCheck.reason}`
+      });
+
+      const closedSpokenMsg = scheduleService.getClosedOfficeSpokenMessage(language, hoursCheck.schedule);
+      return {
+        success: false,
+        status: 'office_closed',
+        officeClosed: true,
+        reason: hoursCheck.reason,
+        spokenMessage: closedSpokenMsg,
+        dialResults: []
+      };
+    }
+
+    // STEP 3: Retrieve Active Staff Numbers from Database
+    const activeStaff = await databaseService.getStaffNumbers({ activeOnly: true });
+    if (!activeStaff || activeStaff.length === 0) {
+      logger.warn('[TELEPHONY DIALER] No active staff numbers found in database! Saving callback request.');
+      await databaseService.createCallbackRequest({
+        caller_phone: callerNumber,
+        question_text: questionText,
+        language,
+        reason: 'no_staff_configured',
+        notes: 'No active staff numbers in database'
+      });
+
+      const noStaffMsg = isHindi
+        ? 'क्षमा करें, हमारे सभी प्रवेश प्रतिनिधि अभी अनुपलब्ध हैं। हमने आपका कॉलबैक अनुरोध सुरक्षित कर लिया है। हमारे अधिकारी आपसे जल्द संपर्क करेंगे।'
+        : 'We apologize, but our admission representatives are currently unavailable. We have saved your callback request, and an officer will reach out to you shortly.';
+
+      return {
+        success: false,
+        status: 'no_staff_available',
+        spokenMessage: noStaffMsg,
+        dialResults: []
+      };
+    }
+
+    // Cap attempts by MAX_STAFF_ATTEMPTS_PER_CALL (default: 3)
+    const maxAttempts = config.telephony.maxStaffAttemptsPerCall || 3;
+    const staffQueue = activeStaff.slice(0, maxAttempts);
+
+    // Initial "Please hold" announcement (polite, caller-friendly, no internal jargon)
+    const pleaseHoldLine = isHindi
+      ? 'कृपया लाइन पर बने रहें, मैं आपको हमारे प्रवेश सहायता अधिकारी से जोड़ रहा हूँ।'
+      : 'Please hold while I connect you to an admission officer for personal assistance.';
+
+    logger.info(`[TELEPHONY DIALER] Trying ${staffQueue.length} staff numbers in sequential order (Max timeout: ${config.telephony.staffDialTimeoutSeconds || 20}s per number)...`);
+
+    const dialResults = [];
+    let connectedStaff = null;
+
+    // STEP 4: Sequential Dialing Loop
+    for (let i = 0; i < staffQueue.length; i++) {
+      const staff = staffQueue[i];
+      const attemptNum = i + 1;
+
+      // If previous attempt failed, speak a warm reassurance hold message so caller never hears dead silence
+      if (attemptNum > 1) {
+        const stillTryingMsg = isHindi
+          ? 'कृपया प्रतीक्षा करें, हम अभी भी आपको हमारे अधिकारी से जोड़ने का प्रयास कर रहे हैं।'
+          : 'Please continue to hold, we are still trying to connect your call to an available officer.';
+        logger.info(`[TELEPHONY HOLD] Playing interim hold reassurance to caller: "${stillTryingMsg}"`);
+      }
+
+      logger.info(`[TELEPHONY DIALER] -> Attempt #${attemptNum}/${staffQueue.length}: Dialing ${staff.name} (${staff.masked_phone}, Priority: ${staff.priority})...`);
+
+      // Determine dial result:
+      // In simulator / test: use simulatedStatuses[i] if provided (e.g. 'busy', 'no-answer', 'rejected', 'answered')
+      // Otherwise default mock is 'answered'
+      let outcome = 'answered';
+      if (Array.isArray(simulatedStatuses) && simulatedStatuses[i] !== undefined) {
+        outcome = simulatedStatuses[i].toLowerCase();
+      } else if (this.dialerProvider === 'mock') {
+        outcome = 'answered';
+      } else if (this.dialerProvider === 'twilio') {
+        outcome = 'forwarded_to_twilio_dial';
+      }
+
+      dialResults.push({
+        attempt: attemptNum,
+        staffId: staff.id,
+        staffName: staff.name,
+        maskedPhone: staff.masked_phone,
+        outcome,
+        timeoutSeconds: config.telephony.staffDialTimeoutSeconds || 20,
+        interimHoldPlayed: attemptNum > 1
+      });
+
+      if (outcome === 'answered' || outcome === 'forwarded_to_twilio_dial') {
+        logger.info(`[TELEPHONY DIALER] ✅ ${staff.name} (${staff.masked_phone}) ANSWERED! Transfer successful.`);
+        connectedStaff = staff;
+        break;
+      } else {
+        logger.warn(`[TELEPHONY DIALER] ❌ ${staff.name} (${staff.masked_phone}) was ${outcome.toUpperCase()} (after ~20s timeout).`);
+      }
+    }
+
+    // STEP 5: Handle Outcome
+    if (connectedStaff) {
+      // Natural spoken message to caller (desk name removed for professional caller experience)
+      const connectedMsg = isHindi
+        ? 'कृपया लाइन पर बने रहें, आपकी कॉल हमारे प्रवेश अधिकारी से जोड़ी जा रही है।'
+        : 'Please stay on the line, connecting your call to an admission officer now.';
+
+      return {
+        success: true,
+        status: 'connected',
+        connectedStaff,
+        dialResults,
+        initialPrompt: pleaseHoldLine,
+        spokenMessage: connectedMsg
+      };
+    } else {
+      // Nobody answered: Save callback request and apologize
+      logger.info(`[TELEPHONY DIALER] All ${staffQueue.length} staff attempts failed (busy/no-answer). Registering encrypted callback request...`);
+      await databaseService.createCallbackRequest({
+        caller_phone: callerNumber,
+        question_text: questionText,
+        language,
+        reason: 'all_staff_busy',
+        notes: `Dialed ${staffQueue.length} staff numbers in sequence. None answered.`
+      });
+
+      const allBusyMsg = isHindi
+        ? 'क्षमा करें, हमारे सभी प्रवेश प्रतिनिधि अभी व्यस्त हैं। हमने आपका कॉलबैक अनुरोध सुरक्षित कर लिया है। हमारे अधिकारी आपसे जल्द ही संपर्क करेंगे। धन्यवाद।'
+        : 'We apologize, but all our admission representatives are currently busy. We have saved your callback request, and our officer will call you back shortly. Thank you.';
+
+      return {
+        success: false,
+        status: 'all_staff_busy',
+        allStaffBusy: true,
+        dialResults,
+        initialPrompt: pleaseHoldLine,
+        spokenMessage: allBusyMsg
+      };
+    }
+  }
+
+  /**
    * Helper to transfer active call to human helpline.
    */
-  async transferToStaff(callerNumber = 'Unknown', reason = 'Handoff requested') {
-    const staffPhone = config.handoff.phone;
-    logger.info(`[TELEPHONY] Transferring caller (${maskPhoneNumber(callerNumber)}) to helpline (${staffPhone}). Reason: ${reason}`);
-    return {
-      success: true,
-      provider: this.provider,
-      status: 'forwarded',
-      targetPhone: staffPhone,
-      timestamp: new Date().toISOString()
-    };
+  async transferToStaff(callerNumber = 'Unknown', reason = 'Handoff requested', options = {}) {
+    return this.handleHandoffTransfer({
+      callerNumber,
+      reason,
+      ...options
+    });
   }
 
   /**

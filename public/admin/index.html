@@ -86,6 +86,12 @@
       <button type="button" class="tab-btn" data-tab="faqsTab">
         ⚙️ Manage FAQs & Embeddings
       </button>
+      <button type="button" class="tab-btn" data-tab="staffTab">
+        👥 Staff & Working Hours
+      </button>
+      <button type="button" class="tab-btn" data-tab="callbacksTab">
+        📞 Callback Requests
+      </button>
     </div>
 
     <!-- TAB 1: ALL ENQUIRY LOGS -->
@@ -217,6 +223,202 @@
         </div>
       </div>
     </section>
+
+    <!-- TAB 4: STAFF NUMBERS & WORKING HOURS -->
+    <section class="tab-pane" id="staffTab">
+      <!-- Section 1: Staff Dialing Sequence -->
+      <div class="panel-card" style="margin-bottom: 2rem;">
+        <div class="panel-header">
+          <div>
+            <h3 class="panel-title">👥 Admission Staff Helpline Numbers</h3>
+            <p class="panel-sub">Configure sequential dialing order for phone handoffs. When a number is busy or rejected (~20s timeout), the system tries the next number.</p>
+          </div>
+          <div class="panel-actions">
+            <button type="button" class="btn btn-primary" id="openAddStaffModalBtn">
+              ➕ Add Staff Number
+            </button>
+            <button type="button" class="btn btn-secondary" id="refreshStaffBtn" title="Refresh list">
+              🔄 Refresh
+            </button>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 80px;">Priority</th>
+                <th>Staff Member / Desk Name</th>
+                <th>Phone Number (Masked)</th>
+                <th style="width: 130px;">Active Status</th>
+                <th style="width: 220px;">Actions & Order</th>
+              </tr>
+            </thead>
+            <tbody id="staffTableBody">
+              <tr>
+                <td colspan="5" class="text-center py-4">Loading staff numbers...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Section 2: Office Working Hours & Holiday Calendar -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h3 class="panel-title">⏰ Office Working Hours & Holiday Calendar</h3>
+            <p class="panel-sub">Outside operating hours, live phone transfers are skipped, the caller is informed of working hours in their language, and a callback request is saved.</p>
+          </div>
+        </div>
+
+        <form id="scheduleSettingsForm" style="padding: 1.25rem 0;">
+          <div class="form-row" style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.25rem;">
+            <div class="form-group" style="flex: 1; min-width: 220px;">
+              <label class="form-label" for="settingOfficeStart">Office Opening Time</label>
+              <input type="time" id="settingOfficeStart" class="form-control" value="09:00" required />
+            </div>
+
+            <div class="form-group" style="flex: 1; min-width: 220px;">
+              <label class="form-label" for="settingOfficeEnd">Office Closing Time</label>
+              <input type="time" id="settingOfficeEnd" class="form-control" value="17:00" required />
+            </div>
+
+            <div class="form-group" style="flex: 1; min-width: 220px;">
+              <label class="form-label">Timezone</label>
+              <input type="text" id="settingOfficeTz" class="form-control" value="Asia/Kolkata" readonly style="background: #f3f4f6;" />
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.5rem;">
+            <label class="form-label" style="display: block; margin-bottom: 0.5rem;">Working Days of the Week</label>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+              <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer;">
+                <input type="checkbox" name="workDay" value="1" checked /> Mon
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer;">
+                <input type="checkbox" name="workDay" value="2" checked /> Tue
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer;">
+                <input type="checkbox" name="workDay" value="3" checked /> Wed
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer;">
+                <input type="checkbox" name="workDay" value="4" checked /> Thu
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer;">
+                <input type="checkbox" name="workDay" value="5" checked /> Fri
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer;">
+                <input type="checkbox" name="workDay" value="6" checked /> Sat
+              </label>
+              <label style="display: flex; align-items: center; gap: 0.35rem; cursor: pointer;">
+                <input type="checkbox" name="workDay" value="0" /> Sun
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group" style="margin-bottom: 1.5rem; background: #0f172a; padding: 1.25rem; border-radius: 8px; border: 1px solid #1e293b;">
+            <label class="form-label" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.5rem;">
+              <span><strong>📅 Official University Holidays & Closures</strong></span>
+              <span style="font-size: 0.8rem; color: #94a3b8;">Calls received on these dates route to out-of-office announcement + callback</span>
+            </label>
+
+            <!-- Interactive Add Holiday Bar -->
+            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem;">
+              <div style="flex: 1; min-width: 170px;">
+                <input type="date" id="newHolidayDate" class="form-control" style="background: #1e293b; color: #fff;" title="Select holiday date" />
+              </div>
+              <div style="flex: 2; min-width: 200px;">
+                <input type="text" id="newHolidayName" class="form-control" placeholder="Holiday description (e.g. Republic Day, Diwali)" style="background: #1e293b; color: #fff;" />
+              </div>
+              <button type="button" class="btn btn-primary" id="addHolidayBtn" style="white-space: nowrap;">
+                ➕ Add Holiday Date
+              </button>
+            </div>
+
+            <!-- Active Holiday Chips Container -->
+            <div id="holidaysListContainer" style="display: flex; gap: 0.6rem; flex-wrap: wrap; min-height: 42px; align-items: center; padding: 0.5rem 0;">
+              <span style="color: #64748b; font-size: 0.85rem;">No holidays loaded...</span>
+            </div>
+
+            <!-- Hidden input maintaining serialized string for backend persistence -->
+            <input type="hidden" id="settingHolidays" value="2026-01-26,2026-08-15,2026-10-02" />
+          </div>
+
+          <div class="form-row" style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+            <div class="form-group" style="flex: 1; min-width: 200px;">
+              <label class="form-label" for="settingMaxAttempts">Max Staff Attempts Per Call</label>
+              <input type="number" id="settingMaxAttempts" class="form-control" min="1" max="10" value="3" />
+            </div>
+
+            <div class="form-group" style="flex: 1; min-width: 200px;">
+              <label class="form-label" for="settingStaffTimeout">Dial Timeout per Number (Seconds)</label>
+              <input type="number" id="settingStaffTimeout" class="form-control" min="5" max="60" value="20" />
+            </div>
+
+            <div class="form-group" style="flex: 1; min-width: 200px;">
+              <label class="form-label" for="settingMaxCallerTransfers">Max Transfers per Caller (15m window)</label>
+              <input type="number" id="settingMaxCallerTransfers" class="form-control" min="1" max="10" value="3" />
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" id="saveScheduleBtn">
+            💾 Save Schedule & Dialing Settings
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- TAB 5: CALLBACK REQUESTS -->
+    <section class="tab-pane" id="callbacksTab">
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <h3 class="panel-title">📞 Caller Callback Requests</h3>
+            <p class="panel-sub">Logged when callers ask for human staff outside office hours, when all staff lines are busy, or after failed transfers.</p>
+          </div>
+          <div class="panel-actions">
+            <button type="button" class="btn btn-secondary" id="refreshCallbacksBtn" title="Refresh callbacks">
+              🔄 Refresh
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="filter-bar">
+          <div class="filter-item">
+            <label for="callbackStatusFilter">Filter Status:</label>
+            <select id="callbackStatusFilter" class="form-select">
+              <option value="all">All Callbacks</option>
+              <option value="pending" selected>⏳ Pending Action</option>
+              <option value="completed">✅ Completed</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-responsive">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th style="width: 60px;">#</th>
+                <th style="width: 170px;">Received At</th>
+                <th>Caller Number</th>
+                <th style="width: 90px;">Language</th>
+                <th>Enquiry / Question Asked</th>
+                <th style="width: 150px;">Reason</th>
+                <th style="width: 120px;">Status</th>
+                <th style="width: 200px;">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="callbacksTableBody">
+              <tr>
+                <td colspan="8" class="text-center py-4">Loading callback requests...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- ADD / EDIT FAQ MODAL -->
@@ -295,6 +497,103 @@
           <button type="submit" class="btn btn-primary" id="saveFaqBtn">Save & Reload Embeddings</button>
         </div>
       </form>
+    </div>
+  </div>
+
+  <!-- ADD / EDIT STAFF NUMBER MODAL -->
+  <div class="modal-overlay" id="staffModal" style="display: none;">
+    <div class="modal-card" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 class="modal-title" id="staffModalTitle">Add Staff Number</h3>
+        <button type="button" class="modal-close" id="closeStaffModalBtn">✕</button>
+      </div>
+      <form id="staffModalForm">
+        <input type="hidden" id="modalStaffId" value="" />
+        
+        <div class="form-group">
+          <label class="form-label" for="modalStaffName">Staff Member / Desk Name</label>
+          <input 
+            type="text" 
+            id="modalStaffName" 
+            class="form-control" 
+            placeholder="e.g. Desk 1 - B.Tech Admissions" 
+            required 
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="modalStaffPhone">Phone Number (E.164 format)</label>
+          <input 
+            type="text" 
+            id="modalStaffPhone" 
+            class="form-control" 
+            placeholder="e.g. +915512273901 or +919876543210" 
+            required 
+          />
+          <small style="color: #6b7280; display: block; margin-top: 0.25rem;">Stored securely in the database; masked in logs and reports.</small>
+        </div>
+
+        <div class="form-row" style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+          <div class="form-group" style="flex: 1; margin-bottom: 0;">
+            <label class="form-label" for="modalStaffPriority">Dial Order / Priority</label>
+            <input 
+              type="number" 
+              id="modalStaffPriority" 
+              class="form-control" 
+              min="1" 
+              max="99" 
+              value="1" 
+              required 
+            />
+          </div>
+          <div class="form-group" style="flex: 1; margin-bottom: 0;">
+            <label class="form-label" for="modalStaffActive">Status</label>
+            <select id="modalStaffActive" class="form-select">
+              <option value="1">🟢 Active (In Dial Sequence)</option>
+              <option value="0">⚪ Inactive (Disabled)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancelStaffModalBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveStaffBtn">Save Staff Member</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- DECRYPT CALLER PHONE MODAL -->
+  <div class="modal-overlay" id="decryptModal" style="display: none;">
+    <div class="modal-card" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 class="modal-title">🔐 Caller Phone Number</h3>
+        <button type="button" class="modal-close" id="closeDecryptModalBtn">✕</button>
+      </div>
+      <div style="padding: 1.5rem 0;">
+        <p style="color: #4b5563; font-size: 0.95rem; margin-bottom: 1rem;">
+          This number was decrypted using AES-256-GCM under your authenticated admin session:
+        </p>
+        <div style="background: #f8fafc; border: 2px dashed #3b82f6; border-radius: 8px; padding: 1.25rem; text-align: center; margin-bottom: 1rem;">
+          <div id="decryptedPhoneValue" style="font-size: 1.5rem; font-weight: 700; color: #1e3a8a; letter-spacing: 0.05em; font-family: monospace;">
+            +91XXXXXXXXXX
+          </div>
+        </div>
+        <div style="display: flex; gap: 0.75rem; justify-content: center; margin-bottom: 1rem;">
+          <button type="button" class="btn btn-primary" id="copyDecryptedPhoneBtn">
+            📋 Copy Number
+          </button>
+          <a id="telDecryptedLink" href="#" class="btn btn-secondary">
+            📞 Dial Direct
+          </a>
+        </div>
+        <div style="background: #fffbeb; border: 1px solid #fef3c7; border-radius: 6px; padding: 0.75rem; font-size: 0.85rem; color: #92400e;">
+          ⚠️ <strong>Privacy Notice:</strong> Do not share or log unmasked numbers. All callbacks are automatically purged after 30 days retention.
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="dismissDecryptModalBtn">Close</button>
+      </div>
     </div>
   </div>
 

@@ -51,6 +51,56 @@ const saveFaqBtn = document.getElementById('saveFaqBtn');
 const toastContainer = document.getElementById('toastContainer');
 
 // ==========================================
+// Staff Helpline DOM Elements
+// ==========================================
+let allStaff = [];
+const staffTableBody = document.getElementById('staffTableBody');
+const openAddStaffModalBtn = document.getElementById('openAddStaffModalBtn');
+const refreshStaffBtn = document.getElementById('refreshStaffBtn');
+const staffModal = document.getElementById('staffModal');
+const staffModalTitle = document.getElementById('staffModalTitle');
+const staffModalForm = document.getElementById('staffModalForm');
+const modalStaffId = document.getElementById('modalStaffId');
+const modalStaffName = document.getElementById('modalStaffName');
+const modalStaffPhone = document.getElementById('modalStaffPhone');
+const modalStaffPriority = document.getElementById('modalStaffPriority');
+const modalStaffActive = document.getElementById('modalStaffActive');
+const closeStaffModalBtn = document.getElementById('closeStaffModalBtn');
+const cancelStaffModalBtn = document.getElementById('cancelStaffModalBtn');
+const saveStaffBtn = document.getElementById('saveStaffBtn');
+
+// ==========================================
+// Schedule & Office Hours DOM Elements
+// ==========================================
+let holidaysList = [];
+const scheduleSettingsForm = document.getElementById('scheduleSettingsForm');
+const settingOfficeStart = document.getElementById('settingOfficeStart');
+const settingOfficeEnd = document.getElementById('settingOfficeEnd');
+const settingOfficeTz = document.getElementById('settingOfficeTz');
+const settingHolidays = document.getElementById('settingHolidays');
+const newHolidayDate = document.getElementById('newHolidayDate');
+const newHolidayName = document.getElementById('newHolidayName');
+const addHolidayBtn = document.getElementById('addHolidayBtn');
+const holidaysListContainer = document.getElementById('holidaysListContainer');
+const settingMaxAttempts = document.getElementById('settingMaxAttempts');
+const settingStaffTimeout = document.getElementById('settingStaffTimeout');
+const settingMaxCallerTransfers = document.getElementById('settingMaxCallerTransfers');
+const saveScheduleBtn = document.getElementById('saveScheduleBtn');
+
+// ==========================================
+// Callbacks & Privacy DOM Elements
+// ==========================================
+const callbacksTableBody = document.getElementById('callbacksTableBody');
+const callbackStatusFilter = document.getElementById('callbackStatusFilter');
+const refreshCallbacksBtn = document.getElementById('refreshCallbacksBtn');
+const decryptModal = document.getElementById('decryptModal');
+const closeDecryptModalBtn = document.getElementById('closeDecryptModalBtn');
+const dismissDecryptModalBtn = document.getElementById('dismissDecryptModalBtn');
+const decryptedPhoneValue = document.getElementById('decryptedPhoneValue');
+const copyDecryptedPhoneBtn = document.getElementById('copyDecryptedPhoneBtn');
+const telDecryptedLink = document.getElementById('telDecryptedLink');
+
+// ==========================================
 // Toast Notifications
 // ==========================================
 function showToast(message, type = 'success') {
@@ -390,6 +440,411 @@ function formatTimestamp(isoStr) {
 }
 
 // ==========================================
+// TAB 4: Staff Numbers Management
+// ==========================================
+async function loadStaff() {
+  if (!staffTableBody) return;
+  staffTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4">Loading staff numbers...</td></tr>';
+  const res = await apiFetch('/admin/api/staff');
+  if (!res || !res.ok) return;
+  const data = await res.json();
+  allStaff = data.staff || [];
+  renderStaffTable(allStaff);
+}
+
+function renderStaffTable(staffList) {
+  if (!staffTableBody) return;
+  if (!staffList.length) {
+    staffTableBody.innerHTML = '<tr><td colspan="5" class="text-center py-4 text-muted">No staff numbers configured yet. Click "Add Staff Number" to configure dialing order.</td></tr>';
+    return;
+  }
+
+  staffTableBody.innerHTML = staffList.map((s, index) => {
+    const isActive = Boolean(s.is_active);
+    const activeBadge = isActive 
+      ? `<span class="badge badge-success" style="cursor: pointer;" onclick="toggleStaffStatus('${s.id}', false)">🟢 Active</span>`
+      : `<span class="badge badge-warning" style="cursor: pointer;" onclick="toggleStaffStatus('${s.id}', true)">⚪ Inactive</span>`;
+
+    return `
+      <tr>
+        <td style="font-weight: 700; color: #818cf8;">
+          <span style="display: inline-block; background: #1e293b; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">#${s.priority}</span>
+        </td>
+        <td style="font-weight: 600;">${escapeHtml(s.name)}</td>
+        <td style="font-family: monospace; letter-spacing: 0.05em; font-weight: 600;">${escapeHtml(s.phone_number_masked || '***')}</td>
+        <td>${activeBadge}</td>
+        <td>
+          <div style="display: flex; gap: 0.4rem; align-items: center;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="openStaffModalForEdit('${s.id}')">✏️ Edit</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="moveStaffOrder('${s.id}', -1)" ${index === 0 ? 'disabled' : ''} title="Move Up in priority">⬆️</button>
+            <button type="button" class="btn btn-secondary btn-sm" onclick="moveStaffOrder('${s.id}', 1)" ${index === staffList.length - 1 ? 'disabled' : ''} title="Move Down in priority">⬇️</button>
+            <button type="button" class="btn btn-danger btn-sm" onclick="deleteStaff('${s.id}', '${escapeHtml(s.name)}')">🗑️</button>
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+function openStaffModal(staff = null) {
+  if (!staffModal) return;
+  if (staff) {
+    staffModalTitle.textContent = 'Edit Staff Member';
+    modalStaffId.value = staff.id;
+    modalStaffName.value = staff.name || '';
+    modalStaffPhone.value = '';
+    modalStaffPhone.placeholder = staff.phone_number_masked ? `Leave blank to keep current (${staff.phone_number_masked})` : '+91...';
+    modalStaffPhone.required = false;
+    modalStaffPriority.value = staff.priority || 1;
+    modalStaffActive.value = staff.is_active ? '1' : '0';
+  } else {
+    staffModalTitle.textContent = 'Add Staff Number';
+    modalStaffId.value = '';
+    modalStaffName.value = '';
+    modalStaffPhone.value = '';
+    modalStaffPhone.placeholder = 'e.g. +915512273901 or +919876543210';
+    modalStaffPhone.required = true;
+    modalStaffPriority.value = (allStaff.length > 0 ? Math.max(...allStaff.map(s => s.priority || 0)) + 1 : 1);
+    modalStaffActive.value = '1';
+  }
+  staffModal.style.display = 'flex';
+}
+
+function closeStaffModal() {
+  if (staffModal) staffModal.style.display = 'none';
+}
+
+window.openStaffModalForEdit = function(id) {
+  const staff = allStaff.find(s => s.id === id);
+  if (staff) openStaffModal(staff);
+};
+
+window.toggleStaffStatus = async function(id, newStatus) {
+  const res = await apiFetch(`/admin/api/staff/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ is_active: newStatus })
+  });
+  if (res && res.ok) {
+    showToast(`Staff member ${newStatus ? 'activated' : 'deactivated'}`, 'success');
+    loadStaff();
+  }
+};
+
+window.deleteStaff = async function(id, name) {
+  if (!confirm(`Are you sure you want to remove "${name}" from the dialing sequence?`)) return;
+  const res = await apiFetch(`/admin/api/staff/${id}`, { method: 'DELETE' });
+  if (res && res.ok) {
+    showToast('Staff member deleted', 'success');
+    loadStaff();
+  }
+};
+
+window.moveStaffOrder = async function(id, direction) {
+  const idx = allStaff.findIndex(s => s.id === id);
+  if (idx < 0) return;
+  const targetIdx = idx + direction;
+  if (targetIdx < 0 || targetIdx >= allStaff.length) return;
+
+  const newStaffList = [...allStaff];
+  const temp = newStaffList[idx];
+  newStaffList[idx] = newStaffList[targetIdx];
+  newStaffList[targetIdx] = temp;
+
+  const orderedIds = newStaffList.map(s => s.id);
+  const res = await apiFetch('/admin/api/staff/reorder', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ orderedIds })
+  });
+  if (res && res.ok) {
+    showToast('Dial sequence order updated', 'success');
+    loadStaff();
+  }
+};
+
+// Staff Form Submission
+staffModalForm?.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const id = modalStaffId.value;
+  const name = modalStaffName.value.trim();
+  const phone = modalStaffPhone.value.trim();
+  const priority = parseInt(modalStaffPriority.value, 10) || 1;
+  const is_active = modalStaffActive.value === '1';
+
+  if (!name) return;
+  if (!id && !phone) return;
+
+  saveStaffBtn.disabled = true;
+  saveStaffBtn.textContent = 'Saving...';
+
+  const isEdit = Boolean(id);
+  const url = isEdit ? `/admin/api/staff/${id}` : '/admin/api/staff';
+  const method = isEdit ? 'PUT' : 'POST';
+
+  const payload = { name, priority, is_active };
+  if (phone) payload.phone_number = phone;
+
+  const res = await apiFetch(url, {
+    method,
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  });
+
+  saveStaffBtn.disabled = false;
+  saveStaffBtn.textContent = 'Save Staff Member';
+
+  if (res && res.ok) {
+    closeStaffModal();
+    showToast(`Staff member ${isEdit ? 'updated' : 'added'} successfully!`, 'success');
+    loadStaff();
+  } else {
+    showToast('Failed to save staff member.', 'error');
+  }
+});
+
+// ==========================================
+// TAB 4 (Section 2): Schedule & Office Hours
+// ==========================================
+function renderHolidaysList() {
+  if (!holidaysListContainer) return;
+  if (!holidaysList.length) {
+    holidaysListContainer.innerHTML = '<span style="color: #64748b; font-size: 0.85rem;">No holidays added yet. Pick a date above to add one.</span>';
+    if (settingHolidays) settingHolidays.value = '';
+    return;
+  }
+
+  holidaysListContainer.innerHTML = holidaysList.map((h, idx) => `
+    <div style="background: #1e293b; border: 1px solid #334155; padding: 0.35rem 0.75rem; border-radius: 6px; display: inline-flex; align-items: center; gap: 0.5rem; font-size: 0.85rem;">
+      <span style="font-weight: 600; color: #38bdf8;">📅 ${escapeHtml(h.date)}</span>
+      ${h.name ? `<span style="color: #cbd5e1;">(${escapeHtml(h.name)})</span>` : ''}
+      <button type="button" onclick="removeHoliday(${idx})" style="background: none; border: none; color: #ef4444; font-weight: bold; cursor: pointer; padding: 0 0.25rem; font-size: 1rem; line-height: 1;" title="Remove this holiday date">✕</button>
+    </div>
+  `).join('');
+
+  if (settingHolidays) {
+    settingHolidays.value = holidaysList.map(h => h.date).join(',');
+  }
+}
+
+window.removeHoliday = function(idx) {
+  if (idx >= 0 && idx < holidaysList.length) {
+    const removed = holidaysList.splice(idx, 1)[0];
+    renderHolidaysList();
+    showToast(`Removed holiday: ${removed.date}`, 'success');
+  }
+};
+
+function handleAddHoliday() {
+  if (!newHolidayDate || !newHolidayDate.value) {
+    showToast('Please select a calendar date first.', 'error');
+    newHolidayDate?.focus();
+    return;
+  }
+
+  const dateVal = newHolidayDate.value.trim();
+  const nameVal = newHolidayName ? newHolidayName.value.trim() : '';
+
+  // Check duplicate
+  if (holidaysList.some(h => h.date === dateVal)) {
+    showToast(`Holiday date ${dateVal} is already added.`, 'error');
+    return;
+  }
+
+  holidaysList.push({ date: dateVal, name: nameVal });
+  // Sort chronologically
+  holidaysList.sort((a, b) => a.date.localeCompare(b.date));
+
+  renderHolidaysList();
+  newHolidayDate.value = '';
+  if (newHolidayName) newHolidayName.value = '';
+  showToast(`Added holiday: ${dateVal} ${nameVal ? '(' + nameVal + ')' : ''}`, 'success');
+}
+
+async function loadScheduleSettings() {
+  if (!scheduleSettingsForm) return;
+  const res = await apiFetch('/admin/api/settings');
+  if (!res || !res.ok) return;
+  const data = await res.json();
+  const settings = data.settings || {};
+
+  if (settings.office_hours_start) settingOfficeStart.value = settings.office_hours_start;
+  if (settings.office_hours_end) settingOfficeEnd.value = settings.office_hours_end;
+  if (settings.max_staff_attempts) settingMaxAttempts.value = settings.max_staff_attempts;
+  if (settings.staff_dial_timeout_seconds) settingStaffTimeout.value = settings.staff_dial_timeout_seconds;
+  if (settings.max_caller_transfers) settingMaxCallerTransfers.value = settings.max_caller_transfers;
+
+  // Known standard holiday names map
+  const standardNames = {
+    '2026-01-26': 'Republic Day',
+    '2026-08-15': 'Independence Day',
+    '2026-10-02': 'Gandhi Jayanti',
+    '2026-11-08': 'Diwali'
+  };
+
+  const rawHolidays = settings.holidays || '2026-01-26,2026-08-15,2026-10-02';
+  holidaysList = [];
+
+  if (rawHolidays.trim().startsWith('[')) {
+    try {
+      const parsed = JSON.parse(rawHolidays);
+      if (Array.isArray(parsed)) {
+        holidaysList = parsed.map(item => typeof item === 'object' ? item : { date: String(item), name: standardNames[item] || '' });
+      }
+    } catch {
+      // Fall through to CSV
+    }
+  }
+
+  if (!holidaysList.length) {
+    const dates = rawHolidays.split(',').map(s => s.trim()).filter(Boolean);
+    holidaysList = dates.map(d => ({ date: d, name: standardNames[d] || '' }));
+  }
+
+  renderHolidaysList();
+
+  if (settings.working_days) {
+    const activeDays = settings.working_days.split(',').map(d => d.trim());
+    document.querySelectorAll('input[name="workDay"]').forEach(cb => {
+      cb.checked = activeDays.includes(cb.value);
+    });
+  }
+}
+
+async function handleScheduleSave(e) {
+  e.preventDefault();
+  saveScheduleBtn.disabled = true;
+  saveScheduleBtn.textContent = 'Saving Settings...';
+
+  const selectedDays = Array.from(document.querySelectorAll('input[name="workDay"]:checked')).map(cb => cb.value);
+
+  const newSettings = {
+    office_hours_start: settingOfficeStart.value,
+    office_hours_end: settingOfficeEnd.value,
+    working_days: selectedDays.join(','),
+    holidays: settingHolidays.value.trim(),
+    max_staff_attempts: parseInt(settingMaxAttempts.value, 10) || 3,
+    staff_dial_timeout_seconds: parseInt(settingStaffTimeout.value, 10) || 20,
+    max_caller_transfers: parseInt(settingMaxCallerTransfers.value, 10) || 3
+  };
+
+  const res = await apiFetch('/admin/api/settings', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ settings: newSettings })
+  });
+
+  saveScheduleBtn.disabled = false;
+  saveScheduleBtn.textContent = '💾 Save Schedule & Dialing Settings';
+
+  if (res && res.ok) {
+    showToast('Schedule & Dialing Settings saved successfully!', 'success');
+  } else {
+    showToast('Failed to save settings.', 'error');
+  }
+}
+
+scheduleSettingsForm?.addEventListener('submit', handleScheduleSave);
+
+// ==========================================
+// TAB 5: Caller Callback Requests & Privacy
+// ==========================================
+async function loadCallbacks() {
+  if (!callbacksTableBody) return;
+  callbacksTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4">Loading callback requests...</td></tr>';
+  const status = callbackStatusFilter ? callbackStatusFilter.value : 'all';
+  const res = await apiFetch(`/admin/api/callbacks?status=${status}`);
+  if (!res || !res.ok) return;
+  const data = await res.json();
+  renderCallbacksTable(data.callbacks || []);
+}
+
+function renderCallbacksTable(callbacks) {
+  if (!callbacksTableBody) return;
+  if (!callbacks.length) {
+    callbacksTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-muted">No callback requests found matching the filter.</td></tr>';
+    return;
+  }
+
+  callbacksTableBody.innerHTML = callbacks.map(cb => {
+    const isCompleted = cb.status === 'completed';
+    const statusBadge = isCompleted 
+      ? '<span class="badge badge-success">✅ Completed</span>'
+      : '<span class="badge badge-warning">⏳ Pending</span>';
+
+    const reasonLabel = escapeHtml(cb.reason || 'unanswered');
+    const timeFormatted = cb.created_at ? new Date(cb.created_at).toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }) : '-';
+
+    return `
+      <tr>
+        <td style="font-weight: 600; color: #94a3b8;">#${cb.id}</td>
+        <td style="white-space: nowrap; font-size: 0.8rem; color: #cbd5e1;">${timeFormatted}</td>
+        <td style="font-family: monospace; font-weight: 600;">${escapeHtml(cb.caller_phone_masked || '***')}</td>
+        <td><span class="score-tag">${escapeHtml(cb.language || 'en')}</span></td>
+        <td style="max-width: 280px; word-break: break-word;"><strong>${escapeHtml(cb.question_text || cb.question || 'Admission Enquiry')}</strong></td>
+        <td><span style="background: #1e293b; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.75rem;">${reasonLabel}</span></td>
+        <td>${statusBadge}</td>
+        <td>
+          <div style="display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap;">
+            <button type="button" class="btn btn-secondary btn-sm" onclick="openDecryptModal(${cb.id})">
+              🔐 Reveal Phone
+            </button>
+            ${!isCompleted ? `
+              <button type="button" class="btn btn-primary btn-sm" onclick="completeCallback(${cb.id})">
+                ✓ Mark Done
+              </button>
+            ` : ''}
+          </div>
+        </td>
+      </tr>
+    `;
+  }).join('');
+}
+
+window.completeCallback = async function(id) {
+  const notes = prompt('Add optional note about this completed callback (e.g. "Called parent, explained MCA fee structure"):');
+  if (notes === null) return;
+
+  const res = await apiFetch(`/admin/api/callbacks/${id}/complete`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ notes })
+  });
+
+  if (res && res.ok) {
+    showToast(`Callback #${id} marked as completed!`, 'success');
+    loadCallbacks();
+  }
+};
+
+window.openDecryptModal = async function(id) {
+  if (!decryptModal) return;
+  decryptedPhoneValue.textContent = 'Decrypting...';
+  decryptModal.style.display = 'flex';
+
+  const res = await apiFetch(`/admin/api/callbacks/${id}/decrypt`, { method: 'POST' });
+  if (res && res.ok) {
+    const data = await res.json();
+    decryptedPhoneValue.textContent = data.phone;
+    telDecryptedLink.href = `tel:${data.phone}`;
+  } else {
+    decryptedPhoneValue.textContent = 'Error decrypting';
+    showToast('Failed to decrypt phone number.', 'error');
+  }
+};
+
+function closeDecryptModal() {
+  if (decryptModal) decryptModal.style.display = 'none';
+}
+
+function copyDecryptedPhone() {
+  const phone = decryptedPhoneValue.textContent.trim();
+  if (!phone || phone.includes('Decrypting') || phone.includes('Error')) return;
+  navigator.clipboard.writeText(phone);
+  showToast(`Copied ${phone} to clipboard!`, 'success');
+}
+
+// ==========================================
 // Event Listeners
 // ==========================================
 
@@ -401,41 +856,46 @@ tabButtons.forEach(btn => {
 
     btn.classList.add('active');
     const targetTab = btn.dataset.tab;
-    document.getElementById(targetTab).classList.add('active');
+    document.getElementById(targetTab)?.classList.add('active');
 
     if (targetTab === 'logsTab') loadLogs();
     if (targetTab === 'handoffsTab') loadHandedOffQueries();
     if (targetTab === 'faqsTab') loadFaqs();
+    if (targetTab === 'staffTab') {
+      loadStaff();
+      loadScheduleSettings();
+    }
+    if (targetTab === 'callbacksTab') loadCallbacks();
   });
 });
 
 // Logs Filters
-logSearchInput.addEventListener('input', () => {
+logSearchInput?.addEventListener('input', () => {
   clearTimeout(searchDebounceTimer);
   searchDebounceTimer = setTimeout(loadLogs, 250);
 });
-logStatusFilter.addEventListener('change', loadLogs);
-logChannelFilter.addEventListener('change', loadLogs);
-refreshLogsBtn.addEventListener('click', () => {
+logStatusFilter?.addEventListener('change', loadLogs);
+logChannelFilter?.addEventListener('change', loadLogs);
+refreshLogsBtn?.addEventListener('click', () => {
   loadLogs();
   loadStats();
   showToast('Logs refreshed', 'success');
 });
-exportCsvBtn.addEventListener('click', handleExportCsv);
-refreshHandoffsBtn.addEventListener('click', loadHandedOffQueries);
+exportCsvBtn?.addEventListener('click', handleExportCsv);
+refreshHandoffsBtn?.addEventListener('click', loadHandedOffQueries);
 
 // FAQ Search & Modal
-faqSearchInput.addEventListener('input', () => renderFaqsTable(allFaqs));
-openAddFaqModalBtn.addEventListener('click', () => openFaqModal());
-closeFaqModalBtn.addEventListener('click', closeFaqModal);
-cancelFaqModalBtn.addEventListener('click', closeFaqModal);
+faqSearchInput?.addEventListener('input', () => renderFaqsTable(allFaqs));
+openAddFaqModalBtn?.addEventListener('click', () => openFaqModal());
+closeFaqModalBtn?.addEventListener('click', closeFaqModal);
+cancelFaqModalBtn?.addEventListener('click', closeFaqModal);
 
-faqModal.addEventListener('click', (e) => {
+faqModal?.addEventListener('click', (e) => {
   if (e.target === faqModal) closeFaqModal();
 });
 
 // FAQ Form Submission (Create or Edit)
-faqModalForm.addEventListener('submit', async (e) => {
+faqModalForm?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const id = modalFaqId.value;
   const q = modalQuestion.value.trim();
@@ -477,8 +937,36 @@ faqModalForm.addEventListener('submit', async (e) => {
   }
 });
 
+// Staff & Callbacks Event Listeners
+openAddStaffModalBtn?.addEventListener('click', () => openStaffModal());
+closeStaffModalBtn?.addEventListener('click', closeStaffModal);
+cancelStaffModalBtn?.addEventListener('click', closeStaffModal);
+refreshStaffBtn?.addEventListener('click', loadStaff);
+staffModal?.addEventListener('click', (e) => {
+  if (e.target === staffModal) closeStaffModal();
+});
+
+callbackStatusFilter?.addEventListener('change', loadCallbacks);
+refreshCallbacksBtn?.addEventListener('click', loadCallbacks);
+
+closeDecryptModalBtn?.addEventListener('click', closeDecryptModal);
+dismissDecryptModalBtn?.addEventListener('click', closeDecryptModal);
+copyDecryptedPhoneBtn?.addEventListener('click', copyDecryptedPhone);
+decryptModal?.addEventListener('click', (e) => {
+  if (e.target === decryptModal) closeDecryptModal();
+});
+
+addHolidayBtn?.addEventListener('click', handleAddHoliday);
+newHolidayName?.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    handleAddHoliday();
+  }
+});
+
 // Initialize on page load
 window.addEventListener('DOMContentLoaded', () => {
   loadStats();
   loadLogs();
 });
+

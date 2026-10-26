@@ -12,7 +12,8 @@
     "test-threshold": "node test-threshold.js",
     "test-compare": "node test-compare.js",
     "test-voices": "node scripts/test-voices.js",
-    "test-call": "node test-call-simulator.js"
+    "test-call": "node test-call-simulator.js",
+    "test-handoff": "node test-handoff-scenarios.js"
   },
   "keywords": [
     "ai",

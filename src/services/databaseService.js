@@ -4,6 +4,7 @@ import { DatabaseSync } from 'node:sqlite';
 import pg from 'pg';
 import config from '../config/index.js';
 import logger from '../utils/logger.js';
+import { encryptPhoneNumber, maskPhoneNumber, decryptPhoneNumber } from '../utils/crypto.js';
 
 const { Pool } = pg;
 
@@ -60,6 +61,24 @@ class DatabaseService {
 
     // Auto-seed FAQs if table is empty
     await this.seedFAQsIfEmpty();
+
+    // Auto-seed Staff numbers and settings if empty
+    await this.seedStaffAndSettingsIfEmpty();
+
+    // Purge old callbacks beyond retention days on startup
+    await this.cleanupOldCallbacks();
+
+    // Schedule recurring daily retention purge (every 24 hours while server is running)
+    if (!this.cleanupInterval) {
+      this.cleanupInterval = setInterval(() => {
+        this.cleanupOldCallbacks().catch(err => {
+          logger.error('[PURGE] Recurring callback retention cleanup error:', err.message);
+        });
+      }, 24 * 60 * 60 * 1000);
+      if (this.cleanupInterval.unref) {
+        this.cleanupInterval.unref();
+      }
+    }
 
     this.initialized = true;
     logger.info(`Database service ready [Provider: ${this.type.toUpperCase()}]`);
@@ -137,9 +156,41 @@ class DatabaseService {
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         );
 
+        CREATE TABLE IF NOT EXISTS staff_numbers (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          phone_number TEXT NOT NULL,
+          priority INTEGER NOT NULL DEFAULT 1,
+          is_active INTEGER NOT NULL DEFAULT 1,
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS callback_requests (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          caller_phone_encrypted TEXT NOT NULL,
+          caller_phone_masked TEXT NOT NULL,
+          question_text TEXT NOT NULL,
+          language TEXT NOT NULL DEFAULT 'en-IN',
+          reason TEXT NOT NULL,
+          status TEXT NOT NULL DEFAULT 'pending',
+          created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+          completed_at DATETIME,
+          notes TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS app_settings (
+          key TEXT PRIMARY KEY,
+          value TEXT NOT NULL,
+          updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
+
         CREATE INDEX IF NOT EXISTS idx_logs_timestamp ON enquiry_logs(timestamp);
         CREATE INDEX IF NOT EXISTS idx_logs_status ON enquiry_logs(status);
         CREATE INDEX IF NOT EXISTS idx_logs_channel ON enquiry_logs(channel);
+        CREATE INDEX IF NOT EXISTS idx_staff_priority ON staff_numbers(priority);
+        CREATE INDEX IF NOT EXISTS idx_callbacks_status ON callback_requests(status);
+        CREATE INDEX IF NOT EXISTS idx_callbacks_created ON callback_requests(created_at);
       `);
 
       // Migrations: Add new columns if tables existed from previous version
@@ -197,10 +248,42 @@ class DatabaseService {
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
 
+        CREATE TABLE IF NOT EXISTS staff_numbers (
+          id SERIAL PRIMARY KEY,
+          name VARCHAR(128) NOT NULL,
+          phone_number VARCHAR(64) NOT NULL,
+          priority INTEGER NOT NULL DEFAULT 1,
+          is_active BOOLEAN NOT NULL DEFAULT TRUE,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
+        CREATE TABLE IF NOT EXISTS callback_requests (
+          id SERIAL PRIMARY KEY,
+          caller_phone_encrypted TEXT NOT NULL,
+          caller_phone_masked VARCHAR(64) NOT NULL,
+          question_text TEXT NOT NULL,
+          language VARCHAR(32) NOT NULL DEFAULT 'en-IN',
+          reason VARCHAR(64) NOT NULL,
+          status VARCHAR(32) NOT NULL DEFAULT 'pending',
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          completed_at TIMESTAMP,
+          notes TEXT
+        );
+
+        CREATE TABLE IF NOT EXISTS app_settings (
+          key VARCHAR(128) PRIMARY KEY,
+          value TEXT NOT NULL,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+
         CREATE INDEX IF NOT EXISTS idx_logs_timestamp ON enquiry_logs(timestamp);
         CREATE INDEX IF NOT EXISTS idx_logs_status ON enquiry_logs(status);
         CREATE INDEX IF NOT EXISTS idx_logs_channel ON enquiry_logs(channel);
         CREATE INDEX IF NOT EXISTS idx_faqs_review ON faqs(review_status);
+        CREATE INDEX IF NOT EXISTS idx_staff_priority ON staff_numbers(priority);
+        CREATE INDEX IF NOT EXISTS idx_callbacks_status ON callback_requests(status);
+        CREATE INDEX IF NOT EXISTS idx_callbacks_created ON callback_requests(created_at);
       `);
 
       const pgMigrations = [
@@ -257,6 +340,55 @@ class DatabaseService {
       }
 
       logger.info(`Seeded ${faqs.length} FAQs into database.`);
+    }
+  }
+
+  /**
+   * Seeds default staff numbers and default office schedule settings if tables are empty.
+   */
+  async seedStaffAndSettingsIfEmpty() {
+    try {
+      // 1. Seed Staff Numbers if empty
+      const staffCountRows = await this.executeQuery('SELECT COUNT(*) as count FROM staff_numbers');
+      const staffCount = parseInt(staffCountRows[0].count, 10);
+
+      if (staffCount === 0) {
+        logger.info('Seeding default admission staff helpline numbers into database...');
+        const initialStaff = [
+          { name: 'Admission Helpline Desk 1', phone: '+915512273901', priority: 1 },
+          { name: 'Admission Helpline Desk 2', phone: '+915512273902', priority: 2 },
+          { name: 'Senior Admission Officer', phone: '+915512273903', priority: 3 }
+        ];
+
+        for (const s of initialStaff) {
+          await this.executeQuery(`
+            INSERT INTO staff_numbers (name, phone_number, priority, is_active)
+            VALUES (?, ?, ?, 1)
+          `, [s.name, s.phone, s.priority]);
+        }
+        logger.info(`Seeded ${initialStaff.length} default staff numbers.`);
+      }
+
+      // 2. Seed Default Application Settings if empty
+      const defaultSettings = [
+        ['office_hours_start', config.schedule.officeHoursStart || '09:00'],
+        ['office_hours_end', config.schedule.officeHoursEnd || '17:00'],
+        ['office_days', (config.schedule.officeDays || [1,2,3,4,5,6]).join(',')],
+        ['office_timezone', config.schedule.timezone || 'Asia/Kolkata'],
+        ['office_holidays', (config.schedule.holidays || ['2026-01-26','2026-08-15','2026-10-02']).join(',')],
+        ['max_staff_attempts', String(config.telephony.maxStaffAttemptsPerCall || 3)],
+        ['staff_dial_timeout', String(config.telephony.staffDialTimeoutSeconds || 20)],
+        ['max_transfers_per_caller', String(config.telephony.maxTransfersPerCaller || 3)],
+        ['callback_retention_days', String(config.callbacks.retentionDays || 30)]
+      ];
+
+      for (const [key, val] of defaultSettings) {
+        await this.executeQuery(`
+          INSERT OR IGNORE INTO app_settings (key, value) VALUES (?, ?)
+        `, [key, val]);
+      }
+    } catch (err) {
+      logger.error('Error seeding staff numbers or settings:', err.message);
     }
   }
 
@@ -534,6 +666,219 @@ class DatabaseService {
   async cleanupExpiredSessions() {
     const now = Date.now();
     await this.executeQuery('DELETE FROM admin_sessions WHERE expires_at <= ?', [now]);
+  }
+
+  // ==========================================
+  // Staff Helpline Numbers CRUD
+  // ==========================================
+
+  async getStaffNumbers({ activeOnly = false } = {}) {
+    let sql = 'SELECT id, name, phone_number, priority, is_active, created_at, updated_at FROM staff_numbers';
+    const params = [];
+    if (activeOnly) {
+      sql += ' WHERE is_active = 1';
+    }
+    sql += ' ORDER BY priority ASC, id ASC';
+    const rows = await this.executeQuery(sql, params);
+    return rows.map(r => ({
+      ...r,
+      is_active: Boolean(r.is_active),
+      masked_phone: maskPhoneNumber(r.phone_number)
+    }));
+  }
+
+  async getStaffNumberById(id) {
+    const rows = await this.executeQuery('SELECT * FROM staff_numbers WHERE id = ?', [id]);
+    if (!rows[0]) return null;
+    return {
+      ...rows[0],
+      is_active: Boolean(rows[0].is_active),
+      masked_phone: maskPhoneNumber(rows[0].phone_number)
+    };
+  }
+
+  async createStaffNumber({ name, phone_number, priority = 1, is_active = 1 }) {
+    const cleanName = (name || '').trim();
+    const cleanPhone = (phone_number || '').trim();
+    const priorityVal = parseInt(priority || 1, 10);
+    const activeVal = is_active ? 1 : 0;
+
+    const res = await this.executeQuery(`
+      INSERT INTO staff_numbers (name, phone_number, priority, is_active)
+      VALUES (?, ?, ?, ?)
+    `, [cleanName, cleanPhone, priorityVal, activeVal]);
+
+    return {
+      id: res.lastInsertRowid,
+      name: cleanName,
+      phone_number: cleanPhone,
+      priority: priorityVal,
+      is_active: Boolean(activeVal)
+    };
+  }
+
+  async updateStaffNumber(id, { name, phone_number, priority, is_active }) {
+    const existing = await this.getStaffNumberById(id);
+    if (!existing) throw new Error(`Staff number #${id} not found.`);
+
+    const newName = name !== undefined ? name.trim() : existing.name;
+    const newPhone = phone_number !== undefined ? phone_number.trim() : existing.phone_number;
+    const newPriority = priority !== undefined ? parseInt(priority, 10) : existing.priority;
+    const newActive = is_active !== undefined ? (is_active ? 1 : 0) : (existing.is_active ? 1 : 0);
+
+    await this.executeQuery(`
+      UPDATE staff_numbers
+      SET name = ?, phone_number = ?, priority = ?, is_active = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ?
+    `, [newName, newPhone, newPriority, newActive, id]);
+
+    return this.getStaffNumberById(id);
+  }
+
+  async deleteStaffNumber(id) {
+    const res = await this.executeQuery('DELETE FROM staff_numbers WHERE id = ?', [id]);
+    return { success: true, deletedId: id };
+  }
+
+  async reorderStaffNumbers(orderedIds) {
+    if (!Array.isArray(orderedIds)) return;
+    for (let index = 0; index < orderedIds.length; index++) {
+      const id = orderedIds[index];
+      const priority = index + 1;
+      await this.executeQuery('UPDATE staff_numbers SET priority = ? WHERE id = ?', [priority, id]);
+    }
+  }
+
+  // ==========================================
+  // Callback Requests CRUD
+  // ==========================================
+
+  async createCallbackRequest({ caller_phone, question_text, language = 'en-IN', reason = 'all_staff_busy', notes = null }) {
+    const cleanPhone = (caller_phone || '').trim();
+    const encryptedPhone = encryptPhoneNumber(cleanPhone);
+    const maskedPhone = maskPhoneNumber(cleanPhone);
+    const cleanQ = (question_text || '').trim();
+    const cleanLang = language || 'en-IN';
+    const cleanReason = reason || 'all_staff_busy';
+
+    const res = await this.executeQuery(`
+      INSERT INTO callback_requests (caller_phone_encrypted, caller_phone_masked, question_text, language, reason, status, notes)
+      VALUES (?, ?, ?, ?, ?, 'pending', ?)
+    `, [encryptedPhone, maskedPhone, cleanQ, cleanLang, cleanReason, notes]);
+
+    logger.info(`[CALLBACK REGISTERED] Callback #${res.lastInsertRowid} logged for ${maskedPhone} (${cleanLang}). Reason: ${cleanReason}`);
+    return {
+      id: res.lastInsertRowid,
+      caller_phone_masked: maskedPhone,
+      question_text: cleanQ,
+      language: cleanLang,
+      reason: cleanReason,
+      status: 'pending'
+    };
+  }
+
+  async getCallbackRequests({ status = 'all', limit = 50, offset = 0 } = {}) {
+    let sql = 'SELECT id, caller_phone_masked, question_text, language, reason, status, created_at, completed_at, notes FROM callback_requests';
+    const params = [];
+    if (status && status !== 'all') {
+      sql += ' WHERE status = ?';
+      params.push(status);
+    }
+    sql += ' ORDER BY id DESC LIMIT ? OFFSET ?';
+    params.push(limit, offset);
+
+    const rows = await this.executeQuery(sql, params);
+    const countSql = status && status !== 'all' 
+      ? 'SELECT COUNT(*) as count FROM callback_requests WHERE status = ?' 
+      : 'SELECT COUNT(*) as count FROM callback_requests';
+    const countParams = status && status !== 'all' ? [status] : [];
+    const countRows = await this.executeQuery(countSql, countParams);
+
+    return {
+      callbacks: rows,
+      total: parseInt(countRows[0].count, 10),
+      limit,
+      offset
+    };
+  }
+
+  async markCallbackCompleted(id, notes = '') {
+    await this.executeQuery(`
+      UPDATE callback_requests
+      SET status = 'completed', completed_at = CURRENT_TIMESTAMP, notes = COALESCE(?, notes)
+      WHERE id = ?
+    `, [notes || null, id]);
+
+    return { success: true, id, status: 'completed' };
+  }
+
+  async decryptCallbackPhone(id) {
+    const rows = await this.executeQuery('SELECT caller_phone_encrypted FROM callback_requests WHERE id = ?', [id]);
+    if (!rows[0] || !rows[0].caller_phone_encrypted) {
+      return null;
+    }
+    return decryptPhoneNumber(rows[0].caller_phone_encrypted);
+  }
+
+  /**
+   * Auto-deletes callback requests older than retentionDays (default 30).
+   */
+  async cleanupOldCallbacks(retentionDays = config.callbacks.retentionDays || 30) {
+    try {
+      const days = parseInt(retentionDays, 10);
+      if (this.type === 'sqlite') {
+        const res = await this.executeQuery(`
+          DELETE FROM callback_requests 
+          WHERE created_at < datetime('now', '-' || ? || ' days')
+        `, [days]);
+        if (res.rowCount > 0) {
+          logger.info(`[PURGE] Auto-deleted ${res.rowCount} callback requests older than ${days} days.`);
+        }
+      } else {
+        const res = await this.executeQuery(`
+          DELETE FROM callback_requests 
+          WHERE created_at < NOW() - INTERVAL '1 day' * $1
+        `, [days]);
+        if (res.rowCount > 0) {
+          logger.info(`[PURGE] Auto-deleted ${res.rowCount} callback requests older than ${days} days.`);
+        }
+      }
+    } catch (err) {
+      logger.error('Failed to cleanup old callbacks:', err.message);
+    }
+  }
+
+  // ==========================================
+  // App Settings Management
+  // ==========================================
+
+  async getSetting(key, defaultValue = null) {
+    const rows = await this.executeQuery('SELECT value FROM app_settings WHERE key = ?', [key]);
+    return rows[0] ? rows[0].value : defaultValue;
+  }
+
+  async setSetting(key, value) {
+    const strVal = String(value);
+    if (this.type === 'sqlite') {
+      await this.sqliteDb.prepare(`
+        INSERT INTO app_settings (key, value, updated_at) VALUES (?, ?, CURRENT_TIMESTAMP)
+        ON CONFLICT(key) DO UPDATE SET value = excluded.value, updated_at = CURRENT_TIMESTAMP
+      `).run(key, strVal);
+    } else {
+      await this.pgPool.query(`
+        INSERT INTO app_settings (key, value, updated_at) VALUES ($1, $2, CURRENT_TIMESTAMP)
+        ON CONFLICT(key) DO UPDATE SET value = EXCLUDED.value, updated_at = CURRENT_TIMESTAMP
+      `, [key, strVal]);
+    }
+  }
+
+  async getAllSettings() {
+    const rows = await this.executeQuery('SELECT key, value, updated_at FROM app_settings');
+    const map = {};
+    for (const r of rows) {
+      map[r.key] = r.value;
+    }
+    return map;
   }
 
   /**

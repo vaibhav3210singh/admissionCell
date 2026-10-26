@@ -67,17 +67,33 @@ export const config = Object.freeze({
     googleVoiceEn: (process.env.GOOGLE_VOICE_EN || 'Google.en-IN-Neural2-A').split('#')[0].trim(),
     googleVoiceHi: (process.env.GOOGLE_VOICE_HI || 'Google.hi-IN-Neural2-A').split('#')[0].trim(),
     transcriptionProvider: (process.env.TRANSCRIPTION_PROVIDER || 'deepgram').toLowerCase().split('#')[0].trim(),
-    transcriptionLanguage: (process.env.TRANSCRIPTION_LANGUAGE || 'multi').split('#')[0].trim()
+    transcriptionLanguage: (process.env.TRANSCRIPTION_LANGUAGE || 'multi').split('#')[0].trim(),
+    dialerProvider: (process.env.DIALER_PROVIDER || 'mock').toLowerCase().split('#')[0].trim(), // 'mock' | 'twilio'
+    staffDialTimeoutSeconds: parseInt(process.env.STAFF_DIAL_TIMEOUT_SECONDS || '20', 10),
+    maxStaffAttemptsPerCall: parseInt(process.env.MAX_STAFF_ATTEMPTS_PER_CALL || '3', 10),
+    maxTransfersPerCaller: parseInt(process.env.MAX_TRANSFERS_PER_CALLER || '3', 10),
+    transferRateLimitWindowMs: parseInt(process.env.TRANSFER_RATE_LIMIT_WINDOW_MS || '900000', 10) // 15 mins
+  },
+  schedule: {
+    officeHoursStart: (process.env.OFFICE_HOURS_START || '09:00').trim(),
+    officeHoursEnd: (process.env.OFFICE_HOURS_END || '17:00').trim(),
+    officeDays: (process.env.OFFICE_DAYS || '1,2,3,4,5,6').split(',').map(s => parseInt(s.trim(), 10)).filter(n => !isNaN(n)),
+    timezone: (process.env.OFFICE_TIMEZONE || 'Asia/Kolkata').trim(),
+    holidays: (process.env.OFFICE_HOLIDAYS || '2026-01-26,2026-08-15,2026-10-02').split(',').map(s => s.trim()).filter(Boolean)
+  },
+  callbacks: {
+    retentionDays: parseInt(process.env.CALLBACK_RETENTION_DAYS || '30', 10),
+    encryptionKey: (process.env.CALLBACK_ENCRYPTION_KEY || '').trim()
   },
   handoff: {
     phone: process.env.HANDOFF_PHONE || '+91-551-2273901 / 2273902',
     email: process.env.HANDOFF_EMAIL || 'admission@mmmut.ac.in',
-    hours: process.env.HANDOFF_HOURS || 'Mon - Sat (10:00 AM - 5:00 PM)',
+    hours: process.env.HANDOFF_HOURS || 'Mon - Sat (09:00 AM - 5:00 PM)',
     message: "Thank you for contacting admission support. I couldn't find a confident answer to your question in our FAQ. We will connect you to our admission staff shortly for personal assistance."
   },
   admin: {
-    username: process.env.ADMIN_USERNAME || 'admin',
-    password: process.env.ADMIN_PASSWORD || 'AdminSecure2026!Pass',
+    username: (process.env.ADMIN_USERNAME || 'admin').trim(),
+    password: (process.env.ADMIN_PASSWORD || 'AdminSecure2026!Pass').trim(),
     apiKey: process.env.ADMIN_API_KEY || 'admin_dev_secret_key_2026',
     sessionSecret: process.env.ADMIN_SESSION_SECRET || 'admin_jwt_session_secret_key_random_2026',
     sessionDurationMs: 8 * 60 * 60 * 1000 // 8 hours

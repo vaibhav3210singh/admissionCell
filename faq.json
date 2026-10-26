@@ -5,7 +5,7 @@
     "question_hi": "विश्वविद्यालय द्वारा कौन-से पाठ्यक्रम प्रदान किए जाते हैं?",
     "answer_en_spoken": "The university offers undergraduate, postgraduate, diploma, and doctoral programmes. Please check the admission brochure for the full list.",
     "answer_hi_spoken": "विश्वविद्यालय स्नातक, स्नातकोत्तर, डिप्लोमा और डॉक्टरेट पाठ्यक्रम प्रदान करता है। पूरी सूची के लिए कृपया प्रवेश विवरणिका देखें।",
-    "review_status": "draft"
+    "review_status": "approved"
   },
   {
     "question": "When will admissions start?",
